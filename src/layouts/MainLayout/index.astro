@@ -1,0 +1,45 @@
+---
+import Header from '@/components/sections/Header/index.astro'
+import Footer from '@/components/sections/Footer/index.astro'
+import Preloader from '@/components/sections/Preloader/index.astro'
+import SideNav from '@/components/layout/SideNav/index.astro'
+
+// import 'aos/dist/aos.css'; -- HERE GLOBAL IMPORTS
+import '@/styles/index.scss'
+
+---
+
+<!doctype html>
+<html lang="en" data-theme="dark">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="icon" href="/favicon.ico" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="preconnect" href="https://fonts.googleapis.com">
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+		<link href="https://fonts.googleapis.com/css2?family=Mozilla+Text:wght@200..700&display=swap" rel="stylesheet">
+		<title>EDELX</title>
+		
+		<script is:inline>
+			(() => {
+				const key = 'edelx-theme';
+				const stored = localStorage.getItem(key);
+				const theme = stored === 'light' || stored === 'dark' ? stored : 'dark';
+				document.documentElement.setAttribute('data-theme', theme);
+			})();
+		</script>
+	</head>
+	<body class="is-preloading">
+		<Preloader />
+		<Header />
+		<SideNav />
+
+		<main class="main">
+			<slot />
+		</main>
+		
+		<Footer />
+	</body>
+</html>

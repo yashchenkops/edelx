@@ -1,0 +1,96 @@
+---
+---
+<button
+  type="button"
+  class="theme-toggle"
+  data-theme-toggle
+  aria-label="Toggle color theme"
+>
+  <span class="theme-toggle__label" data-theme-label>Dark</span>
+  <span class="theme-toggle__knob" aria-hidden="true"></span>
+</button>
+
+<style lang="scss">
+  .theme-toggle {
+    --theme-toggle-height: #{rem(36px)};
+    --theme-toggle-knob: #{rem(28px)};
+    --theme-toggle-pad: #{rem(4px)};
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+    min-width: rem(85px);
+    height: var(--theme-toggle-height);
+    padding-block: var(--theme-toggle-pad);
+    padding-inline: rem(14px) var(--theme-toggle-pad);
+    border: 1px solid var(--color-text);
+    border-radius: rem(999px);
+    background: transparent;
+    color: var(--color-text);
+    transition:
+      border-color v.$transition-base,
+      color v.$transition-base,
+      padding v.$transition-base,
+      opacity v.$transition-base;
+
+    &[data-theme-state='light'] {
+      flex-direction: row-reverse;
+      padding-inline: var(--theme-toggle-pad) rem(14px);
+    }
+
+    &__label {
+      font-size: rem(14px);
+      font-weight: 500;
+      line-height: 1;
+      user-select: none;
+    }
+
+    &__knob {
+      flex-shrink: 0;
+      width: var(--theme-toggle-knob);
+      height: var(--theme-toggle-knob);
+      border-radius: v.$radius-round;
+      background-color: var(--color-text);
+      transition: background-color v.$transition-base;
+    }
+
+    @include m.hover {
+      opacity: 0.8;
+    }
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'edelx-theme'
+
+  const getStoredTheme = (): 'dark' | 'light' | null => {
+    const value = localStorage.getItem(STORAGE_KEY)
+    return value === 'dark' || value === 'light' ? value : null
+  }
+
+  const applyTheme = (theme: 'dark' | 'light') => {
+    document.documentElement.setAttribute('data-theme', theme)
+    localStorage.setItem(STORAGE_KEY, theme)
+
+    document.querySelectorAll<HTMLElement>('[data-theme-toggle]').forEach((button) => {
+      const label = button.querySelector<HTMLElement>('[data-theme-label]')
+      button.dataset.themeState = theme
+      button.setAttribute('aria-pressed', String(theme === 'dark'))
+      if (label) label.textContent = theme === 'dark' ? 'Dark' : 'Light'
+    })
+  }
+
+  const current =
+    getStoredTheme() ??
+    (document.documentElement.getAttribute('data-theme') === 'light' ? 'light' : 'dark')
+
+  applyTheme(current)
+
+  document.querySelectorAll('[data-theme-toggle]').forEach((button) => {
+    button.addEventListener('click', () => {
+      const next = document.documentElement.getAttribute('data-theme') === 'dark' ? 'light' : 'dark'
+      applyTheme(next)
+    })
+  })
+</script>

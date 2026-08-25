@@ -1,0 +1,31 @@
+---
+const { class: sectionClass = '', ...rest } = Astro.props;
+---
+
+<header class:list={['page-header', sectionClass && `page-header--${sectionClass}`]} {...rest}>
+  <div class="page-header__inner">
+    <slot />
+  </div>
+</header>
+
+<style lang="scss">
+  $page-width: 1792px;
+  $page-padding-min: 30px;
+  $page-padding-max: 60px;
+
+  .page-header {
+    position: fixed;
+    top: 64px;
+    left: 0;
+    width: 100%;
+    z-index: v.$z-header;
+  }
+
+  .page-header__inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: min(100% - clamp($page-padding-min, 2vw, $page-padding-max), $page-width);
+    margin-inline: auto;
+  }
+</style>

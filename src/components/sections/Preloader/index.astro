@@ -1,0 +1,154 @@
+---
+import preloaderLogo from '@/assets/img/preloader-logo.webp'
+---
+
+<div class="preloader" data-preloader aria-hidden="false">
+  <div class="preloader__logo">
+    <img
+      src={preloaderLogo.src}
+      width={preloaderLogo.width}
+      height={preloaderLogo.height}
+      alt="EdelX"
+      decoding="async"
+    />
+  </div>
+</div>
+
+<style lang="scss">
+  $preloader-enter: 850ms;
+  $preloader-exit: 750ms;
+  $preloader-easing: cubic-bezier(0.4, 0, 0.2, 1);
+
+  @keyframes preloader-enter {
+    from {
+      opacity: 0;
+      transform: scale(0.88);
+    }
+
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+
+  .preloader {
+    position: fixed;
+    inset: 0;
+    z-index: v.$z-prealoader;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--color-bg);
+    background-image: var(--bg-loader-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    opacity: 0;
+    transform: scale(0.88);
+    animation: preloader-enter $preloader-enter $preloader-easing forwards;
+    will-change: transform, opacity;
+
+    @include m.tablet {
+      background-size: cover;
+    }
+
+    &__logo {
+      padding-inline: rem(30px);
+      max-width: rem(300px);
+      opacity: 0;
+      transform: scale(0.88);
+      will-change: transform, opacity;
+      user-select: none;
+
+      @include m.tablet {
+        max-width: rem(560px);
+      }
+
+      img {
+        width: 100%;
+        height: auto;
+      }
+    }
+  }
+
+  :global(body.is-preloading) {
+    overflow: hidden;
+  }
+</style>
+
+<script define:vars={{ enterDuration: 850, exitDuration: 750 }}>
+  const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
+  const waitForPageLoad = () =>
+    document.readyState === 'complete'
+      ? Promise.resolve()
+      : new Promise((resolve) => {
+          window.addEventListener('load', () => resolve(), { once: true })
+        })
+
+  const waitForPreloaderEnter = (element) =>
+    new Promise((resolve) => {
+      const onEnd = (event) => {
+        if (event.animationName !== 'preloader-enter') return
+        element.removeEventListener('animationend', onEnd)
+        resolve()
+      }
+
+      element.addEventListener('animationend', onEnd)
+      setTimeout(resolve, enterDuration + 100)
+    })
+
+  const animateIn = (element) =>
+    element.animate(
+      [
+        { opacity: 0, transform: 'scale(0.88)' },
+        { opacity: 1, transform: 'scale(1)' },
+      ],
+      {
+        duration: enterDuration,
+        easing: EASING,
+        fill: 'forwards',
+      },
+    ).finished
+
+  const animateOut = (element) =>
+    element.animate(
+      [
+        { opacity: 1, transform: 'scale(1)' },
+        { opacity: 0, transform: 'scale(1.14)' },
+      ],
+      {
+        duration: exitDuration,
+        easing: EASING,
+        fill: 'forwards',
+      },
+    ).finished
+
+  const runPreloader = async () => {
+    const preloader = document.querySelector('[data-preloader]')
+    const logo = preloader?.querySelector('.preloader__logo')
+    if (!preloader || !logo) return
+
+    document.body.classList.add('is-preloading')
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    if (prefersReducedMotion) {
+      await waitForPageLoad()
+      preloader.remove()
+      document.body.classList.remove('is-preloading')
+      return
+    }
+
+    await waitForPreloaderEnter(preloader)
+    await animateIn(logo)
+    await waitForPageLoad()
+    await animateOut(logo)
+    await animateOut(preloader)
+
+    preloader.remove()
+    document.body.classList.remove('is-preloading')
+  }
+
+  runPreloader()
+</script>

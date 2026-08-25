@@ -1,0 +1,47 @@
+$font-primary: "Mozilla Text", sans-serif;
+
+// basic colors
+$white: #fff;
+$black: #000;
+$gray-50: #f8f8f8;
+$blue: #0d7bd5;
+
+[data-theme="dark"] {
+  --color-bg: #{$black};
+  --color-text: #{$white};
+}
+
+[data-theme="light"] {
+  --color-bg: #{$white};
+  --color-text: #{$black};
+}
+
+// section paddings
+$page-padding-mobile: 15px;
+$page-padding-tablet: 30px;
+$page-padding-desktop: 50px;
+
+$section-padding-mobile: 56px;
+$section-padding-tablet: 80px;
+$section-padding-desktop: 120px;
+
+// border-radius
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+$radius-round: 50%;
+
+// animations
+$transition-base: 0.3s ease;
+$transition-long: 0.5s ease;
+
+// z-index
+$z-header: 100;
+$z-modal: 1000;
+$z-prealoader: 10000;
+
+// media queries
+$desktop-lg: 1240px;
+$desktop: 1024px;
+$tablet: 768px;
+$mobile: 425px;

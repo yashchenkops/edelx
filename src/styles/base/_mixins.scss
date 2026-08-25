@@ -1,0 +1,60 @@
+@use '@/styles/base/variables' as v;
+
+// Застосовує стилі від переданого брейкпоінта і вище.
+@mixin above($breakpoint) {
+  @media (min-width: $breakpoint) {
+    @content;
+  }
+}
+
+// Застосовує стилі нижче переданого брейкпоінта.
+@mixin below($breakpoint) {
+  @media (max-width: ($breakpoint - 0.02px)) {
+    @content;
+  }
+}
+
+// Застосовує стилі тільки між двома брейкпоінтами.
+@mixin between($from, $until) {
+  @media (min-width: $from) and (max-width: ($until - 0.02px)) {
+    @content;
+  }
+}
+
+
+// Застосовує стилі тільки на мобільних ширинах до планшета.
+@mixin mobile {
+  @include below(v.$tablet) {
+    @content;
+  }
+}
+
+// Застосовує стилі від планшетної ширини і вище.
+@mixin tablet {
+  @include above(v.$tablet) {
+    @content;
+  }
+}
+
+// Застосовує стилі від десктопної ширини і вище.
+@mixin desktop {
+  @include above(v.$desktop) {
+    @content;
+  }
+}
+
+// Застосовує стилі від великої десктопної ширини і вище.
+@mixin desktop-lg {
+  @include above(v.$desktop-lg) {
+    @content;
+  }
+}
+
+// Застосовує hover-стилі тільки на пристроях зі справжнім hover.
+@mixin hover {
+  @media (hover: hover) and (pointer: fine) {
+    &:hover {
+      @content;
+    }
+  }
+}

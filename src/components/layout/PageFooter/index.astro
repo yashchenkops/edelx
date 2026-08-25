@@ -1,0 +1,29 @@
+---
+const { class: sectionClass = '', ...rest } = Astro.props;
+---
+
+<footer class:list={['page-footer', sectionClass && `page-footer--${sectionClass}`]} {...rest}>
+  <div class="page-footer__inner">
+    <slot />
+  </div>
+</footer>
+
+<style lang="scss">
+  $page-width: 1792px;
+  $page-padding-min: 30px;
+  $page-padding-max: 60px;
+
+  .page-footer {
+    position: fixed;
+    bottom: 100px;
+    left: 0;
+    text-align: center;
+    width: 100%;
+    z-index: v.$z-header;;
+  }
+
+  .page-footer__inner {
+    width: min(100% - clamp($page-padding-min, 2vw, $page-padding-max), $page-width);
+    margin-inline: auto;
+  }
+</style>

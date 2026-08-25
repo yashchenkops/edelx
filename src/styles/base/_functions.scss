@@ -1,0 +1,6 @@
+@use 'sass:math';
+
+// Переводить пікселі в rem font-size: rem(96px);
+@function rem($value, $base: 16px) {
+  @return math.div($value, $base) * 1rem;
+}

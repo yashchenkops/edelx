@@ -1,0 +1,57 @@
+---
+import PageHeader from '@/components/layout/PageHeader/index.astro';
+import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
+---
+
+<PageHeader>
+  <a href="/" class="logo">
+    <img class="logo__img logo__img--dark" src="src/assets/img/logo.webp" alt="logo">
+    <img class="logo__img logo__img--light" src="src/assets/img/light/logo.webp" alt="logo">
+  </a>
+  <ThemeToggle />
+  <div class="actions">
+    <a href="#" class="actions__login">Log In</a>
+    <a href="#" class="actions__signup">Sign Up</a>
+  </div>
+</PageHeader>
+
+<style lang="scss">
+  .logo__img {
+    max-width: #{rem(200px)};
+
+    &--light {
+      display: none;
+    }
+  }
+
+  .actions {
+    display: flex;
+    align-items: center;
+    gap: #{rem(18px)};
+    color: var(--color-text);
+
+    &__signup {
+      opacity: 0.5;
+      order: 2;
+    }
+
+    &::before {
+      content: '';
+      display: block;
+      width: 2px;
+      height: 28px;
+      background-color: v.$blue;
+      order: 1;
+    }
+  }
+
+  :global([data-theme='light']) {
+    .logo__img--dark { 
+      display: none;
+    }
+
+    .logo__img--light {
+      display: block;
+    }
+  }
+</style>

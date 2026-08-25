@@ -1,0 +1,62 @@
+---
+interface Props {
+  class?: string;
+  slide?: string;
+}
+
+const { class: sectionClass = '', slide, ...rest } = Astro.props as Props;
+const slideId = slide ?? sectionClass;
+---
+
+<section
+  class:list={['page-section', 'swiper-slide', sectionClass && `page-section--${sectionClass}`]}
+  data-slide={slideId || undefined}
+  data-hash={slideId || undefined}
+  {...rest}
+>
+  <div class="page-section__scene">
+    <div class="page-section__decor" aria-hidden="true"></div>
+    <div class="page-section__inner">
+      <slot />
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  $page-width: 1792px;
+  $page-padding-min: 30px;
+  $page-padding-max: 60px;
+
+  .page-section {
+    display: flex;
+    align-items: center;
+    padding-left: 200px;
+    overflow: hidden;
+  }
+
+  .page-section__scene {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+  }
+
+  .page-section__decor {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+  }
+
+  .page-section__inner {
+    position: relative;
+    z-index: 1;
+    width: min(100% - clamp($page-padding-min, 2vw, $page-padding-max), $page-width);
+    margin-inline: auto;
+  }
+
+  .page-section__inner :global(.section-title),
+  .page-section__inner > :not(.section-title) {
+    will-change: transform, opacity;
+  }
+</style>

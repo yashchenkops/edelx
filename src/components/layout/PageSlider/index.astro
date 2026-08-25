@@ -1,0 +1,27 @@
+<div class="page-slider swiper">
+  <div class="swiper-wrapper">
+    <slot />
+  </div>
+</div>
+
+<style lang="scss">
+  :global(html:has(.page-slider)),
+  :global(body:has(.page-slider)) {
+    overflow: hidden;
+    height: 100%;
+  }
+
+  .page-slider {
+    width: 100%;
+    height: 100vh;
+    height: 100dvh;
+  }
+
+  :global(.page-slider .swiper-slide) {
+    transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
+</style>
+
+<script>
+  import '@/scripts/page-slider.ts'
+</script>
