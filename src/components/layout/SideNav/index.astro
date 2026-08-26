@@ -42,19 +42,23 @@ const menuItems = [
     }
 
     &__link {
+      display: block;
       font-size: rem(14px);
       line-height: 1.2;
       color: var(--color-text);
       opacity: 0.45;
-      transition: opacity v.$transition-base;
+      transition: opacity v.$transition-base, transform v.$transition-base;
+      transform: scale(1);
 
       &.is-active {
         opacity: 1;
         font-weight: 600;
+        transform: scale(1.08);
       }
 
       @include m.hover {
         opacity: 0.85;
+        transform: scale(1.05)
       }
     }
   }

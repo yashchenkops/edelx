@@ -29,6 +29,15 @@ import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
     align-items: center;
     gap: #{rem(18px)};
     color: var(--color-text);
+    
+
+    a {
+      transition: opacity v.$transition-base, transform v.$transition-base;
+
+      @include m.hover {
+        transform: scale(1.05)
+      }
+    }
 
     &__signup {
       opacity: 0.5;
