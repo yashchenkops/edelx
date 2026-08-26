@@ -2,6 +2,30 @@
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+import trustpilotDark from '@/assets/img/trustpilot.webp';
+import trustpilotLight from '@/assets/img/light/trustpilot.webp';
+import cryptoEconomy from '@/assets/img/crypto-economy.webp';
+
+const slides = [
+  {
+    name: 'Trustpilot',
+    dark: trustpilotDark,
+    light: trustpilotLight,
+    description: 'The world’s most trusted review platform.',
+  },
+  {
+    name: 'Crypto Economy',
+    dark: cryptoEconomy,
+    light: cryptoEconomy,
+    description: 'Independent ratings from the crypto community.',
+  },
+  {
+    name: 'Trustpilot',
+    dark: trustpilotDark,
+    light: trustpilotLight,
+    description: 'Real feedback from real customers worldwide.',
+  },
+];
 ---
 
 <Section class="review" slide="review">
@@ -10,14 +34,62 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
       <SectionTitle class="review__title">OUR REVIEW’s</SectionTitle>
       <SectionSubtitle>Still not convinced? Here's what reputable market partners say.</SectionSubtitle>
     </div>
+
     <div class="review__slider">
-      <img class="review__slider-bg" src="src/assets/img/review-slider-bg.webp" alt="review">
-      <div class="review__slider-decoration review__slider-decoration--back"></div>
-      <div class="review__slider-decoration review__slider-decoration--front"></div>
-      <img class="review__slider-front" src="src/assets/img/review-slider-front.webp" alt="review">
+      <img class="review__slider-bg" src="src/assets/img/review-slider-bg.webp" alt="" />
+
+      <div class="review__slider-decoration review__slider-decoration--back" aria-hidden="true"></div>
+      <div class="review__slider-decoration review__slider-decoration--front" aria-hidden="true"></div>
+      <img class="review__slider-front" src="src/assets/img/review-slider-front.webp" alt="" />
+
+      <p class="review__folder-text" data-review-caption>{slides[0].description}</p>
+
+      <div class="review__cards" data-review-slider data-review-descriptions={JSON.stringify(slides.map((s) => s.description))}>
+        <div class="swiper review-swiper">
+          <div class="swiper-wrapper">
+            {slides.map((slide) => (
+              <div class="swiper-slide review-swiper__slide">
+                <div class="review-card">
+                  <img
+                    class="review-card__logo review-card__logo--dark"
+                    src={slide.dark.src}
+                    alt={slide.name}
+                  />
+                  {slide.light.src !== slide.dark.src && (
+                    <img
+                      class="review-card__logo review-card__logo--light"
+                      src={slide.light.src}
+                      alt={slide.name}
+                    />
+                  )}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+
+      <div class="review__nav">
+        <button class="review__nav-btn review__nav-btn--prev" type="button" aria-label="Previous review" data-review-prev>
+          <svg width="60" height="23" viewBox="0 0 60 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <g transform="scale(-1 1) translate(-60 0)">
+              <path d="M59.0607 9.98524C59.6464 10.571 59.6464 11.5208 59.0607 12.1066L49.5147 21.6525C48.9289 22.2383 47.9792 22.2383 47.3934 21.6525C46.8076 21.0667 46.8076 20.117 47.3934 19.5312L55.8787 11.0459L47.3934 2.56062C46.8076 1.97483 46.8076 1.02508 47.3934 0.439297C47.9792 -0.14649 48.9289 -0.14649 49.5147 0.439297L59.0607 9.98524ZM1.5 12.5459C0.671574 12.5459 0 11.8743 0 11.0459C0 10.2175 0.671574 9.5459 1.5 9.5459V11.0459V12.5459ZM58 11.0459V12.5459H1.5V11.0459V9.5459H58V11.0459Z" fill="currentColor"/>
+            </g>
+          </svg>
+        </button>
+        <button class="review__nav-btn review__nav-btn--next" type="button" aria-label="Next review" data-review-next>
+          <svg width="60" height="23" viewBox="0 0 60 23" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+            <path d="M59.0607 9.98524C59.6464 10.571 59.6464 11.5208 59.0607 12.1066L49.5147 21.6525C48.9289 22.2383 47.9792 22.2383 47.3934 21.6525C46.8076 21.0667 46.8076 20.117 47.3934 19.5312L55.8787 11.0459L47.3934 2.56062C46.8076 1.97483 46.8076 1.02508 47.3934 0.439297C47.9792 -0.14649 48.9289 -0.14649 49.5147 0.439297L59.0607 9.98524ZM1.5 12.5459C0.671574 12.5459 0 11.8743 0 11.0459C0 10.2175 0.671574 9.5459 1.5 9.5459V11.0459V12.5459ZM58 11.0459V12.5459H1.5V11.0459V9.5459H58V11.0459Z" fill="currentColor"/>
+          </svg>
+        </button>
+      </div>
     </div>
   </div>
 </Section>
+
+<script>
+  import '@/scripts/review-slider.ts'
+</script>
 
 <style lang="scss">
   .review__inner {
@@ -40,58 +112,187 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     position: relative;
     width: 100%;
     max-width: 625px;
+  }
 
-    .review__slider-decoration {
+  .review__slider-bg {
+    display: block;
+    width: 100%;
+    height: auto;
+  }
+
+  .review__slider-decoration {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    max-width: 480px;
+    max-height: 300px;
+    border-radius: 20px;
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    z-index: 5;
+    pointer-events: none;
+
+    &::before {
+      content: '';
       position: absolute;
-      width: 100%;
-      height: 100%;
-      max-width: 480px;
-      max-height: 300px;
-      border-radius: 20px;
-      backdrop-filter: blur(5px);
-      -webkit-backdrop-filter: blur(5px);
-      z-index: 5;
-
-      &::before {
-        content: '';
-        position: absolute;
-        inset: 0;
-        border-radius: inherit;
-        padding: 1px;
-        background: linear-gradient(
-          180deg,
-          rgb(0 200 255 / 85%) 0%,
-          rgb(0 150 255 / 40%) 18%,
-          rgb(0 120 220 / 0%) 50%
-        );
-        mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        mask-composite: exclude;
-        -webkit-mask:
-          linear-gradient(#fff 0 0) content-box,
-          linear-gradient(#fff 0 0);
-        -webkit-mask-composite: xor;
-        pointer-events: none;
-      }
-
-      &--back {
-        top: -90px;
-        left: 60px;
-        background: rgba(0, 136, 255, 0.3);
-      }
-
-      &--front {
-        top: -75px;
-        left: 70px;
-        background: rgba(0, 0, 0, 0.3);
-      }
+      inset: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(
+        180deg,
+        rgb(0 200 255 / 85%) 0%,
+        rgb(0 150 255 / 40%) 18%,
+        rgb(0 120 220 / 0%) 50%
+      );
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      pointer-events: none;
     }
 
-    .review__slider-front {
-      position: absolute;
-      bottom: 0;
-      z-index: 10;
+    &--back {
+      top: -90px;
+      left: 60px;
+      background: rgba(0, 136, 255, 0.3);
+      z-index: 2;
     }
+
+    &--front {
+      top: -75px;
+      left: 70px;
+      background: rgba(0, 0, 0, 0.3);
+      z-index: 3;
+    }
+  }
+
+  .review__slider-front {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    z-index: 10;
+    width: 100%;
+    height: auto;
+    pointer-events: none;
+  }
+
+  .review__folder-text {
+    position: absolute;
+    left: 95px;
+    top: 240px;
+    z-index: 12;
+    margin: 0;
+    max-width: 410px;
+    font-size: clamp(rem(14px), 2vw, rem(28px));
+    font-weight: 400;
+    line-height: 1.35;
+    color: var(--color-text);
+    text-wrap: pretty;
+    pointer-events: none;
+  }
+
+  .review__cards {
+    position: absolute;
+    top: -75px;
+    left: 70px;
+    z-index: 8;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    max-width: 480px;
+    height: 100%;
+    max-height: 300px;
+    padding: 24px;
+    box-sizing: border-box;
+  }
+
+  .review-swiper {
+    width: 100%;
+    overflow: hidden;
+  }
+
+  .review-swiper__slide {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+  }
+
+  .review-card {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    margin-bottom: 70px;
+  }
+
+  .review-card__logo {
+    display: block;
+    width: 335px;
+    max-width: 100%;
+    height: auto;
+    object-fit: contain;
+
+    &--light {
+      display: none;
+    }
+  }
+
+  :global([data-theme='light']) {
+    .review-card:has(.review-card__logo--light) .review-card__logo--dark {
+      display: none;
+    }
+
+    .review-card__logo--light {
+      display: block;
+    }
+  }
+
+  .review__nav {
+    position: absolute;
+    left: 100px;
+    top: 150px;
+    display: flex;
+    align-items: center;
+    gap: 25px;
+    z-index: 11;
+  }
+
+  .review__nav-btn {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 60px;
+    height: 24px;
+    color: rgb(255 255 255 / 90%);
+    opacity: 1;
+    transition: opacity v.$transition-base, color v.$transition-base, transform v.$transition-base;
+
+    svg {
+      display: block;
+      width: 60px;
+      height: 23px;
+    }
+
+    &.is-disabled {
+      opacity: 0.45;
+      cursor: default;
+    }
+
+    @include m.hover {
+      &:not(.is-disabled) {
+        opacity: 0.75;
+        transform: scale(1.05);
+      }
+    }
+  }
+
+  :global([data-theme='light']) .review__nav-btn {
+    color: rgb(0 0 0 / 90%);
   }
 </style>
