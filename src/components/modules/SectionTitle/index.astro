@@ -1,15 +1,11 @@
 ---
 interface Props {
   as?: string;
-  size?: string;
-  tone?: string;
   class?: string;
 }
 
 const {
   as: Tag = 'h2',
-  size = 'large',
-  tone = 'dark',
   class: className = '',
   ...rest
 } = Astro.props as Props;
@@ -18,8 +14,6 @@ const {
 <Tag
   class:list={[
     'section-title',
-    `section-title--${size}`,
-    `section-title--${tone}`,
     className
   ]}
   {...rest}
@@ -28,5 +22,23 @@ const {
 </Tag>
 
 <style lang="scss">
-  
+  .section-title {
+    position: relative;
+    font-weight: 400;
+    font-size: rem(122px);
+    line-height: 1;
+    text-transform: uppercase;
+    color: var(--color-text);
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: -15px;
+      left: -15px;
+      width: 15px;
+      height: 15px;
+      background-color: transparent;
+      border: 1px solid var(--color-text);
+    }
+  }
 </style>
