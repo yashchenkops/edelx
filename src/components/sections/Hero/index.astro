@@ -108,7 +108,6 @@ const SY = 1 / 509;
 
   .hero__illustration {
     position: relative;
-    flex-shrink: 0;
     width: min(100%, 829px);
     aspect-ratio: 829 / 509;
     isolation: isolate;
@@ -183,8 +182,8 @@ const SY = 1 / 509;
     }
 
     &--euro {
-      width: 220px;
-      bottom: -105px;
+      width: min(220px, 24%);
+      bottom: -20%;
       right: 15%;
     }
   }
