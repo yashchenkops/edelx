@@ -1,0 +1,23 @@
+---
+import Section from '@/components/layout/Section/index.astro';
+import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+---
+
+<Section class="terms-and-conditions" slide="terms-conditions">
+  <div class="terms-and-conditions__inner">
+    <SectionTitle>Terms and Conditions</SectionTitle>
+  </div>
+</Section>
+
+<style lang="scss">
+  .terms-and-conditions__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .terms-and-conditions__title {
+    max-width: 666px;
+  }
+</style>

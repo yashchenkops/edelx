@@ -1,0 +1,23 @@
+---
+import Section from '@/components/layout/Section/index.astro';
+import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+---
+
+<Section class="news" slide="news">
+  <div class="news__inner">
+    <SectionTitle>News</SectionTitle>
+  </div>
+</Section>
+
+<style lang="scss">
+  .news__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .news__title {
+    max-width: 666px;
+  }
+</style>

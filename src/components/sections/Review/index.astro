@@ -1,0 +1,97 @@
+---
+import Section from '@/components/layout/Section/index.astro';
+import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+---
+
+<Section class="review" slide="review">
+  <div class="review__inner">
+    <div class="review__content">
+      <SectionTitle class="review__title">OUR REVIEW’s</SectionTitle>
+      <SectionSubtitle>Still not convinced? Here's what reputable market partners say.</SectionSubtitle>
+    </div>
+    <div class="review__slider">
+      <img class="review__slider-bg" src="src/assets/img/review-slider-bg.webp" alt="review">
+      <div class="review__slider-decoration review__slider-decoration--back"></div>
+      <div class="review__slider-decoration review__slider-decoration--front"></div>
+      <img class="review__slider-front" src="src/assets/img/review-slider-front.webp" alt="review">
+    </div>
+  </div>
+</Section>
+
+<style lang="scss">
+  .review__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: min(10vw, 10px);
+  }
+
+  .review__content {
+    max-width: 666px;
+  }
+
+  .review__title {
+    margin-bottom: 30px;
+  }
+
+  .review__slider {
+    position: relative;
+    width: 100%;
+    max-width: 625px;
+
+    .review__slider-decoration {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      max-width: 480px;
+      max-height: 300px;
+      border-radius: 20px;
+      backdrop-filter: blur(5px);
+      -webkit-backdrop-filter: blur(5px);
+      z-index: 5;
+
+      &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        border-radius: inherit;
+        padding: 1px;
+        background: linear-gradient(
+          180deg,
+          rgb(0 200 255 / 85%) 0%,
+          rgb(0 150 255 / 40%) 18%,
+          rgb(0 120 220 / 0%) 50%
+        );
+        mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        mask-composite: exclude;
+        -webkit-mask:
+          linear-gradient(#fff 0 0) content-box,
+          linear-gradient(#fff 0 0);
+        -webkit-mask-composite: xor;
+        pointer-events: none;
+      }
+
+      &--back {
+        top: -90px;
+        left: 60px;
+        background: rgba(0, 136, 255, 0.3);
+      }
+
+      &--front {
+        top: -75px;
+        left: 70px;
+        background: rgba(0, 0, 0, 0.3);
+      }
+    }
+
+    .review__slider-front {
+      position: absolute;
+      bottom: 0;
+      z-index: 10;
+    }
+  }
+</style>

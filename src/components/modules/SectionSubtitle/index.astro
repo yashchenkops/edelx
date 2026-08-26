@@ -1,0 +1,31 @@
+---
+interface Props {
+  as?: string;
+  class?: string;
+}
+
+const {
+  as: Tag = 'p',
+  class: className = '',
+  ...rest
+} = Astro.props as Props;
+---
+
+<Tag
+  class:list={[
+    'section-subtitle',
+    className
+  ]}
+  {...rest}
+>
+  <slot />
+</Tag>
+
+<style lang="scss">
+  .section-subtitle {
+    font-weight: 400;
+    font-size: clamp(rem(12px), 1.5vw, rem(24px));
+    line-height: 1;
+    color: var(--color-text);
+  }
+</style>

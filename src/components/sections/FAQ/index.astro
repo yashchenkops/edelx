@@ -1,0 +1,23 @@
+---
+import Section from '@/components/layout/Section/index.astro';
+import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+---
+
+<Section class="faq" slide="faq">
+  <div class="faq__inner">
+    <SectionTitle>FAQ</SectionTitle>
+  </div>
+</Section>
+
+<style lang="scss">
+  .faq__inner {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .faq__title {
+    max-width: 666px;
+  }
+</style>
