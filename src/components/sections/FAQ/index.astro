@@ -1,23 +1,335 @@
 ---
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+
+const items = [
+  {
+    question: 'Does EdelX Have A License And Comply With Regulations?',
+    answer:
+      "Click 'Sign Up', Confirm Your Email, And Complete A Quick Verification. Once Verified, You Can Exchange Fiat For Crypto Directly On The Platform — In Seconds.",
+  },
+  {
+    question: 'What Does The Account Verification Process Involve?',
+    answer:
+      'Provide basic personal details, confirm your email, and complete a short identity check. Most users finish verification within a few minutes.',
+  },
+  {
+    question: 'How Are My Funds Protected On The Platform?',
+    answer:
+      'Funds are held with layered security controls, continuous monitoring, and strict operational safeguards until your transfer is complete.',
+  },
+  {
+    question: 'What Currencies And Cryptocurrencies Are Supported?',
+    answer:
+      'EdelX supports major fiat currencies and popular cryptocurrencies, with pairs updated regularly as the market expands.',
+  },
+  {
+    question: 'How Can I Reach The Support Team If Something Goes Wrong?',
+    answer:
+      'Contact support anytime through the in-app help center or email. Our team monitors requests around the clock and responds as quickly as possible.',
+  },
+  {
+    question: 'What Currencies Are Supported?',
+    answer:
+      'You can exchange a wide range of fiat and crypto assets. The full list is always available in your account exchange panel.',
+  },
+];
+
+// Same chevron as Hero right half (mirrored direction)
+const shapePath =
+  'M595.973 0C595.32 5.70682e-08 594.716 0.344247 594.382 0.905378L464.236 219.941C461.569 224.43 456.734 227.181 451.514 227.181H443.799C435.626 227.181 429 233.809 429 241.985V267.015C429 275.191 435.626 281.819 443.799 281.819H451.514C456.734 281.819 461.569 284.57 464.236 289.059L594.381 508.095C594.714 508.656 595.319 509 595.971 509H828.071C828.797 509 829.24 508.202 828.856 507.585L687.945 281.558C686.932 279.932 685.152 278.943 683.236 278.943H505.667C497.493 278.943 490.867 272.314 490.868 264.138L490.868 244.86C490.869 236.684 497.495 230.057 505.668 230.057H683.238C685.153 230.057 686.934 229.068 687.947 227.442L828.859 1.41459C829.242 0.79834 828.799 -6.34854e-08 828.073 0H595.973Z';
+
+const VIEW_X = 429;
+const SHAPE_W = 400;
+const SHAPE_H = 509;
+const SX = 1 / SHAPE_W;
+const SY = 1 / SHAPE_H;
+const clipTransform = `scale(${SX}, ${SY}) translate(${-VIEW_X}, 0)`;
+const shapeIds = ['a', 'b'];
 ---
 
 <Section class="faq" slide="faq">
   <div class="faq__inner">
-    <SectionTitle>FAQ</SectionTitle>
+    <div class="faq__content">
+      <SectionTitle class="faq__title">FAQ</SectionTitle>
+      <SectionSubtitle class="faq__subtitle">The main questions you may have for us.</SectionSubtitle>
+    </div>
+
+    <div class="faq__accordion">
+      <div class="faq__decoration" aria-hidden="true">
+        <svg class="faq-shape-defs" width="0" height="0" aria-hidden="true">
+          <defs>
+            <clipPath id="faqShapeClip" clipPathUnits="objectBoundingBox">
+              <path transform={clipTransform} d={shapePath}></path>
+            </clipPath>
+            <linearGradient id="faq-border" x1={VIEW_X + SHAPE_W / 2} y1="0" x2={VIEW_X + SHAPE_W / 2} y2={SHAPE_H} gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0.04" />
+              <stop offset="30%" stop-color="#fff" stop-opacity="0.14" />
+              <stop offset="65%" stop-color="#fff" stop-opacity="0.38" />
+              <stop offset="100%" stop-color="#fff" stop-opacity="0.72" />
+            </linearGradient>
+            <linearGradient id="faq-edge-highlight" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0%" stop-color="#fff" stop-opacity="0" />
+              <stop offset="18%" stop-color="#fff" stop-opacity="0.42" />
+              <stop offset="82%" stop-color="#fff" stop-opacity="0.42" />
+              <stop offset="100%" stop-color="#fff" stop-opacity="0" />
+            </linearGradient>
+            <filter id="faq-glow" x="-8%" y="-8%" width="116%" height="116%" color-interpolation-filters="sRGB">
+              <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blur" />
+              <feMerge>
+                <feMergeNode in="blur" />
+                <feMergeNode in="SourceGraphic" />
+              </feMerge>
+            </filter>
+          </defs>
+        </svg>
+
+        {shapeIds.map((id) => (
+          <div class="faq-shape" data-shape={id}>
+            <div class="faq-shape__glass"></div>
+            <svg
+              class="faq-shape__svg"
+              width={SHAPE_W}
+              height={SHAPE_H}
+              viewBox={`${VIEW_X} 0 ${SHAPE_W} ${SHAPE_H}`}
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <g filter="url(#faq-glow)">
+                <path
+                  d={shapePath}
+                  fill="none"
+                  stroke="url(#faq-border)"
+                  stroke-width="0.5"
+                  vector-effect="non-scaling-stroke"
+                />
+              </g>
+              <g stroke="url(#faq-edge-highlight)" stroke-width="0.9" stroke-linecap="round">
+                <line x1="607" y1="0.45" x2="817" y2="0.45" />
+                <line x1="515" y1="230.057" x2="674" y2="230.057" />
+              </g>
+            </svg>
+          </div>
+        ))}
+      </div>
+
+      <div class="faq-accordion" data-faq-accordion>
+        {items.map((item, index) => (
+          <div class:list={['faq-accordion__item', { 'is-open': index === 0 }]}>
+            <button
+              class="faq-accordion__trigger"
+              type="button"
+              id={`faq-trigger-${index}`}
+              aria-controls={`faq-panel-${index}`}
+              aria-expanded={index === 0 ? 'true' : 'false'}
+            >
+              {item.question}
+            </button>
+            <div
+              class="faq-accordion__panel"
+              id={`faq-panel-${index}`}
+              role="region"
+              aria-labelledby={`faq-trigger-${index}`}
+            >
+              <div class="faq-accordion__panel-inner">
+                <p class="faq-accordion__answer">{item.answer}</p>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
   </div>
+
+  <img class="faq__image" src="src/assets/img/faq-book.webp" alt="Book image">
 </Section>
+
+<script>
+  import '@/scripts/faq-accordion.ts'
+</script>
 
 <style lang="scss">
   .faq__inner {
     position: relative;
+    z-index: 2;
     display: flex;
     align-items: center;
     justify-content: center;
+    gap: clamp(rem(24px), 4vw, rem(80px));
+  }
+
+  .faq__content {
+    flex: 0 1 666px;
+    max-width: 666px;
+    min-width: 0;
   }
 
   .faq__title {
-    max-width: 666px;
+    margin-bottom: 30px;
+  }
+
+  .faq__accordion {
+    position: relative;
+    flex: 1 1 560px;
+    max-width: 720px;
+    min-width: 0;
+    container-type: inline-size;
+  }
+
+  .faq__decoration {
+    position: absolute;
+    top: 50%;
+    right: -8%;
+    z-index: 0;
+    display: flex;
+    align-items: center;
+    gap: clamp(rem(8px), 1.2vw, rem(20px));
+    translate: 0 -50%;
+    pointer-events: none;
+  }
+
+  .faq-shape-defs {
+    position: absolute;
+    width: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .faq-shape {
+    position: relative;
+    width: min(480px, 68cqw);
+    aspect-ratio: 400 / 509;
+    isolation: isolate;
+    flex-shrink: 0;
+
+    & + & {
+      margin-left: clamp(rem(-120px), -10cqw, rem(-60px));
+    }
+  }
+
+  .faq-shape__glass {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+    clip-path: url(#faqShapeClip);
+    background: rgb(255 255 255 / 10%);
+    backdrop-filter: blur(2px);
+    -webkit-backdrop-filter: blur(5px);
+    pointer-events: none;
+
+    :global([data-theme='light']) & {
+      background: rgb(0 0 0 / 10%);
+    }
+  }
+
+  .faq-shape__svg {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    overflow: visible;
+    pointer-events: none;
+  }
+
+  .faq-accordion {
+    position: relative;
+    z-index: 1;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(rem(22px), 3vw, rem(40px));
+  }
+
+  .faq-accordion__item {
+    min-width: 0;
+  }
+
+  .faq-accordion__trigger {
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: transparent;
+    text-align: left;
+    cursor: pointer;
+    font-family: inherit;
+    font-weight: 700;
+    font-size: clamp(rem(16px), 1.7vw, rem(28px));
+    line-height: 1.25;
+    color: var(--color-text);
+    transition: opacity v.$transition-base;
+
+    @include m.hover {
+      opacity: 0.75;
+    }
+  }
+
+  .faq-accordion__panel {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.35s ease;
+  }
+
+  .faq-accordion__item.is-open .faq-accordion__panel {
+    grid-template-rows: 1fr;
+  }
+
+  .faq-accordion__panel-inner {
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  .faq-accordion__answer {
+    margin: clamp(rem(10px), 1.2vw, rem(16px)) 0 0;
+    max-width: 42em;
+    font-weight: 400;
+    font-size: clamp(rem(13px), 1.2vw, rem(20px));
+    line-height: 1.4;
+    color: var(--color-text);
+    opacity: 0.85;
+    text-wrap: pretty;
+  }
+
+  .faq__image {
+    position: absolute;
+    top: 50%;
+    right: -9%;
+    z-index: 1;
+    translate: 0 -50%;
+    max-width: min(325px, 22vw);
+    pointer-events: none;
+  }
+
+  @media (max-width: 1024px) {
+    .faq__inner {
+      flex-wrap: wrap;
+      justify-content: flex-start;
+    }
+
+    .faq__content {
+      flex: 1 1 100%;
+      max-width: none;
+    }
+
+    .faq__accordion {
+      flex: 1 1 100%;
+      max-width: none;
+    }
+
+    .faq__decoration {
+      right: 0;
+      opacity: 0.85;
+    }
+
+    .faq-shape {
+      width: min(360px, 52vw);
+    }
+
+    .faq__image {
+      right: -4%;
+      max-width: min(240px, 28vw);
+      opacity: 0.9;
+    }
   }
 </style>
