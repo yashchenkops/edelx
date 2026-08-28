@@ -2,6 +2,7 @@
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+import Button from '@/components/modules/Button/index.astro';
 import trustpilotDark from '@/assets/img/trustpilot.webp';
 import trustpilotLight from '@/assets/img/light/trustpilot.webp';
 import cryptoEconomy from '@/assets/img/crypto-economy.webp';
@@ -12,18 +13,24 @@ const slides = [
     dark: trustpilotDark,
     light: trustpilotLight,
     description: 'The world’s most trusted review platform.',
+    cta: 'Read More About Us',
+    href: '#',
   },
   {
     name: 'Crypto Economy',
     dark: cryptoEconomy,
     light: cryptoEconomy,
     description: 'Independent ratings from the crypto community.',
+    cta: 'Read More About Us',
+    href: '#',
   },
   {
     name: 'Trustpilot',
     dark: trustpilotDark,
     light: trustpilotLight,
     description: 'Real feedback from real customers worldwide.',
+    cta: 'Read More About Us',
+    href: '#',
   },
 ];
 ---
@@ -44,7 +51,23 @@ const slides = [
 
       <p class="review__folder-text" data-review-caption>{slides[0].description}</p>
 
-      <div class="review__cards" data-review-slider data-review-descriptions={JSON.stringify(slides.map((s) => s.description))}>
+      <div class="review__cta">
+        <Button
+          class="review__cta-btn"
+          variant="glass"
+          href={slides[0].href}
+          data-review-cta
+        >
+          <span data-review-cta-label>{slides[0].cta}</span>
+        </Button>
+      </div>
+
+      <div
+        class="review__cards"
+        data-review-slider
+        data-review-descriptions={JSON.stringify(slides.map((s) => s.description))}
+        data-review-ctas={JSON.stringify(slides.map((s) => ({ href: s.href, cta: s.cta })))}
+      >
         <div class="swiper review-swiper">
           <div class="swiper-wrapper">
             {slides.map((slide) => (
@@ -204,6 +227,29 @@ const slides = [
     color: var(--color-text);
     text-wrap: pretty;
     pointer-events: none;
+  }
+
+  .review__cta {
+    position: absolute;
+    left: 50%;
+    bottom: sw(-10);
+    z-index: 13;
+    translate: -50% 0;
+  }
+
+  .review__cta :global(.review__cta-btn) {
+    padding: sw(41) sw(47);
+    font-size: max(rem(12px), sw(20));
+    gap: sw(14);
+    white-space: nowrap;
+  }
+
+  .review__cta :global(.button__arrow--simple),
+  .review__cta :global(.button__arrow--simple svg) {
+    width: sw(16);
+    height: sw(16);
+    min-width: sw(16);
+    min-height: sw(16);
   }
 
   .review__cards {
