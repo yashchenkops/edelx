@@ -1,11 +1,15 @@
 ---
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 ---
 
 <Section class="news" slide="news">
   <div class="news__inner">
-    <SectionTitle>News</SectionTitle>
+    <div class="news__content">
+      <SectionTitle>News</SectionTitle>
+      <SectionSubtitle>Stay up to date with the latest news and updates from our team.</SectionSubtitle>
+    </div>
   </div>
 </Section>
 
@@ -17,7 +21,14 @@ import SectionTitle from '@/components/modules/SectionTitle/index.astro';
     justify-content: center;
   }
 
+  .faq__content {
+    flex: 0 1 666px;
+    max-width: 666px;
+    min-width: 0;
+  }
+
   .news__title {
     max-width: 666px;
+    margin-bottom: 30px;
   }
 </style>
