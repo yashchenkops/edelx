@@ -3,13 +3,84 @@ import PageFooter from '@/components/layout/PageFooter/index.astro';
 ---
 
 <PageFooter>
-  <p class="footer__text">© 2026-2027 EldelX. All rights reserved.</p>
+  <div class="footer__wrap">
+    <p class="footer__text footer__text--default">© 2026-2027 EldelX. All rights reserved.</p>
+    <div class="footer__text footer__text--terms">
+      <p>© 2026 – 2027 EldelX. All rights reserved.</p>
+      <p>Tokenum is a trading name operated by Djooky Finance Limited, a corporation established under the laws of British Columbia, Canada (Incorporation No. BC1535602). The company is officially registered as a Money Services Business (MSB) with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) under registration number C100000967. Registered office: 5780 Victoria Drive, Unit #123, Vancouver, BC V5P 3W7, Canada. For complete access to our regulatory policies and user agreements, please visit Terms and Conditions.</p>
+      <p>All materials and information provided are for informational purposes only and do not constitute financial, legal, or investment advice. Tokenum does not offer recommendations or solicitations to purchase, trade, or hold any specific digital assets or to follow any particular investment strategy. We do not engage in any activities intended to influence the market price of cryptoassets.</p>
+      <p>Please be advised that digital assets are highly volatile and are not protected by the Canada Deposit Insurance Corporation (CDIC) or any other government-backed insurance schemes. Engaging in cryptoasset transactions carries a risk of total capital loss. Users are responsible for any tax liabilities arising from their activities under the Canada Revenue Agency (CRA) guidelines and should seek independent tax advice. Access to certain products or services may be restricted based on your geographical location. Additional information regarding our compliance and jurisdictional status can be found at AML/KYC and Legal Disclosures.</p>
+    </div>
+  </div>
 </PageFooter>
 
+<script>
+  const wrap = document.querySelector<HTMLElement>('.footer__wrap')
+  const slider = document.querySelector<HTMLElement>('.page-slider')
+
+  if (wrap && slider) {
+    const check = () => {
+      const activeSlide = slider.querySelector<HTMLElement>('.swiper-slide-active[data-slide]')
+      const isTerms = activeSlide?.dataset.slide === 'terms-conditions'
+      wrap.classList.toggle('is-terms', isTerms)
+    }
+
+    const observer = new MutationObserver(check)
+    observer.observe(slider, { subtree: true, attributeFilter: ['class'], childList: false })
+
+    // initial
+    check()
+  }
+</script>
+
 <style lang="scss">
+  .footer__wrap {
+    position: relative;
+  }
+
   .footer__text {
-    font-size: 12px;
-    opacity: 0.8;
-    color: var(--color-text);
+    transition:
+      opacity 0.55s ease,
+      transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+
+    &--default {
+      font-size: 12px;
+      opacity: 0.8;
+      color: var(--color-text);
+    }
+
+    &--terms {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      opacity: 0;
+      transform: translateY(8px);
+      pointer-events: none;
+      font-weight: 200;
+      font-size: 8px;
+      line-height: 1.6;
+      color: #767676;
+      text-align: left;
+
+      p {
+        margin-bottom: 4px;
+        &:last-child { margin-bottom: 0; }
+      }
+    }
+  }
+
+  .is-terms {
+    .footer__text--default {
+      opacity: 0;
+      transform: translateY(-8px);
+      pointer-events: none;
+    }
+
+    .footer__text--terms {
+      opacity: 1;
+      transform: translateY(0);
+      pointer-events: auto;
+    }
   }
 </style>
