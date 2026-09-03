@@ -142,6 +142,12 @@ const SY = 1 / 509;
     pointer-events: none;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    .hero__currency-item {
+      animation: none !important;
+    }
+  }
+
   .hero__currency {
     position: absolute;
     inset: 0;
@@ -154,6 +160,30 @@ const SY = 1 / 509;
     &--front {
       z-index: 2;
     }
+  }
+
+  @keyframes hero-float-a {
+    0%   { transform: translateY(-50%) translate(0px, 0px) rotate(0deg); }
+    25%  { transform: translateY(-50%) translate(6px, -10px) rotate(1.2deg); }
+    50%  { transform: translateY(-50%) translate(-4px, -18px) rotate(-0.6deg); }
+    75%  { transform: translateY(-50%) translate(-8px, -8px) rotate(0.8deg); }
+    100% { transform: translateY(-50%) translate(0px, 0px) rotate(0deg); }
+  }
+
+  @keyframes hero-float-b {
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    30%  { transform: translate(-7px, -12px) rotate(-1.5deg); }
+    60%  { transform: translate(5px, -20px) rotate(1deg); }
+    80%  { transform: translate(8px, -10px) rotate(-0.5deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
+  }
+
+  @keyframes hero-float-c {
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    20%  { transform: translate(8px, -8px) rotate(1.8deg); }
+    55%  { transform: translate(-5px, -16px) rotate(-1.2deg); }
+    75%  { transform: translate(-9px, -6px) rotate(0.7deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
   }
 
   .hero__currency-item {
@@ -172,18 +202,26 @@ const SY = 1 / 509;
       top: 50%;
       left: 20%;
       transform: translateY(-50%);
+      animation: hero-float-a 7s ease-in-out infinite;
+      will-change: transform;
     }
 
     &--yen {
       width: min(165px, 24%);
       top: -50px;
       right: 24%;
+      animation: hero-float-b 8.5s ease-in-out infinite;
+      animation-delay: -2.8s;
+      will-change: transform;
     }
 
     &--euro {
       width: min(220px, 24%);
       bottom: -20%;
       right: 15%;
+      animation: hero-float-c 9.2s ease-in-out infinite;
+      animation-delay: -5.1s;
+      will-change: transform;
     }
   }
 </style>
