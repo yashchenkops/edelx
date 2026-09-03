@@ -2,13 +2,60 @@
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+import Button from '@/components/modules/Button/index.astro';
+
+const articles = [
+  {
+    title: 'What’s new at finance world?',
+    description: 'Still not convinced? Here\'s what reputable market partners say. Some people say thats in not possible, but we don’t agree...',
+    button: 'Read more',
+    href: '#',
+  },
+  {
+    title: 'Which currency is the most profitable at the moment?',
+    description: 'Still not convinced? Here\'s what reputable market partners say. Some people say thats in not possible, but we don’t agree...',
+    button: 'Read more',
+    href: '#',
+  },
+  {
+    title: 'Hello! Its you’re new finance agent.',
+    description: 'Still not convinced? Here\'s what reputable market partners say. Some people say thats in not possible, but we don’t agree...',
+    button: 'Read more',
+    href: '#',
+  }
+];
 ---
 
 <Section class="news" slide="news">
   <div class="news__inner">
     <div class="news__content">
       <SectionTitle>News</SectionTitle>
-      <SectionSubtitle>Stay up to date with the latest news and updates from our team.</SectionSubtitle>
+      <SectionSubtitle>Still not convinced? Here's what reputable market partners say.</SectionSubtitle>
+    </div>
+    <div class="news__articles">
+      {articles.map((article) => {
+        return (
+          <article class="news__article">
+            <div class="news__article-info">
+              <h3 class="news__article-title">
+                {article.title}
+              </h3>
+              <p class="news__article-description">
+                {article.description}
+              </p>
+            </div>
+            <div class="news__article-button">
+              <Button href={article.href} variant="glass">{article.button}</Button>
+            </div>
+          </article>
+        )
+      })}
+    </div>
+    <div class="news__decoration news__decoration--edit-machine">
+      <img src="src/assets/img/news-edit-machine.webp" alt="Text machine">
+    </div>
+    <div class="news__decoration news__decoration--hashtag">
+      <img src="src/assets/img/news-hashtag.webp" alt="Hashtag">
     </div>
   </div>
 </Section>
@@ -21,7 +68,7 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     justify-content: center;
   }
 
-  .faq__content {
+  .news__content {
     flex: 0 1 666px;
     max-width: 666px;
     min-width: 0;
@@ -30,5 +77,100 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
   .news__title {
     max-width: 666px;
     margin-bottom: 30px;
+  }
+
+  .news__articles {
+    max-width: 711px;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 26px;
+  }
+
+  .news__article {
+    position: relative;
+    gap: 24px;
+    padding: 35px 40px;
+    border-radius: 20px;
+    background: rgb(255 255 255 / 10%);
+    backdrop-filter: blur(5px);
+    -webkit-backdrop-filter: blur(5px);
+    box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
+    isolation: isolate;
+
+    &::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      border-radius: inherit;
+      padding: 1px;
+      background: linear-gradient(
+        180deg,
+        rgb(255 255 255 / 45%) 0%,
+        rgb(255 255 255 / 15%) 35%,
+        rgb(255 255 255 / 0%) 100%
+      );
+      mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      mask-composite: exclude;
+      -webkit-mask:
+        linear-gradient(#fff 0 0) content-box,
+        linear-gradient(#fff 0 0);
+      -webkit-mask-composite: xor;
+      pointer-events: none;
+    }
+
+    &-info {
+      max-width: 420px;
+    }
+
+    &-button {
+      display: inline-block;
+      position: absolute;
+      top: 50%;
+      right: -35px;
+      transform: translateY(-50%);
+      
+      .button--glass {
+        padding: 30px 35px !important;
+      }
+    }
+  }
+
+  :global([data-theme='light']) .news__article {
+    background: rgb(0 0 0 / 10%);
+    box-shadow: 0 8px 28px rgb(0 0 0 / 8%);
+
+    &::before {
+      background: linear-gradient(
+        180deg,
+        rgb(0 0 0 / 18%) 0%,
+        rgb(0 0 0 / 8%) 35%,
+        rgb(0 0 0 / 0%) 100%
+      );
+    }
+  }
+
+  .news__decoration {
+    position: absolute;
+    user-select: none;
+    pointer-events: none;
+
+    &--edit-machine {
+      bottom: -170px;
+      left: 45%;
+      transform: translateX(-50%);
+      max-width: 245px;
+      z-index: 1;
+    }
+
+    &--hashtag {
+      top: -110px;
+      right: 330px;
+      max-width: 145px;
+      z-index: -1;
+    }
   }
 </style>
