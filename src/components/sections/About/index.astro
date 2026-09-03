@@ -82,9 +82,10 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
           opacity: 1,
           y: 0,
           scale: 1,
-          filter: 'blur(0px)',
+          filter: 'none',
           duration: 0.25,
           overwrite: true,
+          onComplete: () => gsap.set(socials, { clearProps: 'transform,filter' }),
         })
         return
       }
@@ -101,12 +102,14 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
           opacity: 1,
           y: 0,
           scale: 1,
-          filter: 'blur(0px)',
+          filter: 'none',
           duration: 0.85,
           delay: 0.28,
           stagger: 0.14,
           ease: 'power3.out',
           overwrite: true,
+          // Inline transform blocks CSS hover scale — clear after entrance
+          onComplete: () => gsap.set(socials, { clearProps: 'transform,filter' }),
         },
       )
       played = true

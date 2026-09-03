@@ -213,7 +213,6 @@ const SY = 1 / 509;
     position: relative;
     width: min(100%, 829px);
     aspect-ratio: 829 / 509;
-    isolation: isolate;
 
     @media (max-width: 768px) {
       width: min(100%, 560px);
@@ -224,7 +223,6 @@ const SY = 1 / 509;
   .hero__main {
     position: relative;
     z-index: 1;
-    isolation: isolate;
   }
 
   .hero__glass {
@@ -233,7 +231,7 @@ const SY = 1 / 509;
     z-index: 0;
     clip-path: url(#heroShapeClip);
     background: rgb(255 255 255 / 10%);
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: none;
 
@@ -249,6 +247,7 @@ const SY = 1 / 509;
     height: auto;
     overflow: visible;
     pointer-events: none;
+    transform: translateZ(0);
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -268,6 +267,8 @@ const SY = 1 / 509;
 
     &--front {
       z-index: 2;
+      /* Keep euro above the glass layer without isolating the glass parent */
+      transform: translateZ(0);
     }
   }
 

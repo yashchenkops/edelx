@@ -82,7 +82,6 @@ const articles = [
       gsap.set(cards, {
         opacity: 0,
         y: 36,
-        filter: 'blur(8px)',
       })
     }
 
@@ -98,7 +97,13 @@ const articles = [
     const playIn = () => {
       if (reduced) {
         if (cards.length) {
-          gsap.to(cards, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+          gsap.to(cards, {
+            opacity: 1,
+            y: 0,
+            duration: 0.25,
+            overwrite: true,
+            onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
+          })
         }
         if (decorations.length) {
           gsap.to(decorations, {
@@ -116,16 +121,17 @@ const articles = [
       if (cards.length) {
         gsap.fromTo(
           cards,
-          { opacity: 0, y: 36, filter: 'blur(8px)' },
+          { opacity: 0, y: 36 },
           {
             opacity: 1,
             y: 0,
-            filter: 'blur(0px)',
             duration: 0.7,
             delay: 0.18,
             stagger: 0.1,
             ease: 'power3.out',
             overwrite: true,
+            // Inline transform kills backdrop-filter — clear after entrance
+            onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
           },
         )
       }
@@ -163,7 +169,6 @@ const articles = [
         gsap.to(cards, {
           opacity: 0,
           y: -16,
-          filter: 'blur(6px)',
           duration: reduced ? 0.2 : 0.28,
           stagger: 0.04,
           ease: 'power2.in',
@@ -260,7 +265,6 @@ const articles = [
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
-    isolation: isolate;
 
     @media (min-width: 1201px) {
       padding-right: 180px;

@@ -10,8 +10,10 @@ gsap.registerPlugin(SplitText)
 const NAV_LINK_SELECTOR = '[data-nav-link]'
 const SLIDE_SELECTOR = '[data-slide]'
 const TEXT_SELECTOR = '.section-title, .section-subtitle'
+/* Do not target glass parents (.hero__illustration, .faq__decoration):
+   transform/filter/opacity on ancestors kill backdrop-filter. */
 const VISUAL_SELECTOR =
-  '.page-section__decor, .hero__illustration, .about__illustration, .review__slider, .faq__decoration, .news__decoration'
+  '.page-section__decor, .hero__currency, .about__illustration, .review__slider, .news__decoration'
 const TABLET_BREAKPOINT = 1024
 
 const PARALLAX = {
