@@ -171,10 +171,27 @@ export const initPageSlider = () => {
 
   const reduced = prefersReducedMotion()
 
+  // Keep the hashed slide on reload; don't let the browser restore scroll / fire wheel.
+  if ('scrollRestoration' in history) {
+    history.scrollRestoration = 'manual'
+  }
+  window.scrollTo(0, 0)
+
+  const hash = window.location.hash.replace(/^#/, '')
+  const initialSlide = hash
+    ? Math.max(
+        0,
+        slides.findIndex(
+          (slide) => slide.dataset.hash === hash || slide.dataset.slide === hash,
+        ),
+      )
+    : 0
+
   const swiper = new Swiper(slider, {
     modules: [Mousewheel, Keyboard, HashNavigation, EffectCreative],
     direction: 'vertical',
     speed: reduced ? 450 : 1000,
+    initialSlide,
     slidesPerView: 1,
     watchSlidesProgress: true,
     simulateTouch: false,
@@ -203,9 +220,10 @@ export const initPageSlider = () => {
         }),
     hashNavigation: {
       watchState: true,
-      replaceState: false,
+      replaceState: true,
     },
     mousewheel: {
+      enabled: false,
       forceToAxis: true,
       releaseOnEdges: false,
     },
@@ -215,10 +233,20 @@ export const initPageSlider = () => {
     },
     on: {
       init: (swiperInstance) => {
+        // Re-assert hash slide in case modules moved us during boot
+        if (swiperInstance.activeIndex !== initialSlide) {
+          swiperInstance.slideTo(initialSlide, 0, false)
+        }
+
         updateActiveNav(slides, swiperInstance.activeIndex)
         swiperInstance.slides.forEach((slide) => {
           if (slide instanceof HTMLElement) applySlideParallax(slide, slide.progress)
         })
+
+        // Ignore residual wheel/trackpad events from reload for a moment
+        window.setTimeout(() => {
+          swiperInstance.mousewheel?.enable?.()
+        }, 350)
 
         if (reduced) return
 

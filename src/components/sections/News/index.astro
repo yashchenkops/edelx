@@ -130,7 +130,6 @@ const articles = [
             stagger: 0.1,
             ease: 'power3.out',
             overwrite: true,
-            // Inline transform kills backdrop-filter — clear after entrance
             onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
           },
         )
@@ -232,7 +231,7 @@ const articles = [
     }
   }
 
-  .news__title {
+  .section-title {
     max-width: 666px;
     margin-bottom: 30px;
   }
