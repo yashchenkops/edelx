@@ -132,9 +132,20 @@ const articles = [
       top: 50%;
       right: -35px;
       transform: translateY(-50%);
-      
-      .button--glass {
-        padding: 30px 35px !important;
+
+      :global(.button--glass) {
+        padding: 30px 35px;
+        background: #0d62b8;
+        backdrop-filter: none;
+        -webkit-backdrop-filter: none;
+
+        &:hover {
+          background: #1270cc;
+        }
+
+        &:active {
+          background: #0a56a0;
+        }
       }
     }
   }

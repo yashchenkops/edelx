@@ -1,23 +1,150 @@
 ---
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
+import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 ---
 
 <Section class="terms-and-conditions" slide="terms-conditions">
   <div class="terms-and-conditions__inner">
-    <SectionTitle>Terms and Conditions</SectionTitle>
+    <div class="terms-and-conditions__content">
+      <SectionTitle>Terms and Conditions</SectionTitle>
+      <SectionSubtitle>The main rules and regulations that our company adheres to.</SectionSubtitle>
+    </div>
+    <div class="terms-and-conditions__scroll-wrap">
+      <div class="terms-and-conditions__list" data-terms-scroll>
+        <p class="terms-and-conditions__list-title">SECTION 1: Introduction</p>
+
+        <p class="terms-and-conditions__list-text">1.1. These Terms and Conditions ("Terms") govern your access to and use of the website, mobile applications, and all online services (collectively, the "Service") provided by Djooky Finance Limited, a company incorporated under the laws of British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at: 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA.</p>
+
+        <p class="terms-and-conditions__list-text">1.2. Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967. The Company operates under the brand name Tokenum.</p>
+
+        <p class="terms-and-conditions__list-text">1.3. By accessing, registering for, or using the Service, you acknowledge that you have read, understood, and agree to be legally bound by these Terms, as well as any additional terms, policies, or notices expressly incorporated herein by reference, including the Privacy Policy, Risk Disclosure, and AML/CTF Policy. If you do not agree to these Terms in their entirety, you must not access or use the Service.</p>
+
+        <p class="terms-and-conditions__list-text">1.4. Djooky Finance Limited is committed to operating in full compliance with all applicable Canadian laws and regulations, including but not limited to:</p>
+        <ul class="terms-and-conditions__list-ul">
+          <li>The Proceeds of Crime (Money Laundering) and Terrorist Financing Act (PCMLTFA);</li>
+          <li>Regulations and guidance issued by FINTRAC;</li>
+          <li>Applicable provincial laws and consumer protection regulations of British Columbia.</li>
+        </ul>
+
+        <p class="terms-and-conditions__list-text">1.5. The Service is intended exclusively for individual clients (natural persons). The Company provides services related to the exchange of fiat currency for digital assets and vice versa, as well as the transfer of digital assets. Djooky Finance Limited does not provide investment advice, tax advice, or discretionary portfolio management.</p>
+
+        <p class="terms-and-conditions__list-text">1.6. The Company prohibits the use of the Service by residents or citizens of jurisdictions subject to international sanctions, as well as by any individuals or entities appearing on applicable global sanctions lists. These restricted categories include, but are not limited to, parties identified on the Consolidated Canadian Autonomous Sanctions List administered by Global Affairs Canada, the OSFI Consolidated List, the United Nations Security Council Consolidated Sanctions List, and the U.S. OFAC Specially Designated Nationals (SDN) List and other U.S. sanctions lists. Furthermore, prohibitions extend to parties on the UK Sanctions List maintained by the Office of Financial Sanctions Implementation (OFSI), the European Union Consolidated Financial Sanctions List, and any individuals, entities, or jurisdictions designated as high-risk or non-cooperative by the Financial Action Task Force (FATF). The Company reserves the right to immediately deny or terminate access to the Service for any user matching these criteria or based on internal risk assessments and compliance policies.</p>
+
+        <p class="terms-and-conditions__list-text">1.7. Registration with FINTRAC as an MSB does not constitute an endorsement or a license from a securities regulator. Use of the Service carries significant risk, and you should only use funds that you can afford to lose.</p>
+      </div>
+    </div>
   </div>
 </Section>
+
+<script>
+  import { initPageSlider } from '@/scripts/page-slider.ts'
+
+  const el = document.querySelector<HTMLElement>('[data-terms-scroll]')
+  const slider = document.querySelector<HTMLElement>('.page-slider')
+  if (el && slider) {
+    el.addEventListener('wheel', (event) => {
+      const { scrollTop, scrollHeight, clientHeight } = el
+      const atTop = scrollTop === 0 && event.deltaY < 0
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 1 && event.deltaY > 0
+      if (!atTop && !atBottom) {
+        event.stopPropagation()
+      }
+    }, { passive: false, capture: true })
+  }
+</script>
 
 <style lang="scss">
   .terms-and-conditions__inner {
     position: relative;
     display: flex;
     align-items: center;
-    justify-content: center;
+    gap: clamp(rem(20px), 3vw, rem(48px));
   }
 
-  .terms-and-conditions__title {
-    max-width: 666px;
+  .terms-and-conditions__content {
+    flex: 0 0 45%;
+    max-width: 45%;
+    min-width: 0;
+  }
+
+  .terms-and-conditions__scroll-wrap {
+    position: relative;
+    flex: 0 0 48%;
+    max-width: 48%;
+    min-width: 0;
+    mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 10%,
+      #000 88%,
+      transparent 100%
+    );
+    -webkit-mask-image: linear-gradient(
+      180deg,
+      transparent 0%,
+      #000 10%,
+      #000 88%,
+      transparent 100%
+    );
+  }
+
+  .terms-and-conditions__list {
+    max-height: 70vh;
+    overflow-y: auto;
+    padding: 72px 4px;
+    scrollbar-width: none;
+
+    &::-webkit-scrollbar {
+      display: none;
+    }
+  }
+
+  .terms-and-conditions__list-title {
+    font-size: clamp(rem(13px), 1vw, rem(16px));
+    line-height: 1.4;
+    font-weight: 500;
+    text-transform: capitalize;
+    margin-bottom: 16px;
+    color: var(--color-text);
+  }
+
+  .terms-and-conditions__list-text {
+    font-size: clamp(rem(11px), 0.9vw, rem(14px));
+    line-height: 1.7;
+    font-weight: 200;
+    text-transform: capitalize;
+    color: var(--color-text);
+    opacity: 0.75;
+    margin-bottom: 12px;
+
+    &:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .terms-and-conditions__list-ul {
+    list-style: none;
+    padding: 0 0 0 16px;
+    margin: 0 0 12px;
+
+    li {
+      position: relative;
+      font-size: clamp(rem(11px), 0.9vw, rem(14px));
+      line-height: 1.7;
+      font-weight: 200;
+      text-transform: capitalize;
+      color: var(--color-text);
+      opacity: 0.75;
+      padding-left: 12px;
+      margin-bottom: 4px;
+
+      &::before {
+        content: '—';
+        position: absolute;
+        left: 0;
+        opacity: 0.5;
+      }
+    }
   }
 </style>
