@@ -1,16 +1,20 @@
 import Swiper from 'swiper'
-import { Mousewheel, Keyboard, HashNavigation } from 'swiper/modules'
+import { Mousewheel, Keyboard, HashNavigation, EffectCreative } from 'swiper/modules'
 import 'swiper/css'
+import 'swiper/css/effect-creative'
 
 const NAV_LINK_SELECTOR = '[data-nav-link]'
 const SLIDE_SELECTOR = '[data-slide]'
 const TABLET_BREAKPOINT = 1024
 
 const PARALLAX = {
-  decor: 0.42,
-  title: 0.28,
-  content: 0.14,
+  decor: 0.5,
+  title: 0.32,
+  content: 0.16,
 }
+
+const prefersReducedMotion = () =>
+  window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
 const isTouchSwipeEnabled = () =>
   window.matchMedia(`(max-width: ${TABLET_BREAKPOINT}px)`).matches ||
@@ -33,8 +37,8 @@ const setLayerMotion = (
   duration?: number,
 ) => {
   const translateY = progress * 100 * factor
-  const opacity = 1 - Math.min(Math.abs(progress) * opacityFalloff, 0.8)
-  const scale = 1 - Math.min(Math.abs(progress) * 0.06, 0.06)
+  const opacity = 1 - Math.min(Math.abs(progress) * opacityFalloff, 0.85)
+  const scale = 1 - Math.min(Math.abs(progress) * 0.08, 0.08)
 
   element.style.transform = `translate3d(0, ${translateY}%, 0) scale(${scale})`
   element.style.opacity = `${opacity}`
@@ -50,11 +54,15 @@ const applySlideParallax = (slideEl: HTMLElement, progress: number, duration?: n
   const inner = slideEl.querySelector<HTMLElement>('.page-section__inner')
 
   if (decor) setLayerMotion(decor, progress, PARALLAX.decor, 0.45, duration)
-  if (title) setLayerMotion(title, progress, PARALLAX.title, 0.65, duration)
+  if (title) setLayerMotion(title, progress, PARALLAX.title, 0.7, duration)
 
   inner?.querySelectorAll<HTMLElement>(':scope > *:not(.section-title)').forEach((element) => {
-    setLayerMotion(element, progress, PARALLAX.content, 0.85, duration)
+    setLayerMotion(element, progress, PARALLAX.content, 0.9, duration)
   })
+
+  const absProgress = Math.min(Math.abs(progress), 1)
+  slideEl.style.setProperty('--slide-progress', `${absProgress}`)
+  slideEl.style.filter = `blur(${absProgress * 10}px) saturate(${1 - absProgress * 0.25})`
 }
 
 export const initPageSlider = () => {
@@ -64,14 +72,38 @@ export const initPageSlider = () => {
   const slides = Array.from(slider.querySelectorAll<HTMLElement>(SLIDE_SELECTOR))
   if (!slides.length) return
 
+  const reduced = prefersReducedMotion()
+
   const swiper = new Swiper(slider, {
-    modules: [Mousewheel, Keyboard, HashNavigation],
+    modules: [Mousewheel, Keyboard, HashNavigation, EffectCreative],
     direction: 'vertical',
-    speed: 1000,
+    speed: reduced ? 450 : 1150,
     slidesPerView: 1,
     watchSlidesProgress: true,
     simulateTouch: false,
     allowTouchMove: isTouchSwipeEnabled(),
+    ...(reduced
+      ? {}
+      : {
+          effect: 'creative',
+          creativeEffect: {
+            limitProgress: 1,
+            perspective: true,
+            shadowPerProgress: false,
+            prev: {
+              translate: [0, '-12%', -280],
+              rotate: [12, 0, -2],
+              scale: 0.86,
+              opacity: 0,
+            },
+            next: {
+              translate: [0, '108%', -40],
+              rotate: [-7, 0, 2],
+              scale: 1.06,
+              opacity: 0,
+            },
+          },
+        }),
     hashNavigation: {
       watchState: true,
       replaceState: false,
@@ -102,6 +134,9 @@ export const initPageSlider = () => {
         swiperInstance.slides.forEach((slide) => {
           if (!(slide instanceof HTMLElement)) return
           applySlideParallax(slide, slide.progress, duration)
+          slide.style.transitionDuration = `${duration}ms`
+          slide.style.transitionProperty = 'transform, opacity, filter'
+          slide.style.transitionTimingFunction = 'cubic-bezier(0.22, 1, 0.36, 1)'
         })
       },
     },
