@@ -147,6 +147,88 @@ const shapeIds = ['a', 'b'];
 
 <script>
   import '@/scripts/faq-accordion.ts'
+  import { gsap } from 'gsap'
+
+  const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
+
+  if (slide && items.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let played = false
+
+    gsap.set(items, {
+      opacity: 0,
+      y: 36,
+      x: 64,
+      rotateX: 16,
+      rotateY: -6,
+      scale: 0.94,
+      filter: 'blur(10px)',
+    })
+
+    const playIn = () => {
+      if (reduced) {
+        gsap.to(items, { opacity: 1, duration: 0.25, overwrite: true })
+        return
+      }
+
+      gsap.fromTo(
+        items,
+        {
+          opacity: 0,
+          y: 40,
+          x: 72,
+          rotateX: 20,
+          rotateY: -8,
+          scale: 0.92,
+          filter: 'blur(12px)',
+        },
+        {
+          opacity: 1,
+          y: 0,
+          x: 0,
+          rotateX: 0,
+          rotateY: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.75,
+          delay: 0.1,
+          stagger: 0.09,
+          ease: 'back.out(1.5)',
+          overwrite: true,
+        },
+      )
+      played = true
+    }
+
+    const playOut = () => {
+      if (!played) return
+      gsap.to(items, {
+        opacity: 0,
+        y: -16,
+        x: 28,
+        rotateX: -8,
+        scale: 0.97,
+        filter: 'blur(8px)',
+        duration: reduced ? 0.2 : 0.28,
+        stagger: 0.04,
+        ease: 'power2.in',
+        overwrite: true,
+      })
+    }
+
+    const sync = () => {
+      if (slide.classList.contains('swiper-slide-active')) playIn()
+      else playOut()
+    }
+
+    new MutationObserver(sync).observe(slide, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    sync()
+  }
 </script>
 
 <style lang="scss">
@@ -239,10 +321,14 @@ const shapeIds = ['a', 'b'];
     display: flex;
     flex-direction: column;
     gap: clamp(rem(22px), 3vw, rem(40px));
+    perspective: 900px;
   }
 
   .faq-accordion__item {
     min-width: 0;
+    transform-origin: 80% 50%;
+    transform-style: preserve-3d;
+    will-change: transform, opacity, filter;
   }
 
   .faq-accordion__trigger {

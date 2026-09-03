@@ -1,16 +1,22 @@
 import Swiper from 'swiper'
 import { Mousewheel, Keyboard, HashNavigation, EffectCreative } from 'swiper/modules'
+import { gsap } from 'gsap'
+import { SplitText } from 'gsap/SplitText'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
 
+gsap.registerPlugin(SplitText)
+
 const NAV_LINK_SELECTOR = '[data-nav-link]'
 const SLIDE_SELECTOR = '[data-slide]'
+const TEXT_SELECTOR = '.section-title, .section-subtitle'
+const VISUAL_SELECTOR =
+  '.page-section__decor, .hero__illustration, .about__illustration, .review__slider, .faq__decoration, .news__decoration'
 const TABLET_BREAKPOINT = 1024
 
 const PARALLAX = {
   decor: 0.5,
-  title: 0.32,
-  content: 0.16,
+  visual: 0.18,
 }
 
 const prefersReducedMotion = () =>
@@ -50,19 +56,106 @@ const setLayerMotion = (
 
 const applySlideParallax = (slideEl: HTMLElement, progress: number, duration?: number) => {
   const decor = slideEl.querySelector<HTMLElement>('.page-section__decor')
-  const title = slideEl.querySelector<HTMLElement>('.section-title')
-  const inner = slideEl.querySelector<HTMLElement>('.page-section__inner')
-
   if (decor) setLayerMotion(decor, progress, PARALLAX.decor, 0.45, duration)
-  if (title) setLayerMotion(title, progress, PARALLAX.title, 0.7, duration)
-
-  inner?.querySelectorAll<HTMLElement>(':scope > *:not(.section-title)').forEach((element) => {
-    setLayerMotion(element, progress, PARALLAX.content, 0.9, duration)
-  })
 
   const absProgress = Math.min(Math.abs(progress), 1)
-  slideEl.style.setProperty('--slide-progress', `${absProgress}`)
-  slideEl.style.filter = `blur(${absProgress * 10}px) saturate(${1 - absProgress * 0.25})`
+
+  slideEl.querySelectorAll<HTMLElement>(VISUAL_SELECTOR).forEach((element) => {
+    if (element === decor) return
+    setLayerMotion(element, progress, PARALLAX.visual, 0.55, duration)
+    element.style.filter = `blur(${absProgress * 10}px) saturate(${1 - absProgress * 0.25})`
+  })
+}
+
+type SplitCache = {
+  chars: Element[]
+}
+
+const splitCache = new WeakMap<HTMLElement, SplitCache>()
+
+const getChars = (el: HTMLElement) => {
+  const cached = splitCache.get(el)
+  if (cached) return cached.chars
+
+  const split = SplitText.create(el, {
+    type: 'words,chars',
+    aria: 'auto',
+  })
+
+  gsap.set(el, { perspective: 400 })
+  splitCache.set(el, { chars: split.chars })
+  return split.chars
+}
+
+const charStagger = (count: number) =>
+  count > 42 ? { amount: 0.42 } : 0.01
+
+const animateCharsIn = (chars: Element[], delay = 0) => {
+  gsap.fromTo(
+    chars,
+    {
+      opacity: 0,
+      scale: 0,
+      y: 80,
+      rotationX: 180,
+    },
+    {
+      duration: 0.8,
+      opacity: 1,
+      scale: 1,
+      y: 0,
+      rotationX: 0,
+      transformOrigin: '0% 50% -50',
+      ease: 'back',
+      stagger: charStagger(chars.length),
+      delay,
+      overwrite: true,
+    },
+  )
+}
+
+const animateCharsOut = (chars: Element[]) => {
+  gsap.to(chars, {
+    duration: 0.45,
+    opacity: 0,
+    scale: 0,
+    y: -36,
+    rotationX: -120,
+    transformOrigin: '0% 50% -50',
+    ease: 'back.in',
+    stagger: charStagger(chars.length),
+    overwrite: true,
+  })
+}
+
+const setCharsState = (slideEl: HTMLElement, visible: boolean) => {
+  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+    const chars = getChars(el)
+    gsap.set(chars, {
+      opacity: visible ? 1 : 0,
+      scale: visible ? 1 : 0,
+      y: visible ? 0 : 80,
+      rotationX: visible ? 0 : 180,
+      transformOrigin: '0% 50% -50',
+    })
+  })
+}
+
+const animateSlideText = (slideEl: HTMLElement, direction: 'in' | 'out', delay = 0) => {
+  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+    const chars = getChars(el)
+    if (!chars.length) return
+    if (direction === 'in') animateCharsIn(chars, delay)
+    else animateCharsOut(chars)
+  })
+}
+
+const prepareTextSplits = async (slides: HTMLElement[], activeIndex: number) => {
+  await document.fonts.ready
+
+  slides.forEach((slide, index) => {
+    setCharsState(slide, index === activeIndex)
+  })
 }
 
 export const initPageSlider = () => {
@@ -122,8 +215,22 @@ export const initPageSlider = () => {
         swiperInstance.slides.forEach((slide) => {
           if (slide instanceof HTMLElement) applySlideParallax(slide, slide.progress)
         })
+
+        if (reduced) return
+
+        void prepareTextSplits(slides, swiperInstance.activeIndex).then(() => {
+          const active = slides[swiperInstance.activeIndex]
+          if (active) animateSlideText(active, 'in', 0.12)
+        })
       },
       slideChange: ({ activeIndex }) => updateActiveNav(slides, activeIndex),
+      slideChangeTransitionStart: (swiperInstance) => {
+        if (reduced) return
+        const prev = swiperInstance.slides[swiperInstance.previousIndex]
+        const next = swiperInstance.slides[swiperInstance.activeIndex]
+        if (prev instanceof HTMLElement) animateSlideText(prev, 'out')
+        if (next instanceof HTMLElement) animateSlideText(next, 'in', 0.16)
+      },
       progress: (swiperInstance) => {
         swiperInstance.slides.forEach((slide) => {
           if (!(slide instanceof HTMLElement)) return
@@ -135,7 +242,7 @@ export const initPageSlider = () => {
           if (!(slide instanceof HTMLElement)) return
           applySlideParallax(slide, slide.progress, duration)
           slide.style.transitionDuration = `${duration}ms`
-          slide.style.transitionProperty = 'transform, opacity, filter'
+          slide.style.transitionProperty = 'transform, opacity'
           slide.style.transitionTimingFunction = 'cubic-bezier(0.22, 1, 0.36, 1)'
         })
       },
