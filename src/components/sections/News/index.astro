@@ -66,12 +66,23 @@ const articles = [
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 1200px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: clamp(rem(32px), 5vw, rem(56px));
+    }
   }
 
   .news__content {
     flex: 0 1 666px;
     max-width: 666px;
     min-width: 0;
+
+    @media (max-width: 1200px) {
+      flex: none;
+      max-width: 100%;
+    }
   }
 
   .news__title {
@@ -85,10 +96,21 @@ const articles = [
     display: flex;
     flex-direction: column;
     gap: 26px;
+
+    @media (max-width: 1200px) {
+      max-width: 100%;
+    }
+
+    @media (max-width: 768px) {
+      gap: 16px;
+    }
   }
 
   .news__article {
     position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
     gap: 24px;
     padding: 35px 40px;
     border-radius: 20px;
@@ -97,6 +119,17 @@ const articles = [
     -webkit-backdrop-filter: blur(5px);
     box-shadow: 0 8px 28px rgb(0 0 0 / 18%);
     isolation: isolate;
+
+    @media (min-width: 1201px) {
+      padding-right: 180px;
+    }
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 20px;
+      padding: 24px 24px 28px;
+    }
 
     &::before {
       content: '';
@@ -124,6 +157,12 @@ const articles = [
 
     &-info {
       max-width: 420px;
+      position: relative;
+      z-index: 1;
+
+      @media (max-width: 768px) {
+        max-width: 100%;
+      }
     }
 
     &-button {
@@ -132,12 +171,27 @@ const articles = [
       top: 50%;
       right: -35px;
       transform: translateY(-50%);
+      z-index: 1;
+      flex-shrink: 0;
+
+      @media (max-width: 1200px) {
+        position: static;
+        top: auto;
+        right: auto;
+        transform: none;
+        flex-shrink: 0;
+      }
 
       :global(.button--glass) {
         padding: 30px 35px;
         background: #0d62b8;
         backdrop-filter: none;
         -webkit-backdrop-filter: none;
+
+        @media (max-width: 768px) {
+          padding: 20px 28px;
+          font-size: rem(14px);
+        }
 
         &:hover {
           background: #1270cc;
@@ -170,11 +224,27 @@ const articles = [
     pointer-events: none;
 
     &--edit-machine {
-      bottom: -170px;
-      left: 45%;
+      bottom: -200px;
+      left: 40%;
       transform: translateX(-50%);
       max-width: 245px;
       z-index: 1;
+
+      @media (max-width: 1200px) {
+        bottom: -100px;
+        left: 50%;
+        top: auto;
+        right: auto;
+        transform: translateX(-50%);
+        max-width: 160px;
+        opacity: 0.7;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 120px;
+        bottom: -70px;
+        opacity: 0.55;
+      }
     }
 
     &--hashtag {
@@ -182,6 +252,21 @@ const articles = [
       right: 330px;
       max-width: 145px;
       z-index: -1;
+
+      @media (max-width: 1200px) {
+        top: -70px;
+        right: 80px;
+        left: auto;
+        max-width: 100px;
+        opacity: 0.55;
+      }
+
+      @media (max-width: 768px) {
+        max-width: 70px;
+        top: -45px;
+        right: 40px;
+        opacity: 0.4;
+      }
     }
   }
 </style>
