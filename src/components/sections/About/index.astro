@@ -62,11 +62,21 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     align-items: center;
     justify-content: center;
     gap: 20px;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: clamp(rem(48px), 8vw, rem(80px));
+      align-items: flex-start;
+    }
   }
 
   .about__content {
     max-width: 666px;
     flex-shrink: 1;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
   }
 
   .about__content-title {
@@ -98,12 +108,38 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     flex-shrink: 0.5;
     gap: 18px;
 
+    @media (max-width: 768px) {
+      align-self: center;
+      gap: 10px;
+
+      svg {
+        width: auto;
+        height: auto;
+      }
+
+      .item-1, .item-4 {
+        width: clamp(100px, 25vw, 180px);
+      }
+
+      .item-2, .item-3 {
+        width: clamp(60px, 15vw, 110px);
+      }
+    }
+
     .item-1 {
       margin-right: -48px;
+
+      @media (max-width: 768px) {
+        margin-right: clamp(-30px, -6vw, -18px);
+      }
     }
 
     .item-4 {
       margin-left: -48px;
+
+      @media (max-width: 768px) {
+        margin-left: clamp(-30px, -6vw, -18px);
+      }
     }
   }
 
