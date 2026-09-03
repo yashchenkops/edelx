@@ -128,12 +128,24 @@ const slides = [
     justify-content: center;
     flex-wrap: wrap;
     gap: clamp(rem(16px), 3vw, rem(40px));
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: rem(100px);
+    }
   }
 
   .review__content {
     max-width: 666px;
     flex: 1 1 260px;
     min-width: 0;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+      flex: none;
+      width: 100%;
+    }
   }
 
   .review__title {
@@ -148,6 +160,14 @@ const slides = [
     min-width: 0;
     container-type: inline-size;
     container-name: review-slider;
+
+    @media (max-width: 768px) {
+      flex: none;
+      width: min(85%, 360px);
+      max-width: 100%;
+      align-self: center;
+      margin-bottom: rem(60px);
+    }
   }
 
   .review__slider-bg {
