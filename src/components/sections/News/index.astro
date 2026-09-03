@@ -189,26 +189,26 @@ const articles = [
       }
     }
 
-    // ── Mouse parallax on decorations (CSS vars — no transform fight) ──
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    // ── Mouse parallax on decorations (desktop only) ───────────────
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const desktopMq = window.matchMedia('(min-width: 1024px)')
     const decorationLayers = Array.from(
       document.querySelectorAll<HTMLElement>('.news__decoration'),
     )
 
-    const canParallax = !reduced && finePointer && decorationLayers.length > 0
+    const parallaxEnabled = () =>
+      !reduced && finePointer.matches && desktopMq.matches && decorationLayers.length > 0
 
-    const parallaxProxies = canParallax
-      ? decorationLayers.map((el, index) => {
-          const proxy = { x: 0, y: 0 }
-          const max = index === 0 ? 22 : 14
-          const apply = () => {
-            el.style.setProperty('--parallax-x', `${proxy.x}px`)
-            el.style.setProperty('--parallax-y', `${proxy.y}px`)
-          }
-          apply()
-          return { el, proxy, max, apply }
-        })
-      : []
+    const parallaxProxies = decorationLayers.map((el, index) => {
+      const proxy = { x: 0, y: 0 }
+      const max = index === 0 ? 22 : 14
+      const apply = () => {
+        el.style.setProperty('--parallax-x', `${proxy.x}px`)
+        el.style.setProperty('--parallax-y', `${proxy.y}px`)
+      }
+      apply()
+      return { el, proxy, max, apply }
+    })
 
     const resetParallax = () => {
       parallaxProxies.forEach(({ proxy, apply }) => {
@@ -224,7 +224,7 @@ const articles = [
     }
 
     const onPointerMove = (event: PointerEvent) => {
-      if (!canParallax || !isActive) return
+      if (!parallaxEnabled() || !isActive) return
 
       const rect = slide.getBoundingClientRect()
       if (!rect.width || !rect.height) return
@@ -246,9 +246,11 @@ const articles = [
       })
     }
 
-    if (canParallax) {
-      // window — slide can miss moves over overflow / stacking gaps
+    if (decorationLayers.length && !reduced) {
       window.addEventListener('pointermove', onPointerMove)
+      desktopMq.addEventListener('change', () => {
+        if (!desktopMq.matches) resetParallax()
+      })
     }
 
     const sync = () => {

@@ -109,7 +109,8 @@ const SY = 1 / 509;
 
   if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
-    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)')
+    const desktopMq = window.matchMedia('(min-width: 1024px)')
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
@@ -176,21 +177,22 @@ const SY = 1 / 509;
       })
     }
 
-    // ── Mouse parallax on SVG + glass (same motion, no parent transform) ──
+    // ── Mouse parallax on SVG + glass (desktop only) ───────────────
     const PARALLAX_MAX = 16
     const parallaxEls = [
       document.querySelector<HTMLElement>('.hero__glass'),
       document.querySelector<HTMLElement>('.hero__shape'),
     ].filter(Boolean) as HTMLElement[]
 
-    const canParallax = parallaxEls.length > 0 && !reduced && finePointer
+    const parallaxEnabled = () =>
+      parallaxEls.length > 0 && !reduced && finePointer.matches && desktopMq.matches
 
-    const xTos = canParallax
-      ? parallaxEls.map((el) => gsap.quickTo(el, 'x', { duration: 0.7, ease: 'power3.out' }))
-      : []
-    const yTos = canParallax
-      ? parallaxEls.map((el) => gsap.quickTo(el, 'y', { duration: 0.7, ease: 'power3.out' }))
-      : []
+    const xTos = parallaxEls.map((el) =>
+      gsap.quickTo(el, 'x', { duration: 0.7, ease: 'power3.out' }),
+    )
+    const yTos = parallaxEls.map((el) =>
+      gsap.quickTo(el, 'y', { duration: 0.7, ease: 'power3.out' }),
+    )
 
     const resetParallax = () => {
       xTos.forEach((to) => to(0))
@@ -198,7 +200,7 @@ const SY = 1 / 509;
     }
 
     const onPointerMove = (event: PointerEvent) => {
-      if (!canParallax || !isActive) return
+      if (!parallaxEnabled() || !isActive) return
 
       const rect = slide.getBoundingClientRect()
       if (!rect.width || !rect.height) return
@@ -212,9 +214,12 @@ const SY = 1 / 509;
       yTos.forEach((to) => to(y))
     }
 
-    if (canParallax) {
+    if (parallaxEls.length && !reduced) {
       slide.addEventListener('pointermove', onPointerMove)
       slide.addEventListener('pointerleave', resetParallax)
+      desktopMq.addEventListener('change', () => {
+        if (!desktopMq.matches) resetParallax()
+      })
     }
 
     const sync = () => {
