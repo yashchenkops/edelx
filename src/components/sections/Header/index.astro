@@ -23,6 +23,10 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
   .logo__img {
     max-width: #{rem(200px)};
 
+    @media (max-width: 768px) {
+      max-width: #{rem(140px)};
+    }
+
     &--light {
       display: none;
     }

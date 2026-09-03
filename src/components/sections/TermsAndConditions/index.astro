@@ -7,7 +7,7 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 <Section class="terms-and-conditions" slide="terms-conditions">
   <div class="terms-and-conditions__inner">
     <div class="terms-and-conditions__content">
-      <SectionTitle>Terms and Conditions</SectionTitle>
+      <SectionTitle>terms & Condition’s</SectionTitle>
       <SectionSubtitle>The main rules and regulations that our company adheres to.</SectionSubtitle>
     </div>
     <div class="terms-and-conditions__scroll-wrap">
@@ -38,17 +38,63 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 </Section>
 
 <script>
-  import { initPageSlider } from '@/scripts/page-slider.ts'
+  const updateFooterOffset = () => {
+    const footer = document.querySelector<HTMLElement>('.page-footer')
+    const inner = document.querySelector<HTMLElement>('.terms-and-conditions__inner')
+    if (!footer || !inner) return
+
+    const footerH = footer.getBoundingClientRect().height
+    const bottomOffset = footerH + 80
+    inner.style.setProperty('--footer-offset', `${bottomOffset}px`)
+  }
+
+  updateFooterOffset()
+
+  const slider = document.querySelector<HTMLElement>('.page-slider')
+  const footerWrap = document.querySelector<HTMLElement>('.footer__wrap')
+
+  if (slider) {
+    new MutationObserver(updateFooterOffset).observe(slider, {
+      subtree: true, attributeFilter: ['class'], childList: false
+    })
+  }
+
+  if (footerWrap) {
+    new MutationObserver(updateFooterOffset).observe(footerWrap, {
+      attributes: true, attributeFilter: ['class'], childList: false
+    })
+  }
+
+  window.addEventListener('resize', updateFooterOffset)
 
   const el = document.querySelector<HTMLElement>('[data-terms-scroll]')
-  const slider = document.querySelector<HTMLElement>('.page-slider')
-  if (el && slider) {
+
+  if (el) {
     el.addEventListener('wheel', (event) => {
       const { scrollTop, scrollHeight, clientHeight } = el
-      const atTop = scrollTop === 0 && event.deltaY < 0
+      const atTop    = scrollTop <= 0 && event.deltaY < 0
       const atBottom = scrollTop + clientHeight >= scrollHeight - 1 && event.deltaY > 0
+
       if (!atTop && !atBottom) {
         event.stopPropagation()
+        event.stopImmediatePropagation()
+      }
+    }, { passive: false, capture: true })
+
+    let touchStartY = 0
+    el.addEventListener('touchstart', (e) => {
+      touchStartY = e.touches[0].clientY
+    }, { passive: true })
+
+    el.addEventListener('touchmove', (e) => {
+      const dy = touchStartY - e.touches[0].clientY
+      const { scrollTop, scrollHeight, clientHeight } = el
+      const atTop    = scrollTop <= 0 && dy < 0
+      const atBottom = scrollTop + clientHeight >= scrollHeight - 1 && dy > 0
+
+      if (!atTop && !atBottom) {
+        e.stopPropagation()
+        e.stopImmediatePropagation()
       }
     }, { passive: false, capture: true })
   }
@@ -56,22 +102,62 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 
 <style lang="scss">
   .terms-and-conditions__inner {
+    --footer-offset: #{rem(240px)};
     position: relative;
     display: flex;
     align-items: center;
     gap: clamp(rem(20px), 3vw, rem(48px));
+
+    @media (max-width: 1024px) {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: rem(24px);
+      padding-top: rem(120px);
+      padding-bottom: var(--footer-offset, rem(240px));
+      box-sizing: border-box;
+      min-height: 100dvh;
+    }
+
+    @media (max-width: 768px) {
+      padding-top: rem(100px);
+      padding-bottom: var(--footer-offset, rem(260px));
+      gap: rem(20px);
+    }
   }
 
   .terms-and-conditions__content {
     flex: 0 0 45%;
     max-width: 45%;
     min-width: 0;
+    overflow: hidden;
+
+    @media (max-width: 1024px) {
+      flex: none;
+      max-width: 100%;
+      overflow: visible;
+    }
+  }
+
+  .section-title {
+    margin-bottom: rem(30px);
+
+    @media (max-width: 768px) {
+      margin-bottom: rem(10px);
+    }
+  }
+
+  .terms-and-conditions__content :global(.section-title) {
+    font-size: clamp(rem(36px), 4.5vw, rem(88px));
+
+    @media (max-width: 1024px) {
+      font-size: clamp(rem(36px), 8vw, rem(72px));
+    }
   }
 
   .terms-and-conditions__scroll-wrap {
     position: relative;
-    flex: 0 0 48%;
-    max-width: 48%;
+    flex: 0 0 42%;
+    max-width: 42%;
     min-width: 0;
     mask-image: linear-gradient(
       180deg,
@@ -87,6 +173,12 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
       #000 88%,
       transparent 100%
     );
+
+    @media (max-width: 1024px) {
+      flex: none;
+      max-width: min(100%, rem(560px));
+      width: min(100%, rem(560px));
+    }
   }
 
   .terms-and-conditions__list {
@@ -94,6 +186,16 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     overflow-y: auto;
     padding: 72px 4px;
     scrollbar-width: none;
+
+    @media (max-width: 1024px) {
+      max-height: calc(100dvh - var(--footer-offset, 240px) - rem(320px));
+      padding: 56px 4px;
+    }
+
+    @media (max-width: 768px) {
+      max-height: calc(100dvh - var(--footer-offset, 260px) - rem(300px));
+      padding: 20px 4px;
+    }
 
     &::-webkit-scrollbar {
       display: none;
