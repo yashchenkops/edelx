@@ -20,7 +20,13 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 </PageHeader>
 
 <style lang="scss">
+  .logo {
+    position: relative;
+    z-index: calc(v.$z-header + 20);
+  }
+
   .logo__img {
+    display: block;
     max-width: #{rem(200px)};
 
     @media (max-width: 768px) {

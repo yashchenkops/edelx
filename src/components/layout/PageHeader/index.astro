@@ -9,16 +9,14 @@ const { class: sectionClass = '', ...rest } = Astro.props;
 </header>
 
 <style lang="scss">
-  $page-width: 100%;
-  $page-padding-min: 30px;
-  $page-padding-max: 65px;
-
   .page-header {
     position: fixed;
     top: 64px;
     left: 0;
     width: 100%;
     z-index: v.$z-header;
+    padding-inline: clamp(1rem, 2vw, 3rem);
+    box-sizing: border-box;
 
     @media (max-width: 768px) {
       top: 24px;
@@ -29,10 +27,6 @@ const { class: sectionClass = '', ...rest } = Astro.props;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    width: min(
-      calc(100% - 2 * clamp(#{$page-padding-min}, 3vw, #{$page-padding-max})),
-      $page-width
-    );
-    margin-inline: auto;
+    width: 100%;
   }
 </style>
