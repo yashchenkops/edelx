@@ -1,0 +1,333 @@
+---
+const menuItems = [
+  { name: 'Main', slide: 'main' },
+  { name: 'About Us', slide: 'about-us' },
+  { name: 'Review', slide: 'review' },
+  { name: 'FAQ', slide: 'faq' },
+  { name: 'News', slide: 'news' },
+  { name: 'Terms & Conditions', slide: 'terms-conditions' },
+]
+---
+
+<!-- Burger button -->
+<button class="burger" type="button" aria-label="Open menu" aria-expanded="false" data-burger>
+  <span class="burger__icon" aria-hidden="true">
+    <span class="burger__row burger__row--1">
+      <span class="burger__dot"></span>
+      <span class="burger__line"></span>
+    </span>
+    <span class="burger__row burger__row--2">
+      <span class="burger__dot"></span>
+      <span class="burger__line"></span>
+    </span>
+    <span class="burger__row burger__row--3">
+      <span class="burger__dot"></span>
+      <span class="burger__line"></span>
+    </span>
+  </span>
+</button>
+
+<!-- Mobile drawer -->
+<div class="mob-menu" data-mob-menu aria-hidden="true">
+  <div class="mob-menu__backdrop" data-mob-menu-backdrop></div>
+  <div class="mob-menu__panel">
+    <nav class="mob-menu__nav">
+      <ul class="mob-menu__list">
+        {menuItems.map((item) => (
+          <li class="mob-menu__item">
+            <a
+              href={`#${item.slide}`}
+              class="mob-menu__link"
+              data-nav-link={item.slide}
+              data-mob-nav-link
+            >
+              {item.name}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </nav>
+
+    <div class="mob-menu__footer">
+      <button
+        type="button"
+        class="mob-theme-toggle"
+        data-theme-toggle
+        aria-label="Toggle color theme"
+      >
+        <span class="mob-theme-toggle__label" data-theme-label>Dark</span>
+        <span class="mob-theme-toggle__knob" aria-hidden="true"></span>
+      </button>
+
+      <div class="mob-menu__actions">
+        <a href="#" class="mob-menu__login">Log In</a>
+        <span class="mob-menu__divider"></span>
+        <a href="#" class="mob-menu__signup">Sign Up</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+  const burger = document.querySelector<HTMLButtonElement>('[data-burger]')
+  const menu = document.querySelector<HTMLElement>('[data-mob-menu]')
+  const backdrop = document.querySelector<HTMLElement>('[data-mob-menu-backdrop]')
+
+  const open = () => {
+    menu?.classList.add('is-open')
+    menu?.removeAttribute('aria-hidden')
+    burger?.setAttribute('aria-expanded', 'true')
+    burger?.classList.add('is-active')
+    document.body.style.overflow = 'hidden'
+  }
+
+  const close = () => {
+    menu?.classList.remove('is-open')
+    menu?.setAttribute('aria-hidden', 'true')
+    burger?.setAttribute('aria-expanded', 'false')
+    burger?.classList.remove('is-active')
+    document.body.style.overflow = ''
+  }
+
+  burger?.addEventListener('click', () => {
+    const isOpen = menu?.classList.contains('is-open')
+    isOpen ? close() : open()
+  })
+
+  backdrop?.addEventListener('click', close)
+
+  // close on nav link click
+  document.querySelectorAll('[data-mob-nav-link]').forEach((link) => {
+    link.addEventListener('click', close)
+  })
+
+  // ESC key
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') close()
+  })
+</script>
+
+<style lang="scss">
+  // ── Burger button ──────────────────────────────────────────────
+  .burger {
+    display: none;
+    flex-direction: column;
+    gap: 0;
+    padding: 6px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    color: var(--color-text);
+
+    @media (max-width: 1024px) {
+      display: flex;
+    }
+  }
+
+  .burger__icon {
+    display: flex;
+    flex-direction: column;
+    gap: 8px; // vertical gap between rows
+  }
+
+  .burger__row {
+    display: flex;
+    align-items: center;
+    gap: 8px; // horizontal gap between dot and line
+  }
+
+  .burger__dot {
+    flex-shrink: 0;
+    width: 4px;
+    height: 4px;
+    background: v.$blue;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
+  }
+
+  .burger__line {
+    width: 22px;
+    height: 4px;
+    background: #fff;
+    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, width 0.3s ease;
+
+    :global([data-theme='light']) & {
+      background: #111;
+    }
+  }
+
+  // Active (X) state
+  .burger.is-active {
+    .burger__row--1 {
+      .burger__dot { opacity: 0; }
+      .burger__line { transform: translateY(12px) rotate(45deg); }
+    }
+    .burger__row--2 {
+      .burger__dot { opacity: 0; }
+      .burger__line { opacity: 0; transform: scaleX(0); }
+    }
+    .burger__row--3 {
+      .burger__dot { opacity: 0; }
+      .burger__line { transform: translateY(-12px) rotate(-45deg); }
+    }
+  }
+
+  // ── Mobile drawer ──────────────────────────────────────────────
+  .mob-menu {
+    display: none;
+    position: fixed;
+    inset: 0;
+    z-index: calc(v.$z-header + 10);
+    pointer-events: none;
+
+    @media (max-width: 1024px) {
+      display: block;
+    }
+
+    &.is-open {
+      pointer-events: auto;
+    }
+  }
+
+  .mob-menu__backdrop {
+    position: absolute;
+    inset: 0;
+    background: rgb(0 0 0 / 55%);
+    opacity: 0;
+    transition: opacity 0.35s ease;
+    backdrop-filter: blur(4px);
+
+    .mob-menu.is-open & {
+      opacity: 1;
+    }
+  }
+
+  .mob-menu__panel {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: min(320px, 80vw);
+    background: rgb(10 10 18 / 95%);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-left: 1px solid rgb(255 255 255 / 8%);
+    display: flex;
+    flex-direction: column;
+    padding: 100px 40px 48px;
+    transform: translateX(100%);
+    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
+
+    .mob-menu.is-open & {
+      transform: translateX(0);
+    }
+
+    :global([data-theme='light']) & {
+      background: rgb(245 245 252 / 95%);
+      border-left-color: rgb(0 0 0 / 8%);
+    }
+  }
+
+  .mob-menu__nav {
+    flex: 1;
+  }
+
+  .mob-menu__list {
+    display: flex;
+    flex-direction: column;
+    gap: 28px;
+  }
+
+  .mob-menu__link {
+    font-size: rem(20px);
+    font-weight: 400;
+    color: var(--color-text);
+    opacity: 0.45;
+    transition: opacity 0.2s ease, transform 0.2s ease;
+    display: block;
+
+    &.is-active {
+      opacity: 1;
+      font-weight: 600;
+    }
+
+    &:hover {
+      opacity: 0.85;
+      transform: translateX(4px);
+    }
+  }
+
+  .mob-menu__footer {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .mob-menu__actions {
+    display: flex;
+    align-items: center;
+    gap: rem(18px);
+    color: var(--color-text);
+
+    a {
+      font-size: rem(15px);
+      transition: opacity 0.2s;
+      &:hover { opacity: 0.7; }
+    }
+  }
+
+  .mob-menu__login { order: 0; }
+  .mob-menu__signup { opacity: 0.5; order: 2; }
+
+  .mob-menu__divider {
+    display: block;
+    width: 2px;
+    height: 24px;
+    background: v.$blue;
+    order: 1;
+  }
+
+  // ── Mobile theme toggle ────────────────────────────────────────
+  .mob-theme-toggle {
+    --theme-toggle-height: #{rem(36px)};
+    --theme-toggle-knob: #{rem(28px)};
+    --theme-toggle-pad: #{rem(4px)};
+
+    display: inline-flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(12px);
+    min-width: rem(85px);
+    height: var(--theme-toggle-height);
+    padding-block: var(--theme-toggle-pad);
+    padding-inline: rem(14px) var(--theme-toggle-pad);
+    border: 1px solid var(--color-text);
+    border-radius: rem(999px);
+    background: transparent;
+    color: var(--color-text);
+    cursor: pointer;
+    transition: border-color v.$transition-base, color v.$transition-base, opacity v.$transition-base;
+
+    &[data-theme-state='light'] {
+      flex-direction: row-reverse;
+      padding-inline: var(--theme-toggle-pad) rem(14px);
+    }
+
+    &__label {
+      font-size: rem(14px);
+      font-weight: 500;
+      line-height: 1;
+      user-select: none;
+    }
+
+    &__knob {
+      flex-shrink: 0;
+      width: var(--theme-toggle-knob);
+      height: var(--theme-toggle-knob);
+      border-radius: v.$radius-round;
+      background-color: var(--color-text);
+      transition: background-color v.$transition-base;
+    }
+
+    &:hover { opacity: 0.8; }
+  }
+</style>

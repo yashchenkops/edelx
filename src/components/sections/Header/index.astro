@@ -1,6 +1,7 @@
 ---
 import PageHeader from '@/components/layout/PageHeader/index.astro';
 import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
+import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 ---
 
 <PageHeader>
@@ -8,11 +9,14 @@ import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
     <img class="logo__img logo__img--dark" src="src/assets/img/logo.webp" alt="logo">
     <img class="logo__img logo__img--light" src="src/assets/img/light/logo.webp" alt="logo">
   </a>
-  <ThemeToggle />
-  <div class="actions">
-    <a href="#" class="actions__login">Log In</a>
-    <a href="#" class="actions__signup">Sign Up</a>
+  <div class="header__desktop">
+    <ThemeToggle />
+    <div class="actions">
+      <a href="#" class="actions__login">Log In</a>
+      <a href="#" class="actions__signup">Sign Up</a>
+    </div>
   </div>
+  <BurgerMenu />
 </PageHeader>
 
 <style lang="scss">
@@ -24,12 +28,21 @@ import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
     }
   }
 
+  .header__desktop {
+    display: flex;
+    align-items: center;
+    gap: #{rem(24px)};
+
+    @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+
   .actions {
     display: flex;
     align-items: center;
     gap: #{rem(18px)};
     color: var(--color-text);
-    
 
     a {
       transition: opacity v.$transition-base, transform v.$transition-base;
@@ -55,7 +68,7 @@ import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
   }
 
   :global([data-theme='light']) {
-    .logo__img--dark { 
+    .logo__img--dark {
       display: none;
     }
 

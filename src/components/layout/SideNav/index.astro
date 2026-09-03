@@ -35,6 +35,10 @@ const menuItems = [
     z-index: v.$z-header;
     transform: translateY(-50%);
 
+    @media (max-width: 1024px) {
+      display: none;
+    }
+
     &__list {
       display: flex;
       flex-direction: column;
