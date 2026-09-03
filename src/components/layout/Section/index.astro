@@ -25,7 +25,7 @@ const slideId = slide ?? sectionClass;
 <style lang="scss">
   $page-width: 1792px;
   $page-padding-min: 30px;
-  $page-padding-max: 60px;
+  $page-padding-max: 65px;
 
   .page-section {
     display: flex;
@@ -50,7 +50,7 @@ const slideId = slide ?? sectionClass;
   .page-section__inner {
     position: relative;
     z-index: 1;
-    width: min(100% - clamp($page-padding-min, 2vw, $page-padding-max), $page-width);
+    width: min(100% - 2 * clamp($page-padding-min, 3vw, $page-padding-max), $page-width);
     margin-inline: auto;
   }
 

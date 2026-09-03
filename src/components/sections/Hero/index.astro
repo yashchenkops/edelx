@@ -99,10 +99,21 @@ const SY = 1 / 509;
     display: flex;
     align-items: center;
     justify-content: center;
+
+    @media (max-width: 768px) {
+      flex-direction: column;
+      gap: clamp(rem(70px), 8vw, rem(80px));
+      justify-content: center;
+      align-items: flex-start;
+    }
   }
 
   .hero__title {
     max-width: 666px;
+
+    @media (max-width: 768px) {
+      max-width: 100%;
+    }
   }
 
   .hero__illustration {
@@ -110,6 +121,11 @@ const SY = 1 / 509;
     width: min(100%, 829px);
     aspect-ratio: 829 / 509;
     isolation: isolate;
+
+    @media (max-width: 768px) {
+      width: min(100%, 560px);
+      align-self: center;
+    }
   }
 
   .hero__main {
