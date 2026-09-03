@@ -29,7 +29,6 @@ const {
     line-height: 1;
     text-transform: uppercase;
     color: var(--color-text);
-    perspective: 400px;
 
     &::before {
       content: '';
@@ -44,12 +43,13 @@ const {
 
     :global(.word) {
       display: inline-block;
-      white-space: nowrap;
+      overflow: clip;
+      vertical-align: top;
     }
 
-    :global(.char) {
-      display: inline-block;
-      transform-style: preserve-3d;
+    :global(.line) {
+      display: block;
+      overflow: clip;
     }
   }
 </style>

@@ -38,6 +38,8 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 </Section>
 
 <script>
+  import { gsap } from 'gsap'
+
   const updateFooterOffset = () => {
     const footer = document.querySelector<HTMLElement>('.page-footer')
     const inner = document.querySelector<HTMLElement>('.terms-and-conditions__inner')
@@ -97,6 +99,72 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
         e.stopImmediatePropagation()
       }
     }, { passive: false, capture: true })
+  }
+
+  const slide = document.querySelector<HTMLElement>('[data-slide="terms-conditions"]')
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.terms-and-conditions__list > *'))
+
+  if (slide && items.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let played = false
+    let isActive = slide.classList.contains('swiper-slide-active')
+
+    gsap.set(items, {
+      opacity: 0,
+      y: 24,
+      filter: 'blur(6px)',
+    })
+
+    const playIn = () => {
+      if (reduced) {
+        gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+        return
+      }
+
+      gsap.fromTo(
+        items,
+        { opacity: 0, y: 24, filter: 'blur(6px)' },
+        {
+          opacity: 1,
+          y: 0,
+          filter: 'blur(0px)',
+          duration: 0.6,
+          delay: 0.16,
+          stagger: 0.05,
+          ease: 'power3.out',
+          overwrite: true,
+        },
+      )
+      played = true
+    }
+
+    const playOut = () => {
+      if (!played) return
+      gsap.to(items, {
+        opacity: 0,
+        y: -10,
+        filter: 'blur(5px)',
+        duration: reduced ? 0.2 : 0.22,
+        stagger: 0.02,
+        ease: 'power2.in',
+        overwrite: true,
+      })
+    }
+
+    const sync = () => {
+      const nextActive = slide.classList.contains('swiper-slide-active')
+      if (nextActive === isActive) return
+      isActive = nextActive
+      if (nextActive) playIn()
+      else playOut()
+    }
+
+    new MutationObserver(sync).observe(slide, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    if (isActive) playIn()
   }
 </script>
 

@@ -155,46 +155,31 @@ const shapeIds = ['a', 'b'];
   if (slide && items.length) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let played = false
+    let isActive = slide.classList.contains('swiper-slide-active')
 
     gsap.set(items, {
       opacity: 0,
-      y: 36,
-      x: 64,
-      rotateX: 16,
-      rotateY: -6,
-      scale: 0.94,
-      filter: 'blur(10px)',
+      y: 28,
+      filter: 'blur(6px)',
     })
 
     const playIn = () => {
       if (reduced) {
-        gsap.to(items, { opacity: 1, duration: 0.25, overwrite: true })
+        gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
         return
       }
 
       gsap.fromTo(
         items,
-        {
-          opacity: 0,
-          y: 40,
-          x: 72,
-          rotateX: 20,
-          rotateY: -8,
-          scale: 0.92,
-          filter: 'blur(12px)',
-        },
+        { opacity: 0, y: 28, filter: 'blur(6px)' },
         {
           opacity: 1,
           y: 0,
-          x: 0,
-          rotateX: 0,
-          rotateY: 0,
-          scale: 1,
           filter: 'blur(0px)',
-          duration: 0.75,
-          delay: 0.1,
-          stagger: 0.09,
-          ease: 'back.out(1.5)',
+          duration: 0.65,
+          delay: 0.16,
+          stagger: 0.07,
+          ease: 'power3.out',
           overwrite: true,
         },
       )
@@ -205,20 +190,20 @@ const shapeIds = ['a', 'b'];
       if (!played) return
       gsap.to(items, {
         opacity: 0,
-        y: -16,
-        x: 28,
-        rotateX: -8,
-        scale: 0.97,
-        filter: 'blur(8px)',
-        duration: reduced ? 0.2 : 0.28,
-        stagger: 0.04,
+        y: -12,
+        filter: 'blur(5px)',
+        duration: reduced ? 0.2 : 0.24,
+        stagger: 0.03,
         ease: 'power2.in',
         overwrite: true,
       })
     }
 
     const sync = () => {
-      if (slide.classList.contains('swiper-slide-active')) playIn()
+      const nextActive = slide.classList.contains('swiper-slide-active')
+      if (nextActive === isActive) return
+      isActive = nextActive
+      if (nextActive) playIn()
       else playOut()
     }
 
@@ -227,7 +212,7 @@ const shapeIds = ['a', 'b'];
       attributeFilter: ['class'],
     })
 
-    sync()
+    if (isActive) playIn()
   }
 </script>
 
@@ -321,14 +306,10 @@ const shapeIds = ['a', 'b'];
     display: flex;
     flex-direction: column;
     gap: clamp(rem(22px), 3vw, rem(40px));
-    perspective: 900px;
   }
 
   .faq-accordion__item {
     min-width: 0;
-    transform-origin: 80% 50%;
-    transform-style: preserve-3d;
-    will-change: transform, opacity, filter;
   }
 
   .faq-accordion__trigger {
