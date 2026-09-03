@@ -263,12 +263,76 @@ const shapeIds = ['a', 'b'];
       }
     }
 
+    // ── Mouse parallax on SVG chevrons (+ glass) ───────────────────
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const shapeGroups = Array.from(document.querySelectorAll<HTMLElement>('.faq-shape')).map(
+      (shape, index) => ({
+        els: [
+          shape.querySelector<HTMLElement>('.faq-shape__glass'),
+          shape.querySelector<HTMLElement>('.faq-shape__svg'),
+        ].filter(Boolean) as HTMLElement[],
+        // Back chevron moves a touch less for depth
+        max: index === 0 ? 14 : 18,
+      }),
+    )
+
+    const canParallax =
+      !reduced &&
+      finePointer &&
+      shapeGroups.some((group) => group.els.length > 0)
+
+    const parallaxTweens = canParallax
+      ? shapeGroups.map((group) => ({
+          max: group.max,
+          xTos: group.els.map((el) =>
+            gsap.quickTo(el, 'x', { duration: 0.7, ease: 'power3.out' }),
+          ),
+          yTos: group.els.map((el) =>
+            gsap.quickTo(el, 'y', { duration: 0.7, ease: 'power3.out' }),
+          ),
+        }))
+      : []
+
+    const resetParallax = () => {
+      parallaxTweens.forEach(({ xTos, yTos }) => {
+        xTos.forEach((to) => to(0))
+        yTos.forEach((to) => to(0))
+      })
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!canParallax || !isActive) return
+
+      const rect = slide.getBoundingClientRect()
+      if (!rect.width || !rect.height) return
+
+      const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+      const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+      const clampedX = Math.max(-1, Math.min(1, nx))
+      const clampedY = Math.max(-1, Math.min(1, ny))
+
+      parallaxTweens.forEach(({ max, xTos, yTos }) => {
+        const x = clampedX * max
+        const y = clampedY * max
+        xTos.forEach((to) => to(x))
+        yTos.forEach((to) => to(y))
+      })
+    }
+
+    if (canParallax) {
+      slide.addEventListener('pointermove', onPointerMove)
+      slide.addEventListener('pointerleave', resetParallax)
+    }
+
     const sync = () => {
       const nextActive = slide.classList.contains('swiper-slide-active')
       if (nextActive === isActive) return
       isActive = nextActive
       if (nextActive) playIn()
-      else playOut()
+      else {
+        playOut()
+        resetParallax()
+      }
     }
 
     new MutationObserver(sync).observe(slide, {
@@ -347,6 +411,7 @@ const shapeIds = ['a', 'b'];
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: none;
+    will-change: transform;
 
     :global([data-theme='light']) & {
       background: rgb(0 0 0 / 10%);
@@ -361,7 +426,7 @@ const shapeIds = ['a', 'b'];
     height: auto;
     overflow: visible;
     pointer-events: none;
-    transform: translateZ(0);
+    will-change: transform;
   }
 
   .faq-accordion {

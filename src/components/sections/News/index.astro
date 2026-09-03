@@ -189,12 +189,77 @@ const articles = [
       }
     }
 
+    // ── Mouse parallax on decorations (CSS vars — no transform fight) ──
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
+    const decorationLayers = Array.from(
+      document.querySelectorAll<HTMLElement>('.news__decoration'),
+    )
+
+    const canParallax = !reduced && finePointer && decorationLayers.length > 0
+
+    const parallaxProxies = canParallax
+      ? decorationLayers.map((el, index) => {
+          const proxy = { x: 0, y: 0 }
+          const max = index === 0 ? 22 : 14
+          const apply = () => {
+            el.style.setProperty('--parallax-x', `${proxy.x}px`)
+            el.style.setProperty('--parallax-y', `${proxy.y}px`)
+          }
+          apply()
+          return { el, proxy, max, apply }
+        })
+      : []
+
+    const resetParallax = () => {
+      parallaxProxies.forEach(({ proxy, apply }) => {
+        gsap.to(proxy, {
+          x: 0,
+          y: 0,
+          duration: 0.55,
+          ease: 'power3.out',
+          overwrite: true,
+          onUpdate: apply,
+        })
+      })
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!canParallax || !isActive) return
+
+      const rect = slide.getBoundingClientRect()
+      if (!rect.width || !rect.height) return
+
+      const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+      const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+      const clampedX = Math.max(-1, Math.min(1, nx))
+      const clampedY = Math.max(-1, Math.min(1, ny))
+
+      parallaxProxies.forEach(({ proxy, max, apply }) => {
+        gsap.to(proxy, {
+          x: clampedX * max,
+          y: clampedY * max,
+          duration: 0.7,
+          ease: 'power3.out',
+          overwrite: true,
+          onUpdate: apply,
+        })
+      })
+    }
+
+    if (canParallax) {
+      // window — slide can miss moves over overflow / stacking gaps
+      window.addEventListener('pointermove', onPointerMove)
+    }
+
     const sync = () => {
       const nextActive = slide.classList.contains('swiper-slide-active')
       if (nextActive === isActive) return
       isActive = nextActive
       if (nextActive) playIn()
-      else playOut()
+      else {
+        playOut()
+        resetParallax()
+      }
     }
 
     new MutationObserver(sync).observe(slide, {
@@ -364,9 +429,12 @@ const articles = [
   }
 
   .news__decoration {
+    --parallax-x: 0px;
+    --parallax-y: 0px;
     position: absolute;
     user-select: none;
     pointer-events: none;
+    translate: var(--parallax-x) var(--parallax-y);
 
     &-reveal {
       opacity: 0;
@@ -381,7 +449,7 @@ const articles = [
     &--edit-machine {
       bottom: -200px;
       left: 40%;
-      transform: translateX(-50%);
+      translate: calc(-50% + var(--parallax-x)) var(--parallax-y);
       max-width: 245px;
       z-index: 1;
 
@@ -390,7 +458,6 @@ const articles = [
         left: 50%;
         top: auto;
         right: auto;
-        transform: translateX(-50%);
         max-width: 160px;
         opacity: 0.7;
       }

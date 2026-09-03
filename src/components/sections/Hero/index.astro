@@ -107,19 +107,25 @@ const SY = 1 / 509;
     document.querySelectorAll<HTMLElement>('.hero__currency-reveal'),
   )
 
-  if (slide && currencies.length) {
+  if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)').matches
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    gsap.set(currencies, {
-      opacity: 0,
-      y: 28,
-      scale: 0.94,
-      filter: 'blur(10px)',
-    })
+    // ── Currency entrance ──────────────────────────────────────────
+    if (currencies.length) {
+      gsap.set(currencies, {
+        opacity: 0,
+        y: 28,
+        scale: 0.94,
+        filter: 'blur(10px)',
+      })
+    }
 
     const playIn = () => {
+      if (!currencies.length) return
+
       if (reduced) {
         gsap.to(currencies, {
           opacity: 1,
@@ -129,6 +135,7 @@ const SY = 1 / 509;
           duration: 0.25,
           overwrite: true,
         })
+        played = true
         return
       }
 
@@ -156,7 +163,7 @@ const SY = 1 / 509;
     }
 
     const playOut = () => {
-      if (!played) return
+      if (!played || !currencies.length) return
       gsap.to(currencies, {
         opacity: 0,
         y: -14,
@@ -169,12 +176,56 @@ const SY = 1 / 509;
       })
     }
 
+    // ── Mouse parallax on SVG + glass (same motion, no parent transform) ──
+    const PARALLAX_MAX = 16
+    const parallaxEls = [
+      document.querySelector<HTMLElement>('.hero__glass'),
+      document.querySelector<HTMLElement>('.hero__shape'),
+    ].filter(Boolean) as HTMLElement[]
+
+    const canParallax = parallaxEls.length > 0 && !reduced && finePointer
+
+    const xTos = canParallax
+      ? parallaxEls.map((el) => gsap.quickTo(el, 'x', { duration: 0.7, ease: 'power3.out' }))
+      : []
+    const yTos = canParallax
+      ? parallaxEls.map((el) => gsap.quickTo(el, 'y', { duration: 0.7, ease: 'power3.out' }))
+      : []
+
+    const resetParallax = () => {
+      xTos.forEach((to) => to(0))
+      yTos.forEach((to) => to(0))
+    }
+
+    const onPointerMove = (event: PointerEvent) => {
+      if (!canParallax || !isActive) return
+
+      const rect = slide.getBoundingClientRect()
+      if (!rect.width || !rect.height) return
+
+      const nx = ((event.clientX - rect.left) / rect.width - 0.5) * 2
+      const ny = ((event.clientY - rect.top) / rect.height - 0.5) * 2
+      const x = Math.max(-1, Math.min(1, nx)) * PARALLAX_MAX
+      const y = Math.max(-1, Math.min(1, ny)) * PARALLAX_MAX
+
+      xTos.forEach((to) => to(x))
+      yTos.forEach((to) => to(y))
+    }
+
+    if (canParallax) {
+      slide.addEventListener('pointermove', onPointerMove)
+      slide.addEventListener('pointerleave', resetParallax)
+    }
+
     const sync = () => {
       const nextActive = slide.classList.contains('swiper-slide-active')
       if (nextActive === isActive) return
       isActive = nextActive
       if (nextActive) playIn()
-      else playOut()
+      else {
+        playOut()
+        resetParallax()
+      }
     }
 
     new MutationObserver(sync).observe(slide, {
@@ -234,6 +285,7 @@ const SY = 1 / 509;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: none;
+    will-change: transform;
 
     :global([data-theme='light']) & {
       background: rgb(0 0 0 / 10%);
@@ -247,7 +299,7 @@ const SY = 1 / 509;
     height: auto;
     overflow: visible;
     pointer-events: none;
-    transform: translateZ(0);
+    will-change: transform;
   }
 
   @media (prefers-reduced-motion: reduce) {

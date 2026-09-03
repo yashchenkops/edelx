@@ -13,7 +13,7 @@ const TEXT_SELECTOR = '.section-title, .section-subtitle'
 /* Do not target glass parents (.hero__illustration, .faq__decoration):
    transform/filter/opacity on ancestors kill backdrop-filter. */
 const VISUAL_SELECTOR =
-  '.page-section__decor, .hero__currency, .about__illustration, .review__slider, .news__decoration'
+  '.page-section__decor, .hero__currency, .about__illustration, .review__slider'
 const TABLET_BREAKPOINT = 1024
 
 const PARALLAX = {
