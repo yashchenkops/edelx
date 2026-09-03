@@ -24,10 +24,14 @@ const SY = 1 / 509;
     <div class="hero__illustration">
       <div class="hero__currency hero__currency--back">
         <div class="hero__currency-item hero__currency-item--usd">
-          <img src={usdImg.src} alt="USD" />
+          <div class="hero__currency-reveal">
+            <img src={usdImg.src} alt="USD" />
+          </div>
         </div>
         <div class="hero__currency-item hero__currency-item--yen">
-          <img src={yenImg.src} alt="YEN" />
+          <div class="hero__currency-reveal">
+            <img src={yenImg.src} alt="YEN" />
+          </div>
         </div>
       </div>
 
@@ -86,12 +90,101 @@ const SY = 1 / 509;
 
       <div class="hero__currency hero__currency--front">
         <div class="hero__currency-item hero__currency-item--euro">
-          <img src={euroImg.src} alt="EURO" />
+          <div class="hero__currency-reveal">
+            <img src={euroImg.src} alt="EURO" />
+          </div>
         </div>
       </div>
     </div>
   </div>
 </Section>
+
+<script>
+  import { gsap } from 'gsap'
+
+  const slide = document.querySelector<HTMLElement>('[data-slide="main"]')
+  const currencies = Array.from(
+    document.querySelectorAll<HTMLElement>('.hero__currency-reveal'),
+  )
+
+  if (slide && currencies.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let played = false
+    let isActive = slide.classList.contains('swiper-slide-active')
+
+    gsap.set(currencies, {
+      opacity: 0,
+      y: 28,
+      scale: 0.94,
+      filter: 'blur(10px)',
+    })
+
+    const playIn = () => {
+      if (reduced) {
+        gsap.to(currencies, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.25,
+          overwrite: true,
+        })
+        return
+      }
+
+      gsap.fromTo(
+        currencies,
+        {
+          opacity: 0,
+          y: 32,
+          scale: 0.94,
+          filter: 'blur(10px)',
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.85,
+          delay: 0.28,
+          stagger: 0.14,
+          ease: 'power3.out',
+          overwrite: true,
+        },
+      )
+      played = true
+    }
+
+    const playOut = () => {
+      if (!played) return
+      gsap.to(currencies, {
+        opacity: 0,
+        y: -14,
+        scale: 0.97,
+        filter: 'blur(6px)',
+        duration: reduced ? 0.2 : 0.28,
+        stagger: 0.05,
+        ease: 'power2.in',
+        overwrite: true,
+      })
+    }
+
+    const sync = () => {
+      const nextActive = slide.classList.contains('swiper-slide-active')
+      if (nextActive === isActive) return
+      isActive = nextActive
+      if (nextActive) playIn()
+      else playOut()
+    }
+
+    new MutationObserver(sync).observe(slide, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    if (isActive) playIn()
+  }
+</script>
 
 <style lang="scss">
   .hero__inner {
@@ -159,7 +252,7 @@ const SY = 1 / 509;
   }
 
   @media (prefers-reduced-motion: reduce) {
-    .hero__currency-item {
+    .hero__currency-item img {
       animation: none !important;
     }
   }
@@ -179,11 +272,11 @@ const SY = 1 / 509;
   }
 
   @keyframes hero-float-a {
-    0%   { transform: translateY(-50%) translate(0px, 0px) rotate(0deg); }
-    25%  { transform: translateY(-50%) translate(6px, -10px) rotate(1.2deg); }
-    50%  { transform: translateY(-50%) translate(-4px, -18px) rotate(-0.6deg); }
-    75%  { transform: translateY(-50%) translate(-8px, -8px) rotate(0.8deg); }
-    100% { transform: translateY(-50%) translate(0px, 0px) rotate(0deg); }
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    25%  { transform: translate(6px, -10px) rotate(1.2deg); }
+    50%  { transform: translate(-4px, -18px) rotate(-0.6deg); }
+    75%  { transform: translate(-8px, -8px) rotate(0.8deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
   }
 
   @keyframes hero-float-b {
@@ -205,38 +298,49 @@ const SY = 1 / 509;
   .hero__currency-item {
     position: absolute;
 
-    img {
-      display: block;
-      width: 100%;
-      height: auto;
-      position: relative;
-      z-index: 1;
-    }
-
     &--usd {
       width: min(300px, 36%);
       top: 50%;
       left: 20%;
       transform: translateY(-50%);
-      animation: hero-float-a 7s ease-in-out infinite;
-      will-change: transform;
+
+      img {
+        animation: hero-float-a 7s ease-in-out infinite;
+      }
     }
 
     &--yen {
       width: min(165px, 24%);
       top: -50px;
       right: 24%;
-      animation: hero-float-b 8.5s ease-in-out infinite;
-      animation-delay: -2.8s;
-      will-change: transform;
+
+      img {
+        animation: hero-float-b 8.5s ease-in-out infinite;
+        animation-delay: -2.8s;
+      }
     }
 
     &--euro {
       width: min(220px, 24%);
       bottom: -20%;
       right: 15%;
-      animation: hero-float-c 9.2s ease-in-out infinite;
-      animation-delay: -5.1s;
+
+      img {
+        animation: hero-float-c 9.2s ease-in-out infinite;
+        animation-delay: -5.1s;
+      }
+    }
+  }
+
+  .hero__currency-reveal {
+    opacity: 0;
+
+    img {
+      display: block;
+      width: 100%;
+      height: auto;
+      position: relative;
+      z-index: 1;
       will-change: transform;
     }
   }

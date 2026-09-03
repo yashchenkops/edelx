@@ -52,10 +52,14 @@ const articles = [
       })}
     </div>
     <div class="news__decoration news__decoration--edit-machine">
-      <img src="src/assets/img/news-edit-machine.webp" alt="Text machine">
+      <div class="news__decoration-reveal">
+        <img src="src/assets/img/news-edit-machine.webp" alt="Text machine">
+      </div>
     </div>
     <div class="news__decoration news__decoration--hashtag">
-      <img src="src/assets/img/news-hashtag.webp" alt="Hashtag">
+      <div class="news__decoration-reveal">
+        <img src="src/assets/img/news-hashtag.webp" alt="Hashtag">
+      </div>
     </div>
   </div>
 </Section>
@@ -65,52 +69,120 @@ const articles = [
 
   const slide = document.querySelector<HTMLElement>('[data-slide="news"]')
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.news__article'))
+  const decorations = Array.from(
+    document.querySelectorAll<HTMLElement>('.news__decoration-reveal'),
+  )
 
-  if (slide && cards.length) {
+  if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    gsap.set(cards, {
-      opacity: 0,
-      y: 36,
-      filter: 'blur(8px)',
-    })
+    if (cards.length) {
+      gsap.set(cards, {
+        opacity: 0,
+        y: 36,
+        filter: 'blur(8px)',
+      })
+    }
+
+    if (decorations.length) {
+      gsap.set(decorations, {
+        opacity: 0,
+        y: 28,
+        scale: 0.94,
+        filter: 'blur(10px)',
+      })
+    }
 
     const playIn = () => {
       if (reduced) {
-        gsap.to(cards, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+        if (cards.length) {
+          gsap.to(cards, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+        }
+        if (decorations.length) {
+          gsap.to(decorations, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.25,
+            overwrite: true,
+          })
+        }
         return
       }
 
-      gsap.fromTo(
-        cards,
-        { opacity: 0, y: 36, filter: 'blur(8px)' },
-        {
-          opacity: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.7,
-          delay: 0.18,
-          stagger: 0.1,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
+      if (cards.length) {
+        gsap.fromTo(
+          cards,
+          { opacity: 0, y: 36, filter: 'blur(8px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.7,
+            delay: 0.18,
+            stagger: 0.1,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
+      if (decorations.length) {
+        gsap.fromTo(
+          decorations,
+          {
+            opacity: 0,
+            y: 28,
+            scale: 0.94,
+            filter: 'blur(10px)',
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            delay: 0.48,
+            stagger: 0.14,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
       played = true
     }
 
     const playOut = () => {
       if (!played) return
-      gsap.to(cards, {
-        opacity: 0,
-        y: -16,
-        filter: 'blur(6px)',
-        duration: reduced ? 0.2 : 0.28,
-        stagger: 0.04,
-        ease: 'power2.in',
-        overwrite: true,
-      })
+
+      if (cards.length) {
+        gsap.to(cards, {
+          opacity: 0,
+          y: -16,
+          filter: 'blur(6px)',
+          duration: reduced ? 0.2 : 0.28,
+          stagger: 0.04,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
+
+      if (decorations.length) {
+        gsap.to(decorations, {
+          opacity: 0,
+          y: -14,
+          scale: 0.97,
+          filter: 'blur(6px)',
+          duration: reduced ? 0.2 : 0.28,
+          stagger: 0.05,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
     }
 
     const sync = () => {
@@ -292,6 +364,16 @@ const articles = [
     position: absolute;
     user-select: none;
     pointer-events: none;
+
+    &-reveal {
+      opacity: 0;
+
+      img {
+        display: block;
+        width: 100%;
+        height: auto;
+      }
+    }
 
     &--edit-machine {
       bottom: -200px;

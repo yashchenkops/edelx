@@ -56,6 +56,93 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
   </div>
 </Section>
 
+<script>
+  import { gsap } from 'gsap'
+
+  const slide = document.querySelector<HTMLElement>('[data-slide="about-us"]')
+  const socials = Array.from(
+    document.querySelectorAll<HTMLElement>('.about__content-socials-item'),
+  )
+
+  if (slide && socials.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    let played = false
+    let isActive = slide.classList.contains('swiper-slide-active')
+
+    gsap.set(socials, {
+      opacity: 0,
+      y: 28,
+      scale: 0.94,
+      filter: 'blur(10px)',
+    })
+
+    const playIn = () => {
+      if (reduced) {
+        gsap.to(socials, {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.25,
+          overwrite: true,
+        })
+        return
+      }
+
+      gsap.fromTo(
+        socials,
+        {
+          opacity: 0,
+          y: 32,
+          scale: 0.94,
+          filter: 'blur(10px)',
+        },
+        {
+          opacity: 1,
+          y: 0,
+          scale: 1,
+          filter: 'blur(0px)',
+          duration: 0.85,
+          delay: 0.28,
+          stagger: 0.14,
+          ease: 'power3.out',
+          overwrite: true,
+        },
+      )
+      played = true
+    }
+
+    const playOut = () => {
+      if (!played) return
+      gsap.to(socials, {
+        opacity: 0,
+        y: -14,
+        scale: 0.97,
+        filter: 'blur(6px)',
+        duration: reduced ? 0.2 : 0.28,
+        stagger: 0.05,
+        ease: 'power2.in',
+        overwrite: true,
+      })
+    }
+
+    const sync = () => {
+      const nextActive = slide.classList.contains('swiper-slide-active')
+      if (nextActive === isActive) return
+      isActive = nextActive
+      if (nextActive) playIn()
+      else playOut()
+    }
+
+    new MutationObserver(sync).observe(slide, {
+      attributes: true,
+      attributeFilter: ['class'],
+    })
+
+    if (isActive) playIn()
+  }
+</script>
+
 <style lang="scss">
   .about__inner {
     display: flex;
@@ -94,6 +181,7 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     
     &-item {
       color: var(--color-text);
+      opacity: 0;
       transition: opacity v.$transition-base, transform v.$transition-base, color v.$transition-base;
 
       @include m.hover {

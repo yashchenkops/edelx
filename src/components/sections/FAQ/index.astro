@@ -151,52 +151,116 @@ const shapeIds = ['a', 'b'];
 
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
   const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
+  const image = document.querySelector<HTMLElement>('.faq__image')
 
-  if (slide && items.length) {
+  if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    gsap.set(items, {
-      opacity: 0,
-      y: 28,
-      filter: 'blur(6px)',
-    })
+    if (items.length) {
+      gsap.set(items, {
+        opacity: 0,
+        y: 28,
+        filter: 'blur(6px)',
+      })
+    }
+
+    if (image) {
+      gsap.set(image, {
+        opacity: 0,
+        x: 36,
+        scale: 0.94,
+        filter: 'blur(10px)',
+      })
+    }
 
     const playIn = () => {
       if (reduced) {
-        gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+        if (items.length) {
+          gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+        }
+        if (image) {
+          gsap.to(image, {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.25,
+            overwrite: true,
+          })
+        }
         return
       }
 
-      gsap.fromTo(
-        items,
-        { opacity: 0, y: 28, filter: 'blur(6px)' },
-        {
-          opacity: 1,
-          y: 0,
-          filter: 'blur(0px)',
-          duration: 0.65,
-          delay: 0.16,
-          stagger: 0.07,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
+      if (items.length) {
+        gsap.fromTo(
+          items,
+          { opacity: 0, y: 28, filter: 'blur(6px)' },
+          {
+            opacity: 1,
+            y: 0,
+            filter: 'blur(0px)',
+            duration: 0.65,
+            delay: 0.16,
+            stagger: 0.07,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
+      if (image) {
+        gsap.fromTo(
+          image,
+          {
+            opacity: 0,
+            x: 36,
+            scale: 0.94,
+            filter: 'blur(10px)',
+          },
+          {
+            opacity: 1,
+            x: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            delay: 0.28,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
       played = true
     }
 
     const playOut = () => {
       if (!played) return
-      gsap.to(items, {
-        opacity: 0,
-        y: -12,
-        filter: 'blur(5px)',
-        duration: reduced ? 0.2 : 0.24,
-        stagger: 0.03,
-        ease: 'power2.in',
-        overwrite: true,
-      })
+
+      if (items.length) {
+        gsap.to(items, {
+          opacity: 0,
+          y: -12,
+          filter: 'blur(5px)',
+          duration: reduced ? 0.2 : 0.24,
+          stagger: 0.03,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
+
+      if (image) {
+        gsap.to(image, {
+          opacity: 0,
+          x: 20,
+          scale: 0.97,
+          filter: 'blur(6px)',
+          duration: reduced ? 0.2 : 0.28,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
     }
 
     const sync = () => {
@@ -366,6 +430,7 @@ const shapeIds = ['a', 'b'];
     translate: 0 -50%;
     max-width: min(325px, 22vw);
     pointer-events: none;
+    opacity: 0;
   }
 
   @media (max-width: 1024px) {
