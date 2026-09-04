@@ -128,6 +128,19 @@ const documents: TermsDocument[] = [
 </script>
 
 <style lang="scss">
+  :global(.page-section--terms-and-conditions .page-section__scene) {
+    @media (max-width: 1024px) {
+      align-items: flex-start;
+      padding-top: rem(112px);
+      padding-bottom: rem(24px);
+    }
+
+    @media (max-width: 768px) {
+      padding-top: rem(84px);
+      padding-bottom: rem(16px);
+    }
+  }
+
   .terms-and-conditions__inner {
     --footer-offset: #{rem(240px)};
     position: relative;
@@ -140,15 +153,16 @@ const documents: TermsDocument[] = [
       flex-direction: column;
       align-items: flex-start;
       justify-content: flex-start;
-      gap: rem(24px);
-      padding-bottom: var(--footer-offset, rem(240px));
+      gap: rem(12px);
+      padding-bottom: var(--footer-offset, rem(260px));
       box-sizing: border-box;
-      min-height: 100%;
+      min-height: 0;
+      width: 100%;
     }
 
     @media (max-width: 768px) {
-      padding-bottom: var(--footer-offset, rem(260px));
-      gap: rem(20px);
+      padding-bottom: var(--footer-offset, rem(280px));
+      gap: rem(10px);
     }
   }
 
@@ -187,19 +201,18 @@ const documents: TermsDocument[] = [
     @media (max-width: 1024px) {
       width: 100%;
       height: auto;
-      padding: rem(20px) rem(8px) rem(8px) rem(24px);
+      overflow: hidden;
+      padding: 0;
       mask-image: linear-gradient(
         90deg,
-        transparent 0%,
-        #000 10%,
-        #000 90%,
+        #000 0%,
+        #000 78%,
         transparent 100%
       );
       -webkit-mask-image: linear-gradient(
         90deg,
-        transparent 0%,
-        #000 10%,
-        #000 90%,
+        #000 0%,
+        #000 78%,
         transparent 100%
       );
     }
@@ -212,12 +225,18 @@ const documents: TermsDocument[] = [
     @media (max-width: 1024px) {
       height: auto;
       align-items: flex-start;
+      justify-content: flex-start;
     }
   }
 
   .terms-titles :global(.swiper-slide) {
     height: auto;
     overflow: visible;
+
+    @media (max-width: 1024px) {
+      height: auto;
+      box-sizing: border-box;
+    }
   }
 
   .terms-titles__slide {
@@ -231,13 +250,17 @@ const documents: TermsDocument[] = [
     padding-left: rem(20px);
     opacity: 1;
     cursor: pointer;
+    text-align: left;
 
     @media (max-width: 1024px) {
-      width: fit-content;
-      max-width: 82%;
-      padding-block: rem(12px);
-      padding-left: rem(20px);
-      padding-right: rem(18px);
+      width: 100%;
+      max-width: 100%;
+      padding-block: rem(4px);
+      padding-left: 0;
+      padding-right: rem(8px);
+      justify-content: flex-start;
+      align-items: flex-start;
+      text-align: left;
     }
 
     :global(.section-title),
@@ -259,6 +282,11 @@ const documents: TermsDocument[] = [
         max-height: rem(72px);
         margin-top: rem(30px);
         opacity: 1;
+
+        @media (max-width: 1024px) {
+          max-height: rem(48px);
+          margin-top: rem(8px);
+        }
       }
 
       :global(.section-title__mark) {
@@ -278,9 +306,16 @@ const documents: TermsDocument[] = [
 
   .terms-and-conditions__content :global(.section-title) {
     font-size: clamp(rem(40px), 5.4vw, rem(104px));
+    text-align: left;
 
     @media (max-width: 1024px) {
-      font-size: clamp(rem(36px), 8vw, rem(72px));
+      font-size: clamp(rem(28px), 6.5vw, rem(44px));
+      width: 100%;
+      line-height: 1.05;
+    }
+
+    @media (max-width: 768px) {
+      font-size: clamp(rem(24px), 7.2vw, rem(36px));
     }
 
     :global(.section-title__mark) {
@@ -294,11 +329,18 @@ const documents: TermsDocument[] = [
     margin: 0;
     opacity: 0;
     overflow: hidden;
+    text-align: left;
     transition:
       max-height 0.45s ease,
       opacity 0.35s ease,
       margin 0.45s ease,
       color 0.35s ease;
+
+    @media (max-width: 1024px) {
+      width: 100%;
+      font-size: clamp(rem(12px), 2.8vw, rem(16px));
+      line-height: 1.25;
+    }
 
     @media (max-width: 768px) {
       margin-top: 0;
@@ -328,8 +370,8 @@ const documents: TermsDocument[] = [
 
     @media (max-width: 1024px) {
       flex: none;
-      max-width: min(100%, rem(560px));
-      width: min(100%, rem(560px));
+      max-width: 100%;
+      width: 100%;
       margin-left: 0;
     }
   }
@@ -341,13 +383,14 @@ const documents: TermsDocument[] = [
     scrollbar-width: none;
 
     @media (max-width: 1024px) {
-      max-height: calc(100dvh - var(--footer-offset, 240px) - rem(320px));
-      padding: 56px 4px;
+      max-height: calc(100dvh - var(--footer-offset, 240px) - rem(280px));
+      width: 100%;
+      padding: rem(12px) 0 rem(12px);
     }
 
     @media (max-width: 768px) {
-      max-height: calc(100dvh - var(--footer-offset, 260px) - rem(300px));
-      padding: 20px 4px;
+      max-height: calc(100dvh - var(--footer-offset, 280px) - rem(240px));
+      padding: rem(8px) 0 rem(8px);
     }
 
     &::-webkit-scrollbar {

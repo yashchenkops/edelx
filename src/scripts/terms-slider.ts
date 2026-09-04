@@ -77,7 +77,7 @@ const updateFooterOffset = () => {
   if (!footer || !inner) return
 
   const footerH = footer.getBoundingClientRect().height
-  inner.style.setProperty('--footer-offset', `${footerH + 80}px`)
+  inner.style.setProperty('--footer-offset', `${footerH + 100}px`)
 }
 
 const ACTIVE_COLOR = 'var(--color-text)'
@@ -176,8 +176,9 @@ export const initTermsSlider = () => {
   const swiper = new Swiper(titlesEl, {
     direction: isHorizontal() ? 'horizontal' : 'vertical',
     speed: reduced ? 280 : SLIDE_SPEED,
-    slidesPerView: 'auto',
-    centeredSlides: true,
+    slidesPerView: isHorizontal() ? 1.3 : 'auto',
+    spaceBetween: isHorizontal() ? 16 : 0,
+    centeredSlides: !isHorizontal(),
     nested: true,
     observer: true,
     observeParents: true,
@@ -244,10 +245,15 @@ export const initTermsSlider = () => {
   })
 
   const syncDirection = () => {
-    const nextDirection = isHorizontal() ? 'horizontal' : 'vertical'
+    const horizontal = isHorizontal()
+    const nextDirection = horizontal ? 'horizontal' : 'vertical'
     if (swiper.params.direction !== nextDirection) {
       swiper.changeDirection(nextDirection)
     }
+    swiper.params.centeredSlides = !horizontal
+    swiper.params.centeredSlidesBounds = false
+    swiper.params.slidesPerView = horizontal ? 1.3 : 'auto'
+    swiper.params.spaceBetween = horizontal ? 16 : 0
     swiper.update()
     updateSlideVisuals(swiper)
   }
