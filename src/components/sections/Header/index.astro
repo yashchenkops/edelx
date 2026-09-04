@@ -5,7 +5,7 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 ---
 
 <PageHeader>
-  <a href="/" class="logo" data-header-item>
+  <a href={import.meta.env.BASE_URL} class="logo" data-header-item>
     <img class="logo__img logo__img--dark" src="src/assets/img/logo.webp" alt="logo">
     <img class="logo__img logo__img--light" src="src/assets/img/light/logo.webp" alt="logo">
   </a>

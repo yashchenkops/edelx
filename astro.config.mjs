@@ -4,6 +4,8 @@ import { fileURLToPath } from 'url'
 
 // https://astro.build/config
 export default defineConfig({
+  site: 'https://yashchenkops.github.io',
+  base: '/edelx',
   vite: {
     resolve: {
       alias: {
