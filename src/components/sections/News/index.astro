@@ -287,7 +287,53 @@ const articles = [
 
 <style lang="scss">
   :global(.page-section--news) {
+    position: relative;
     overflow: hidden;
+
+    // Fade scrolling news under the header / above the footer on mobile/tablet.
+    @media (max-width: 1024px) {
+      &::before,
+      &::after {
+        content: '';
+        position: absolute;
+        left: 0;
+        right: 0;
+        z-index: 8;
+        pointer-events: none;
+      }
+
+      &::before {
+        top: 0;
+        height: rem(190px);
+        background: linear-gradient(
+          180deg,
+          var(--color-bg) 0%,
+          var(--color-bg) 45%,
+          transparent 100%
+        );
+      }
+
+      &::after {
+        bottom: 0;
+        height: rem(90px);
+        background: linear-gradient(
+          0deg,
+          var(--color-bg) 0%,
+          var(--color-bg) 30%,
+          transparent 100%
+        );
+      }
+    }
+
+    @media (max-width: 768px) {
+      &::before {
+        height: rem(130px);
+      }
+
+      &::after {
+        height: rem(70px);
+      }
+    }
   }
 
   :global(.page-section--news .page-section__scene) {
@@ -535,16 +581,18 @@ const articles = [
 
       @media (max-width: 1200px) {
         bottom: -100px;
-        left: 50%;
+        left: auto;
+        right: -8%;
         top: auto;
-        right: auto;
+        translate: var(--parallax-x) var(--parallax-y);
         max-width: 160px;
         opacity: 0.7;
       }
 
       @media (max-width: 768px) {
-        max-width: 120px;
-        bottom: -70px;
+        right: -12%;
+        bottom: -56px;
+        max-width: 110px;
         opacity: 0.55;
       }
     }
@@ -556,7 +604,7 @@ const articles = [
       z-index: -1;
 
       @media (max-width: 1200px) {
-        top: -70px;
+        top: -40px;
         right: 80px;
         left: auto;
         max-width: 100px;
@@ -565,7 +613,7 @@ const articles = [
 
       @media (max-width: 768px) {
         max-width: 70px;
-        top: -45px;
+        top: -18px;
         right: 40px;
         opacity: 0.4;
       }
