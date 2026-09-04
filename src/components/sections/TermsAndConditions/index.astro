@@ -1,86 +1,7 @@
 ---
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
-import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
-
-type TermsBlock =
-  | { type: 'title'; text: string }
-  | { type: 'text'; text: string }
-  | { type: 'list'; items: string[] }
-
-type TermsDocument = {
-  title: string
-  subtitle: string
-  blocks: TermsBlock[]
-}
-
-const documents: TermsDocument[] = [
-  {
-    title: "terms & Condition's",
-    subtitle: 'The main rules and regulations that our company adheres to.',
-    blocks: [
-      { type: 'title', text: 'SECTION 1: Introduction' },
-      { type: 'text', text: '1.1. These Terms and Conditions ("Terms") govern your access to and use of the website, mobile applications, and all online services (collectively, the "Service") provided by Djooky Finance Limited, a company incorporated under the laws of British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at: 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA.' },
-      { type: 'text', text: '1.2. Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967. The Company operates under the brand name Tokenum.' },
-      { type: 'text', text: '1.3. By accessing, registering for, or using the Service, you acknowledge that you have read, understood, and agree to be legally bound by these Terms, as well as any additional terms, policies, or notices expressly incorporated herein by reference, including the Privacy Policy, Risk Disclosure, and AML/CTF Policy. If you do not agree to these Terms in their entirety, you must not access or use the Service.' },
-      { type: 'text', text: '1.4. Djooky Finance Limited is committed to operating in full compliance with all applicable Canadian laws and regulations, including but not limited to:' },
-      { type: 'list', items: [
-        'The Proceeds of Crime (Money Laundering) and Terrorist Financing Act (PCMLTFA);',
-        'Regulations and guidance issued by FINTRAC;',
-        'Applicable provincial laws and consumer protection regulations of British Columbia.',
-      ]},
-      { type: 'text', text: '1.5. The Service is intended exclusively for individual clients (natural persons). The Company provides services related to the exchange of fiat currency for digital assets and vice versa, as well as the transfer of digital assets. Djooky Finance Limited does not provide investment advice, tax advice, or discretionary portfolio management.' },
-      { type: 'text', text: '1.6. The Company prohibits the use of the Service by residents or citizens of jurisdictions subject to international sanctions, as well as by any individuals or entities appearing on applicable global sanctions lists. These restricted categories include, but are not limited to, parties identified on the Consolidated Canadian Autonomous Sanctions List administered by Global Affairs Canada, the OSFI Consolidated List, the United Nations Security Council Consolidated Sanctions List, and the U.S. OFAC Specially Designated Nationals (SDN) List and other U.S. sanctions lists. Furthermore, prohibitions extend to parties on the UK Sanctions List maintained by the Office of Financial Sanctions Implementation (OFSI), the European Union Consolidated Financial Sanctions List, and any individuals, entities, or jurisdictions designated as high-risk or non-cooperative by the Financial Action Task Force (FATF). The Company reserves the right to immediately deny or terminate access to the Service for any user matching these criteria or based on internal risk assessments and compliance policies.' },
-      { type: 'text', text: '1.7. Registration with FINTRAC as an MSB does not constitute an endorsement or a license from a securities regulator. Use of the Service carries significant risk, and you should only use funds that you can afford to lose.' },
-    ],
-  },
-  {
-    title: 'AML/CTF Policy',
-    subtitle: 'How we prevent money laundering and terrorist financing.',
-    blocks: [
-      { type: 'title', text: 'SECTION 1: Purpose and Scope' },
-      { type: 'text', text: '1.1. This Anti-Money Laundering and Counter-Terrorist Financing Policy ("AML/CTF Policy") sets out the standards applied by Djooky Finance Limited when providing the Service under the brand name Tokenum.' },
-      { type: 'text', text: '1.2. The Company is registered with FINTRAC as a Money Services Business (MSB) under registration number C100000967 and maintains this Policy to comply with the Proceeds of Crime (Money Laundering) and Terrorist Financing Act (PCMLTFA), related regulations, and FINTRAC guidance.' },
-      { type: 'text', text: '1.3. This Policy applies to all clients, prospective clients, and any person attempting to access or use the Service. Use of the Service constitutes acknowledgement of the controls described herein.' },
-      { type: 'title', text: 'SECTION 2: Customer Due Diligence' },
-      { type: 'text', text: '2.1. The Company applies a risk-based approach to customer identification and verification. Before full access to the Service is granted, you may be required to provide identity documents, proof of address, and such additional information as the Company reasonably requests.' },
-      { type: 'text', text: '2.2. Enhanced due diligence is applied where a relationship or transaction presents a higher risk, including but not limited to:' },
-      { type: 'list', items: [
-        'Inconsistencies in identity or source-of-funds information;',
-        'Activity that is unusual for the declared profile of the client;',
-        'Links to high-risk jurisdictions or sanctioned parties.',
-      ]},
-      { type: 'text', text: '2.3. The Company may refuse, suspend, or terminate a relationship where due diligence cannot be completed to its satisfaction, or where information provided is incomplete, misleading, or cannot be verified.' },
-      { type: 'title', text: 'SECTION 3: Monitoring, Sanctions, and Reporting' },
-      { type: 'text', text: '3.1. Client activity is monitored to identify unusual or potentially suspicious patterns. The Company may request source-of-funds or source-of-wealth information at any time.' },
-      { type: 'text', text: '3.2. The Company screens clients and relevant parties against applicable sanctions lists, including those administered by Global Affairs Canada, OSFI, the United Nations, OFAC, OFSI, and the European Union, and will not provide the Service where prohibited.' },
-      { type: 'text', text: '3.3. Where required by law, the Company files reports with FINTRAC and cooperates with competent authorities. The Company does not disclose such reporting to any person except as permitted or required by law.' },
-      { type: 'text', text: '3.4. Records required under PCMLTFA and this Policy are retained for the period prescribed by applicable law.' },
-    ],
-  },
-  {
-    title: 'Privacy Policy',
-    subtitle: 'How we collect, use, and protect your personal information.',
-    blocks: [
-      { type: 'title', text: 'SECTION 1: Introduction' },
-      { type: 'text', text: '1.1. This Privacy Policy explains how Djooky Finance Limited ("the Company", "we", "us") collects, uses, stores, and discloses personal information in connection with the Service operated under the brand name Tokenum.' },
-      { type: 'text', text: '1.2. We process personal information in accordance with applicable Canadian privacy laws, including the Personal Information Protection and Electronic Documents Act (PIPEDA) and, where applicable, the Personal Information Protection Act of British Columbia.' },
-      { type: 'text', text: '1.3. By accessing or using the Service, you acknowledge this Privacy Policy. If you do not agree, you must not use the Service.' },
-      { type: 'title', text: 'SECTION 2: Information We Collect' },
-      { type: 'text', text: '2.1. We may collect personal information that you provide directly, that is generated through your use of the Service, and that we obtain from identity-verification and compliance partners, including:' },
-      { type: 'list', items: [
-        'Identity and contact details, such as name, date of birth, address, email, and telephone number;',
-        'Identification documents and verification data required for KYC and AML/CTF purposes;',
-        'Transaction details, wallet addresses, and technical data such as device, browser, and IP information.',
-      ]},
-      { type: 'title', text: 'SECTION 3: Use, Sharing, and Retention' },
-      { type: 'text', text: '3.1. We use personal information to provide and improve the Service, to verify identity, to detect and prevent fraud, money laundering, and terrorist financing, to comply with legal obligations, and to communicate with you about your account.' },
-      { type: 'text', text: '3.2. We may share personal information with service providers who support operations (including identity verification, payment processing, hosting, and analytics), with professional advisers, and with competent authorities where required by law. We do not sell personal information.' },
-      { type: 'text', text: '3.3. We retain personal information only for as long as necessary for the purposes described in this Policy, including the retention periods required under PCMLTFA and other applicable law, after which it is securely deleted or anonymized.' },
-      { type: 'text', text: '3.4. You may request access to, correction of, or information about the personal information we hold, subject to legal exceptions. Requests may be sent to the Company at its registered office or through the contact channels published on the Service.' },
-    ],
-  },
-];
+import { documents } from './content';
 ---
 
 <Section class="terms-and-conditions" slide="terms-conditions">
@@ -91,7 +12,6 @@ const documents: TermsDocument[] = [
           {documents.map((doc) => (
             <div class="swiper-slide terms-titles__slide">
               <SectionTitle>{doc.title}</SectionTitle>
-              <SectionSubtitle>{doc.subtitle}</SectionSubtitle>
             </div>
           ))}
         </div>
@@ -108,9 +28,24 @@ const documents: TermsDocument[] = [
             if (block.type === 'title') {
               return <p class="terms-and-conditions__list-title">{block.text}</p>
             }
+            if (block.type === 'subtitle') {
+              return <p class="terms-and-conditions__list-subtitle">{block.text}</p>
+            }
+            if (block.type === 'definition') {
+              return (
+                <p class="terms-and-conditions__list-definition">
+                  <strong>“{block.term}”</strong> {block.text}
+                </p>
+              )
+            }
             if (block.type === 'list') {
               return (
-                <ul class="terms-and-conditions__list-ul">
+                <ul
+                  class:list={[
+                    'terms-and-conditions__list-ul',
+                    { 'terms-and-conditions__list-ul--nested': block.nested },
+                  ]}
+                >
                   {block.items.map((item) => <li>{item}</li>)}
                 </ul>
               )
@@ -263,8 +198,7 @@ const documents: TermsDocument[] = [
       text-align: left;
     }
 
-    :global(.section-title),
-    :global(.section-subtitle) {
+    :global(.section-title) {
       color: color-mix(in srgb, var(--color-text) 28%, transparent);
       transition: color 0.35s ease;
     }
@@ -273,20 +207,8 @@ const documents: TermsDocument[] = [
     &:global(.is-active) {
       cursor: default;
 
-      :global(.section-title),
-      :global(.section-subtitle) {
+      :global(.section-title) {
         color: var(--color-text);
-      }
-
-      :global(.section-subtitle) {
-        max-height: rem(72px);
-        margin-top: rem(30px);
-        opacity: 1;
-
-        @media (max-width: 1024px) {
-          max-height: rem(48px);
-          margin-top: rem(8px);
-        }
       }
 
       :global(.section-title__mark) {
@@ -321,29 +243,6 @@ const documents: TermsDocument[] = [
     :global(.section-title__mark) {
       opacity: 0;
       transition: opacity 0.35s ease;
-    }
-  }
-
-  .terms-and-conditions__content :global(.section-subtitle) {
-    max-height: 0;
-    margin: 0;
-    opacity: 0;
-    overflow: hidden;
-    text-align: left;
-    transition:
-      max-height 0.45s ease,
-      opacity 0.35s ease,
-      margin 0.45s ease,
-      color 0.35s ease;
-
-    @media (max-width: 1024px) {
-      width: 100%;
-      font-size: clamp(rem(12px), 2.8vw, rem(16px));
-      line-height: 1.25;
-    }
-
-    @media (max-width: 768px) {
-      margin-top: 0;
     }
   }
 
@@ -403,49 +302,93 @@ const documents: TermsDocument[] = [
   }
 
   .terms-and-conditions__list-title {
+    margin: rem(28px) 0 rem(14px);
     font-size: clamp(rem(13px), 1vw, rem(16px));
+    line-height: 1.35;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+    text-transform: uppercase;
+    color: var(--color-text);
+
+    &:first-child {
+      margin-top: 0;
+    }
+  }
+
+  .terms-and-conditions__list-subtitle {
+    margin: rem(16px) 0 rem(8px);
+    font-size: clamp(rem(12px), 0.95vw, rem(15px));
     line-height: 1.4;
     font-weight: 500;
-    text-transform: capitalize;
-    margin-bottom: 16px;
     color: var(--color-text);
   }
 
-  .terms-and-conditions__list-text {
+  .terms-and-conditions__list-text,
+  .terms-and-conditions__list-definition {
+    margin: 0 0 rem(12px);
     font-size: clamp(rem(11px), 0.9vw, rem(14px));
     line-height: 1.7;
-    font-weight: 200;
-    text-transform: capitalize;
+    font-weight: 300;
     color: var(--color-text);
-    opacity: 0.75;
-    margin-bottom: 12px;
+    opacity: 0.78;
+    text-wrap: pretty;
 
     &:last-child {
       margin-bottom: 0;
     }
   }
 
+  .terms-and-conditions__list-definition {
+    padding-left: rem(12px);
+    border-left: 1px solid color-mix(in srgb, var(--color-text) 18%, transparent);
+
+    strong {
+      font-weight: 600;
+      opacity: 1;
+      color: var(--color-text);
+    }
+  }
+
   .terms-and-conditions__list-ul {
     list-style: none;
-    padding: 0 0 0 16px;
-    margin: 0 0 12px;
+    padding: 0 0 0 rem(4px);
+    margin: 0 0 rem(12px);
 
     li {
       position: relative;
+      margin-bottom: rem(6px);
+      padding-left: rem(14px);
       font-size: clamp(rem(11px), 0.9vw, rem(14px));
       line-height: 1.7;
-      font-weight: 200;
-      text-transform: capitalize;
+      font-weight: 300;
       color: var(--color-text);
-      opacity: 0.75;
-      padding-left: 12px;
-      margin-bottom: 4px;
+      opacity: 0.78;
+      text-wrap: pretty;
 
       &::before {
         content: '—';
         position: absolute;
         left: 0;
-        opacity: 0.5;
+        opacity: 0.45;
+      }
+
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    &--nested {
+      margin-top: rem(-4px);
+      margin-bottom: rem(12px);
+      padding-left: rem(20px);
+
+      li {
+        opacity: 0.7;
+
+        &::before {
+          content: '·';
+          font-weight: 700;
+        }
       }
     }
   }

@@ -91,11 +91,9 @@ const updateSlideVisuals = (instance: SwiperInstance) => {
     slide.classList.toggle('is-active', isActive)
 
     const title = slide.querySelector<HTMLElement>('.section-title')
-    const subtitle = slide.querySelector<HTMLElement>('.section-subtitle')
     const color = isActive ? ACTIVE_COLOR : MUTED_COLOR
 
     if (title) title.style.color = color
-    if (subtitle) subtitle.style.color = color
   })
 }
 
