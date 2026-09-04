@@ -13,10 +13,10 @@
 }
 
 [data-theme='dark'] {
-  --bg-image: url('/src/assets/img/bg-image.svg');
+  --bg-image: url('../../assets/img/bg-image.svg');
 }
 [data-theme='light'] {
-  --bg-image: url('/src/assets/img/light/bg-image.svg');
+  --bg-image: url('../../assets/img/light/bg-image.svg');
 }
 
 html {

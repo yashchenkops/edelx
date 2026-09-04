@@ -6,6 +6,8 @@ import Button from '@/components/modules/Button/index.astro';
 import trustpilotDark from '@/assets/img/trustpilot.webp';
 import trustpilotLight from '@/assets/img/light/trustpilot.webp';
 import cryptoEconomy from '@/assets/img/crypto-economy.webp';
+import reviewSliderBg from '@/assets/img/review-slider-bg.webp';
+import reviewSliderFront from '@/assets/img/review-slider-front.webp';
 
 const slides = [
   {
@@ -43,11 +45,11 @@ const slides = [
     </div>
 
     <div class="review__slider">
-      <img class="review__slider-bg" src="src/assets/img/review-slider-bg.webp" alt="" />
+      <img class="review__slider-bg" src={reviewSliderBg.src} alt="" />
 
       <div class="review__slider-decoration review__slider-decoration--back" aria-hidden="true"></div>
       <div class="review__slider-decoration review__slider-decoration--front" aria-hidden="true"></div>
-      <img class="review__slider-front" src="src/assets/img/review-slider-front.webp" alt="" />
+      <img class="review__slider-front" src={reviewSliderFront.src} alt="" />
 
       <p class="review__folder-text" data-review-caption>{slides[0].description}</p>
 

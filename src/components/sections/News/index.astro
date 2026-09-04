@@ -3,6 +3,8 @@ import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 import Button from '@/components/modules/Button/index.astro';
+import newsEditMachine from '@/assets/img/news-edit-machine.webp';
+import newsHashtag from '@/assets/img/news-hashtag.webp';
 
 const articles = [
   {
@@ -53,12 +55,12 @@ const articles = [
     </div>
     <div class="news__decoration news__decoration--edit-machine">
       <div class="news__decoration-reveal">
-        <img src="src/assets/img/news-edit-machine.webp" alt="Text machine">
+        <img src={newsEditMachine.src} alt="Text machine">
       </div>
     </div>
     <div class="news__decoration news__decoration--hashtag">
       <div class="news__decoration-reveal">
-        <img src="src/assets/img/news-hashtag.webp" alt="Hashtag">
+        <img src={newsHashtag.src} alt="Hashtag">
       </div>
     </div>
   </div>

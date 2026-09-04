@@ -2,6 +2,7 @@
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+import faqBook from '@/assets/img/faq-book.webp';
 
 const items = [
   {
@@ -146,7 +147,7 @@ const shapeIds = ['a', 'b'];
   </div>
 
   <div class="faq__image">
-    <img class="faq__image-float" src="src/assets/img/faq-book.webp" alt="Book image">
+    <img class="faq__image-float" src={faqBook.src} alt="Book image">
   </div>
 </Section>
 

@@ -2,12 +2,14 @@
 import PageHeader from '@/components/layout/PageHeader/index.astro';
 import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
 import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
+import logoDark from '@/assets/img/logo.webp';
+import logoLight from '@/assets/img/light/logo.webp';
 ---
 
 <PageHeader>
   <a href={import.meta.env.BASE_URL} class="logo" data-header-item>
-    <img class="logo__img logo__img--dark" src="src/assets/img/logo.webp" alt="logo">
-    <img class="logo__img logo__img--light" src="src/assets/img/light/logo.webp" alt="logo">
+    <img class="logo__img logo__img--dark" src={logoDark.src} alt="logo">
+    <img class="logo__img logo__img--light" src={logoLight.src} alt="logo">
   </a>
   <div class="header__center" data-header-item>
     <ThemeToggle />
