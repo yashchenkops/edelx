@@ -39,6 +39,18 @@ const slideId = slide ?? sectionClass;
     height: 100%;
     display: flex;
     align-items: center;
+    box-sizing: border-box;
+
+    @media (max-width: 1024px) {
+      /* Clear fixed header; keep content vertically centered in remaining space */
+      padding-top: rem(152px);
+      padding-bottom: rem(72px);
+    }
+
+    @media (max-width: 768px) {
+      padding-top: rem(120px);
+      padding-bottom: rem(48px);
+    }
   }
 
   .page-section__decor {
@@ -52,6 +64,12 @@ const slideId = slide ?? sectionClass;
     z-index: 1;
     width: min(100% - 2 * clamp($page-padding-min, 3vw, $page-padding-max), $page-width);
     margin-inline: auto;
+    transform-origin: center center;
+    will-change: transform;
+
+    @media (max-width: 768px) {
+      width: min(100% - 2 * clamp(15px, 4vw, 30px), $page-width);
+    }
   }
 
   .page-section__inner :global(.section-title) {

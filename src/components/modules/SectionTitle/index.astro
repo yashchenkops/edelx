@@ -31,6 +31,10 @@ const {
     text-transform: uppercase;
     color: var(--color-text);
 
+    @media (max-width: 768px) {
+      font-size: clamp(rem(36px), 11vw, rem(64px));
+    }
+
     &__mark {
       position: absolute;
       top: -15px;
