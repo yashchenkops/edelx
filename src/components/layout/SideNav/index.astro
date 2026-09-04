@@ -9,7 +9,7 @@ const menuItems = [
 ];
 ---
 
-<nav class="side-nav" aria-label="Page sections">
+<nav class="side-nav" aria-label="Page sections" data-side-nav>
   <ul class="side-nav__list">
     {
       menuItems.map((item) => (
@@ -27,6 +27,44 @@ const menuItems = [
   </ul>
 </nav>
 
+<script>
+  import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
+
+  const nav = document.querySelector<HTMLElement>('[data-side-nav]')
+  const items = Array.from(document.querySelectorAll<HTMLElement>('.side-nav__item'))
+
+  if (nav && items.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    gsap.set(items, {
+      opacity: 0,
+      x: -18,
+    })
+
+    runWhenAppReady(() => {
+      if (reduced) {
+        gsap.to(items, { opacity: 1, x: 0, duration: 0.2, overwrite: true })
+        return
+      }
+
+      gsap.fromTo(
+        items,
+        { opacity: 0, x: -18 },
+        {
+          opacity: 1,
+          x: 0,
+          duration: 0.5,
+          delay: 0.08,
+          stagger: 0.05,
+          ease: 'power3.out',
+          overwrite: true,
+        },
+      )
+    })
+  }
+</script>
+
 <style lang="scss">
   .side-nav {
     position: fixed;
@@ -43,6 +81,10 @@ const menuItems = [
       display: flex;
       flex-direction: column;
       gap: rem(18px);
+    }
+
+    &__item {
+      opacity: 0;
     }
 
     &__link {

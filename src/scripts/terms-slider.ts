@@ -47,7 +47,7 @@ const playIn = (items: HTMLElement[], reduced: boolean) => {
       y: 0,
       filter: 'blur(0px)',
       duration: 0.6,
-      delay: 0.16,
+      delay: 0.06,
       stagger: 0.05,
       ease: 'power3.out',
       overwrite: true,

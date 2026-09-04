@@ -18,7 +18,8 @@ const {
   ]}
   {...rest}
 >
-  <slot />
+  <span class="section-title__mark" aria-hidden="true"></span>
+  <span class="section-title__label"><slot /></span>
 </Tag>
 
 <style lang="scss">
@@ -30,15 +31,21 @@ const {
     text-transform: uppercase;
     color: var(--color-text);
 
-    &::before {
-      content: '';
+    &__mark {
       position: absolute;
       top: -15px;
       left: -15px;
       width: 15px;
       height: 15px;
-      background-color: transparent;
       border: 1px solid var(--color-text);
+      background-color: transparent;
+      pointer-events: none;
+      transform-origin: center;
+      will-change: transform, opacity;
+    }
+
+    &__label {
+      display: block;
     }
 
     :global(.word) {

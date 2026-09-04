@@ -88,7 +88,10 @@ const getTextUnits = (el: HTMLElement) => {
   if (cached) return cached.units
 
   const isTitle = el.classList.contains('section-title')
-  const split = SplitText.create(el, {
+  const splitRoot =
+    (isTitle ? el.querySelector<HTMLElement>('.section-title__label') : null) ?? el
+
+  const split = SplitText.create(splitRoot, {
     type: isTitle ? 'words,lines' : 'lines,words',
     mask: isTitle ? 'words' : 'lines',
     aria: 'auto',
@@ -108,11 +111,56 @@ const getTextUnits = (el: HTMLElement) => {
 
 const unitStagger = (count: number) => Math.min(0.045, 0.24 / Math.max(count, 1))
 
+const getTitleMark = (el: HTMLElement) =>
+  el.classList.contains('section-title')
+    ? el.querySelector<HTMLElement>('.section-title__mark')
+    : null
+
+const setMarkHidden = (mark: HTMLElement) => {
+  gsap.killTweensOf(mark)
+  gsap.set(mark, { opacity: 0, scale: 0.35, rotate: -18 })
+}
+
+const setMarkVisible = (mark: HTMLElement) => {
+  gsap.killTweensOf(mark)
+  gsap.set(mark, { opacity: 1, scale: 1, rotate: 0 })
+}
+
+const revealMark = (mark: HTMLElement, delay = 0) => {
+  gsap.fromTo(
+    mark,
+    { opacity: 0, scale: 0.3, rotate: -22 },
+    {
+      opacity: 1,
+      scale: 1,
+      rotate: 0,
+      duration: 0.55,
+      delay,
+      ease: 'back.out(1.7)',
+      overwrite: true,
+    },
+  )
+}
+
+const concealMark = (mark: HTMLElement) => {
+  gsap.to(mark, {
+    opacity: 0,
+    scale: 0.45,
+    rotate: 12,
+    duration: 0.28,
+    ease: 'power2.in',
+    overwrite: true,
+  })
+}
+
 const setTextHidden = (slideEl: HTMLElement) => {
   getTextElements(slideEl).forEach((el) => {
     const units = getTextUnits(el)
     gsap.killTweensOf(units)
     gsap.set(units, { yPercent: 110 })
+
+    const mark = getTitleMark(el)
+    if (mark) setMarkHidden(mark)
   })
 }
 
@@ -121,6 +169,9 @@ const setTextVisible = (slideEl: HTMLElement) => {
     const units = getTextUnits(el)
     gsap.killTweensOf(units)
     gsap.set(units, { yPercent: 0 })
+
+    const mark = getTitleMark(el)
+    if (mark) setMarkVisible(mark)
   })
 }
 
@@ -129,18 +180,23 @@ const revealText = (slideEl: HTMLElement, delay = 0) => {
     const units = getTextUnits(el)
     if (!units.length) return
 
+    const itemDelay = delay + index * 0.05
+
     gsap.fromTo(
       units,
       { yPercent: 110 },
       {
         yPercent: 0,
-        duration: 0.75,
+        duration: 0.7,
         ease: 'power3.out',
         stagger: unitStagger(units.length),
-        delay: delay + index * 0.06,
+        delay: itemDelay,
         overwrite: true,
       },
     )
+
+    const mark = getTitleMark(el)
+    if (mark) revealMark(mark, itemDelay + 0.12)
   })
 }
 
@@ -151,11 +207,14 @@ const concealText = (slideEl: HTMLElement) => {
 
     gsap.to(units, {
       yPercent: -110,
-      duration: 0.4,
+      duration: 0.35,
       ease: 'power2.in',
       stagger: unitStagger(units.length) * 0.6,
       overwrite: true,
     })
+
+    const mark = getTitleMark(el)
+    if (mark) concealMark(mark)
   })
 }
 
@@ -262,7 +321,7 @@ export const initPageSlider = () => {
           await whenAppReady()
 
           const current = slides[swiperInstance.activeIndex]
-          if (current) revealText(current, 0.08)
+          if (current) revealText(current, 0)
         })
       },
       slideChange: ({ activeIndex }) => updateActiveNav(slides, activeIndex),
@@ -273,7 +332,7 @@ export const initPageSlider = () => {
         if (prev instanceof HTMLElement) concealText(prev)
         if (next instanceof HTMLElement) {
           setTextHidden(next)
-          revealText(next, 0.2)
+          revealText(next, 0.06)
         }
       },
       progress: (swiperInstance) => {

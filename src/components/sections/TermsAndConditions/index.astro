@@ -263,7 +263,7 @@ const documents: TermsDocument[] = [
         opacity: 1;
       }
 
-      :global(.section-title)::before {
+      :global(.section-title__mark) {
         opacity: 1;
         border-color: var(--color-text);
       }
@@ -285,7 +285,7 @@ const documents: TermsDocument[] = [
       font-size: clamp(rem(36px), 8vw, rem(72px));
     }
 
-    &::before {
+    :global(.section-title__mark) {
       opacity: 0;
       transition: opacity 0.35s ease;
     }

@@ -5,26 +5,81 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 ---
 
 <PageHeader>
-  <a href="/" class="logo">
+  <a href="/" class="logo" data-header-item>
     <img class="logo__img logo__img--dark" src="src/assets/img/logo.webp" alt="logo">
     <img class="logo__img logo__img--light" src="src/assets/img/light/logo.webp" alt="logo">
   </a>
-  <div class="header__center">
+  <div class="header__center" data-header-item>
     <ThemeToggle />
   </div>
-  <div class="header__desktop">
+  <div class="header__desktop" data-header-item>
     <div class="actions">
       <a href="#" class="actions__login">Log In</a>
       <a href="#" class="actions__signup">Sign Up</a>
     </div>
   </div>
-  <BurgerMenu />
+  <div data-header-item data-header-burger>
+    <BurgerMenu />
+  </div>
 </PageHeader>
+
+<script>
+  import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
+
+  const items = Array.from(document.querySelectorAll<HTMLElement>('[data-header-item]'))
+  if (items.length) {
+    const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const centered = items.filter((el) => el.classList.contains('header__center'))
+    const moving = items.filter((el) => !el.classList.contains('header__center'))
+
+    if (moving.length) gsap.set(moving, { opacity: 0, y: -14 })
+    if (centered.length) gsap.set(centered, { opacity: 0 })
+
+    runWhenAppReady(() => {
+      if (reduced) {
+        gsap.to(items, { opacity: 1, y: 0, duration: 0.2, overwrite: true })
+        return
+      }
+
+      if (moving.length) {
+        gsap.fromTo(
+          moving,
+          { opacity: 0, y: -16 },
+          {
+            opacity: 1,
+            y: 0,
+            duration: 0.55,
+            delay: 0.02,
+            stagger: 0.07,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
+      if (centered.length) {
+        gsap.fromTo(
+          centered,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.5,
+            delay: 0.12,
+            ease: 'power2.out',
+            overwrite: true,
+          },
+        )
+      }
+    })
+  }
+</script>
 
 <style lang="scss">
   .logo {
     position: relative;
     z-index: calc(v.$z-header + 20);
+    opacity: 0;
   }
 
   .logo__img {
@@ -45,6 +100,7 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
     left: 50%;
     top: 50%;
     transform: translate(-50%, -50%);
+    opacity: 0;
 
     @media (max-width: 1024px) {
       display: none;
@@ -55,8 +111,17 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
     display: flex;
     align-items: center;
     gap: #{rem(24px)};
+    opacity: 0;
 
     @media (max-width: 1024px) {
+      display: none;
+    }
+  }
+
+  [data-header-burger] {
+    opacity: 0;
+
+    @media (min-width: 1025px) {
       display: none;
     }
   }
