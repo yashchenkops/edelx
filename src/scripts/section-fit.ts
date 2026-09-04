@@ -1,6 +1,7 @@
 import { runWhenAppReady } from '@/scripts/app-ready'
 
 const FIT_MQ = '(max-width: 1024px)'
+const SKIP_FIT = '.page-section--news, [data-fit="scroll"]'
 
 const contentBoxHeight = (el: HTMLElement) => {
   const style = getComputedStyle(el)
@@ -19,6 +20,9 @@ const fitSection = (section: HTMLElement) => {
   inner.style.transform = ''
   inner.style.width = ''
   inner.style.transformOrigin = ''
+
+  // Scrollable sections keep natural size instead of scale-fitting.
+  if (section.matches(SKIP_FIT)) return
 
   if (!window.matchMedia(FIT_MQ).matches) return
 

@@ -26,7 +26,7 @@ const articles = [
 ];
 ---
 
-<Section class="news" slide="news">
+<Section class="news" slide="news" data-fit="scroll">
   <div class="news__inner">
     <div class="news__content">
       <SectionTitle>News</SectionTitle>
@@ -259,12 +259,16 @@ const articles = [
       })
     }
 
+    const scene = slide.querySelector<HTMLElement>('.page-section__scene')
+
     const sync = () => {
       const nextActive = slide.classList.contains('swiper-slide-active')
       if (nextActive === isActive) return
       isActive = nextActive
-      if (nextActive) playIn()
-      else {
+      if (nextActive) {
+        if (scene) scene.scrollTop = 0
+        playIn()
+      } else {
         playOut()
         resetParallax()
       }
@@ -280,6 +284,39 @@ const articles = [
 </script>
 
 <style lang="scss">
+  :global(.page-section--news) {
+    overflow: hidden;
+  }
+
+  :global(.page-section--news .page-section__scene) {
+    overflow-x: hidden;
+    overflow-y: auto;
+    overscroll-behavior-y: contain;
+    -webkit-overflow-scrolling: touch;
+    align-items: flex-start;
+    scrollbar-width: thin;
+    scrollbar-color: transparent transparent;
+
+    &::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+
+    &::-webkit-scrollbar-track {
+      background: transparent;
+    }
+  }
+
+  :global(.page-section--news .page-section__inner) {
+    margin-block: auto;
+    transform: none !important;
+  }
+
   .news__inner {
     position: relative;
     display: flex;
@@ -289,7 +326,8 @@ const articles = [
     @media (max-width: 1200px) {
       flex-direction: column;
       align-items: flex-start;
-      gap: clamp(rem(32px), 5vw, rem(56px));
+      gap: clamp(rem(24px), 3.5vh, rem(48px));
+      width: 100%;
     }
   }
 
@@ -314,14 +352,10 @@ const articles = [
     width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 26px;
+    gap: clamp(rem(16px), 2.2vh, rem(26px));
 
     @media (max-width: 1200px) {
       max-width: 100%;
-    }
-
-    @media (max-width: 768px) {
-      gap: 16px;
     }
   }
 
@@ -331,7 +365,7 @@ const articles = [
     align-items: center;
     justify-content: space-between;
     gap: 24px;
-    padding: 35px 40px;
+    padding: clamp(rem(22px), 2.8vh, rem(35px)) clamp(rem(24px), 3vw, rem(40px));
     border-radius: 20px;
     background: rgb(255 255 255 / 10%);
     backdrop-filter: blur(5px);
@@ -345,8 +379,8 @@ const articles = [
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: flex-start;
-      gap: 20px;
-      padding: 24px 24px 28px;
+      gap: rem(16px);
+      padding: rem(22px) rem(20px) rem(24px);
     }
 
     &::before {

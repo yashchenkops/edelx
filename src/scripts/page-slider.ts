@@ -35,6 +35,31 @@ const isTouchSwipeEnabled = () =>
   window.matchMedia('(pointer: coarse)').matches ||
   navigator.maxTouchPoints > 0
 
+const getNestedScrollEl = (slideEl: HTMLElement | undefined) => {
+  if (!slideEl) return null
+  if (!slideEl.matches('[data-fit="scroll"], .page-section--news')) return null
+  return slideEl.querySelector<HTMLElement>('.page-section__scene')
+}
+
+const nestedScrollState = (el: HTMLElement) => {
+  const top = el.scrollTop
+  const max = el.scrollHeight - el.clientHeight
+  return {
+    canScroll: max > 1,
+    atTop: top <= 1,
+    atBottom: top >= max - 1,
+  }
+}
+
+/** True when the nested block should consume this scroll direction. */
+const shouldBlockPageSlide = (el: HTMLElement | null, deltaY: number) => {
+  if (!el || deltaY === 0) return false
+  const { canScroll, atTop, atBottom } = nestedScrollState(el)
+  if (!canScroll) return false
+  if (deltaY > 0) return !atBottom
+  return !atTop
+}
+
 const updateActiveNav = (slides: HTMLElement[], activeIndex: number) => {
   const activeSlideId = slides[activeIndex]?.dataset.slide
 
@@ -370,6 +395,61 @@ export const initPageSlider = () => {
   const syncTouchMove = () => {
     swiper.allowTouchMove = isTouchSwipeEnabled()
   }
+
+  // Nested scroll lock (e.g. News): block page-slide until the inner block
+  // reaches the matching edge in the scroll direction.
+  const onNestedWheel = (event: WheelEvent) => {
+    if (!event.deltaY) return
+    const active = slides[swiper.activeIndex]
+    const scrollEl = getNestedScrollEl(active)
+    if (!shouldBlockPageSlide(scrollEl, event.deltaY)) return
+
+    let delta = event.deltaY
+    if (event.deltaMode === 1) delta *= 16
+    if (event.deltaMode === 2) delta *= scrollEl!.clientHeight
+
+    event.preventDefault()
+    event.stopImmediatePropagation()
+    scrollEl!.scrollTop += delta
+  }
+
+  window.addEventListener('wheel', onNestedWheel, {
+    capture: true,
+    passive: false,
+  })
+
+  let touchStartY = 0
+  const onNestedTouchStart = (event: TouchEvent) => {
+    touchStartY = event.touches[0]?.clientY ?? 0
+  }
+
+  const onNestedTouchMove = (event: TouchEvent) => {
+    const active = slides[swiper.activeIndex]
+    const scrollEl = getNestedScrollEl(active)
+    if (!scrollEl) {
+      syncTouchMove()
+      return
+    }
+
+    const y = event.touches[0]?.clientY ?? touchStartY
+    // Finger up => content scrolls down (positive deltaY equivalent).
+    const deltaY = touchStartY - y
+    if (shouldBlockPageSlide(scrollEl, deltaY)) {
+      swiper.allowTouchMove = false
+      return
+    }
+
+    syncTouchMove()
+  }
+
+  const onNestedTouchEnd = () => {
+    syncTouchMove()
+  }
+
+  slider.addEventListener('touchstart', onNestedTouchStart, { passive: true })
+  slider.addEventListener('touchmove', onNestedTouchMove, { passive: true, capture: true })
+  slider.addEventListener('touchend', onNestedTouchEnd, { passive: true })
+  slider.addEventListener('touchcancel', onNestedTouchEnd, { passive: true })
 
   let resizeTimer = 0
   const onResize = () => {
