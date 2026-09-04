@@ -1,7 +1,7 @@
 import { runWhenAppReady } from '@/scripts/app-ready'
 
 const FIT_MQ = '(max-width: 1024px)'
-const SKIP_FIT = '.page-section--news, [data-fit="scroll"]'
+const SKIP_FIT = '.page-section--news, .page-section--faq, [data-fit="scroll"]'
 
 const contentBoxHeight = (el: HTMLElement) => {
   const style = getComputedStyle(el)

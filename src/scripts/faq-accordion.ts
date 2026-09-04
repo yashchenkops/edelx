@@ -1,23 +1,24 @@
 const initFaqAccordion = (root: HTMLElement) => {
   const items = Array.from(root.querySelectorAll<HTMLElement>('.faq-accordion__item'))
 
+  const setOpen = (item: HTMLElement, open: boolean) => {
+    item.classList.toggle('is-open', open)
+    item
+      .querySelector<HTMLButtonElement>('.faq-accordion__trigger')
+      ?.setAttribute('aria-expanded', String(open))
+  }
+
   items.forEach((item) => {
     const trigger = item.querySelector<HTMLButtonElement>('.faq-accordion__trigger')
     if (!trigger) return
 
     trigger.addEventListener('click', () => {
-      const isOpen = item.classList.contains('is-open')
+      const willOpen = !item.classList.contains('is-open')
 
+      // Toggle open/close in the same frame so both panels transition together.
       items.forEach((other) => {
-        if (other === item) return
-        other.classList.remove('is-open')
-        other
-          .querySelector<HTMLButtonElement>('.faq-accordion__trigger')
-          ?.setAttribute('aria-expanded', 'false')
+        setOpen(other, willOpen && other === item)
       })
-
-      item.classList.toggle('is-open', !isOpen)
-      trigger.setAttribute('aria-expanded', String(!isOpen))
     })
   })
 }

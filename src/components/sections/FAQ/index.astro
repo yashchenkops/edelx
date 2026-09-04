@@ -153,8 +153,24 @@ const shapeIds = ['a', 'b'];
   import { runWhenAppReady } from '@/scripts/app-ready'
 
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
+  const accordion = document.querySelector<HTMLElement>('[data-faq-accordion]')
   const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
   const image = document.querySelector<HTMLElement>('.faq__image')
+
+  const revealItems = () => {
+    gsap.set(items, { clearProps: 'all' })
+    accordion?.classList.add('is-revealed')
+  }
+
+  const hideItemsForAnim = () => {
+    accordion?.classList.remove('is-revealed')
+    gsap.killTweensOf(items)
+    gsap.set(items, {
+      opacity: 0,
+      y: 28,
+      filter: 'blur(6px)',
+    })
+  }
 
   type ShapeBundle = {
     glass: HTMLElement | null
@@ -189,12 +205,7 @@ const shapeIds = ['a', 'b'];
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    if (items.length) {
-      gsap.set(items, {
-        autoAlpha: 0,
-        y: 28,
-      })
-    }
+    if (items.length) hideItemsForAnim()
 
     if (image) {
       gsap.set(image, {
@@ -343,15 +354,7 @@ const shapeIds = ['a', 'b'];
         playShapeIn()
 
         if (reduced) {
-          if (items.length) {
-            gsap.to(items, {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.25,
-              overwrite: true,
-              clearProps: 'transform,filter',
-            })
-          }
+          if (items.length) revealItems()
           if (image) {
             gsap.to(image, {
               opacity: 1,
@@ -367,22 +370,21 @@ const shapeIds = ['a', 'b'];
         }
 
         if (items.length) {
-          // Avoid `filter`/`transform` lingering on accordion items —
-          // both break CSS 0fr/1fr open panels and leave empty gaps.
-          gsap.fromTo(
-            items,
-            { autoAlpha: 0, y: 28 },
-            {
-              autoAlpha: 1,
-              y: 0,
-              duration: 0.65,
+          hideItemsForAnim()
+          gsap
+            .timeline({
               delay: 0.06,
+              onComplete: revealItems,
+            })
+            .to(items, {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              duration: 0.65,
               stagger: 0.07,
               ease: 'power3.out',
               overwrite: true,
-              clearProps: 'transform,filter',
-            },
-          )
+            })
         }
 
         if (image) {
@@ -416,9 +418,11 @@ const shapeIds = ['a', 'b'];
       playShapeOut()
 
       if (items.length) {
+        accordion?.classList.remove('is-revealed')
         gsap.to(items, {
-          autoAlpha: 0,
+          opacity: 0,
           y: -12,
+          filter: 'blur(5px)',
           duration: reduced ? 0.2 : 0.24,
           stagger: 0.03,
           ease: 'power2.in',
@@ -614,14 +618,23 @@ const shapeIds = ['a', 'b'];
   .faq-accordion {
     position: relative;
     z-index: 2;
-    isolation: isolate;
     display: flex;
     flex-direction: column;
     gap: clamp(rem(22px), 3vw, rem(40px));
   }
 
   .faq-accordion__item {
+    position: relative;
+    z-index: 1;
     min-width: 0;
+  }
+
+  /* After intro, force visible — clears stuck GSAP opacity/filter/visibility */
+  .faq-accordion.is-revealed .faq-accordion__item {
+    opacity: 1 !important;
+    visibility: visible !important;
+    filter: none !important;
+    transform: none !important;
   }
 
   .faq-accordion__trigger {
