@@ -158,17 +158,39 @@ const shapeIds = ['a', 'b'];
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
   const accordion = document.querySelector<HTMLElement>('[data-faq-accordion]')
   const image = document.querySelector<HTMLElement>('.faq__image')
+  const itemCount =
+    accordion?.querySelectorAll('.faq-accordion__item').length ?? 0
+  // delay(0.06 + i*0.07) + duration(0.65), converted to ms
+  const INTRO_MS = Math.ceil((0.06 + Math.max(itemCount - 1, 0) * 0.07 + 0.65) * 1000) + 40
 
-  const showItems = () => {
+  let revealTimer = 0
+
+  const lockItemsVisible = () => {
     if (!accordion) return
+    // Lock first, then drop animation class — never leave opacity:0 stuck.
+    accordion.classList.add('is-revealed')
     accordion.classList.remove('is-items-in')
+  }
+
+  const showItems = (instant = false) => {
+    if (!accordion) return
+    window.clearTimeout(revealTimer)
+
+    if (instant) {
+      lockItemsVisible()
+      return
+    }
+
+    accordion.classList.remove('is-revealed', 'is-items-in')
     // Restart CSS animation reliably
     void accordion.offsetWidth
     accordion.classList.add('is-items-in')
+    revealTimer = window.setTimeout(lockItemsVisible, INTRO_MS)
   }
 
   const hideItems = () => {
-    accordion?.classList.remove('is-items-in')
+    window.clearTimeout(revealTimer)
+    accordion?.classList.remove('is-items-in', 'is-revealed')
   }
 
   type ShapeBundle = {
@@ -353,7 +375,7 @@ const shapeIds = ['a', 'b'];
         playShapeIn()
 
         if (reduced) {
-          showItems()
+          showItems(true)
           if (image) {
             gsap.to(image, {
               opacity: 1,
@@ -598,31 +620,8 @@ const shapeIds = ['a', 'b'];
     position: relative;
     z-index: 1;
     min-width: 0;
+    // Opacity only on the item — filter/transform here break 0fr/1fr panels.
     opacity: 0;
-    transform: translateY(28px);
-    filter: blur(6px);
-  }
-
-  .faq-accordion.is-items-in .faq-accordion__item {
-    animation: faq-item-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    animation-delay: calc(0.06s + var(--faq-i, 0) * 0.07s);
-  }
-
-  @keyframes faq-item-in {
-    to {
-      opacity: 1;
-      transform: translateY(0);
-      filter: blur(0);
-    }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .faq-accordion__item {
-      opacity: 1;
-      transform: none;
-      filter: none;
-      animation: none !important;
-    }
   }
 
   .faq-accordion__trigger {
@@ -638,6 +637,8 @@ const shapeIds = ['a', 'b'];
     font-size: clamp(rem(16px), 1.7vw, rem(28px));
     line-height: 1.25;
     color: var(--color-text);
+    transform: translateY(28px);
+    filter: blur(6px);
     transition: opacity v.$transition-base;
 
     @include m.hover {
@@ -645,19 +646,65 @@ const shapeIds = ['a', 'b'];
     }
   }
 
-  .faq-accordion__panel {
-    display: grid;
-    grid-template-rows: 0fr;
-    transition: grid-template-rows 0.35s ease;
+  .faq-accordion.is-items-in .faq-accordion__item {
+    animation: faq-item-fade 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(0.06s + var(--faq-i, 0) * 0.07s);
   }
 
-  .faq-accordion__item.is-open .faq-accordion__panel {
-    grid-template-rows: 1fr;
+  .faq-accordion.is-items-in .faq-accordion__trigger {
+    animation: faq-trigger-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(0.06s + var(--faq-i, 0) * 0.07s);
+  }
+
+  @keyframes faq-item-fade {
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes faq-trigger-in {
+    to {
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  /* Hard lock after intro — questions cannot stay stuck invisible */
+  .faq-accordion.is-revealed .faq-accordion__item {
+    opacity: 1;
+    animation: none;
+  }
+
+  .faq-accordion.is-revealed .faq-accordion__trigger {
+    transform: none;
+    filter: none;
+    animation: none;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-accordion__item {
+      opacity: 1;
+      animation: none !important;
+    }
+
+    .faq-accordion__trigger {
+      transform: none;
+      filter: none;
+      animation: none !important;
+    }
+  }
+
+  /* Height animated via GSAP — works inside Swiper transforms */
+  .faq-accordion__panel {
+    display: block;
+    overflow: hidden;
+    height: 0;
+    opacity: 0;
+    will-change: height, opacity;
   }
 
   .faq-accordion__panel-inner {
     overflow: hidden;
-    min-height: 0;
   }
 
   .faq-accordion__answer {
