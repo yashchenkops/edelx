@@ -2,10 +2,12 @@ import Swiper from 'swiper'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { gsap } from 'gsap'
 import { runWhenAppReady } from '@/scripts/app-ready'
+import { registerNestedWheelLock } from '@/scripts/page-slider'
 import 'swiper/css'
 
 const TABLET_BREAKPOINT = 1024
 const SLIDE_SPEED = 700
+const WHEEL_THRESHOLD = 8
 
 const prefersReducedMotion = () =>
   window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -76,55 +78,6 @@ const updateFooterOffset = () => {
 
   const footerH = footer.getBoundingClientRect().height
   inner.style.setProperty('--footer-offset', `${footerH + 80}px`)
-}
-
-const bindNestedScroll = (wrap: HTMLElement, getActive: () => HTMLElement | undefined) => {
-  wrap.addEventListener(
-    'wheel',
-    (event) => {
-      const el = getActive()
-      if (!el) return
-
-      const { scrollTop, scrollHeight, clientHeight } = el
-      const atTop = scrollTop <= 0 && event.deltaY < 0
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 1 && event.deltaY > 0
-
-      if (!atTop && !atBottom) {
-        event.stopPropagation()
-        event.stopImmediatePropagation()
-      }
-    },
-    { passive: false, capture: true },
-  )
-
-  let touchStartY = 0
-
-  wrap.addEventListener(
-    'touchstart',
-    (event) => {
-      touchStartY = event.touches[0]?.clientY ?? 0
-    },
-    { passive: true },
-  )
-
-  wrap.addEventListener(
-    'touchmove',
-    (event) => {
-      const el = getActive()
-      if (!el) return
-
-      const dy = touchStartY - (event.touches[0]?.clientY ?? touchStartY)
-      const { scrollTop, scrollHeight, clientHeight } = el
-      const atTop = scrollTop <= 0 && dy < 0
-      const atBottom = scrollTop + clientHeight >= scrollHeight - 1 && dy > 0
-
-      if (!atTop && !atBottom) {
-        event.stopPropagation()
-        event.stopImmediatePropagation()
-      }
-    },
-    { passive: false, capture: true },
-  )
 }
 
 const ACTIVE_COLOR = 'var(--color-text)'
@@ -220,8 +173,6 @@ export const initTermsSlider = () => {
     hideItems(getItems(next))
   }
 
-  bindNestedScroll(wrap, getActivePanel)
-
   const swiper = new Swiper(titlesEl, {
     direction: isHorizontal() ? 'horizontal' : 'vertical',
     speed: reduced ? 280 : SLIDE_SPEED,
@@ -252,29 +203,45 @@ export const initTermsSlider = () => {
     },
   })
 
-  titlesEl.addEventListener(
-    'wheel',
-    (event) => {
-      if (isHorizontal()) return
-      if (!pageActive) return
+  const lockNestedSlide = () => {
+    wheelLock = true
+    window.setTimeout(() => {
+      wheelLock = false
+    }, reduced ? 280 : SLIDE_SPEED)
+  }
 
-      event.preventDefault()
-      event.stopPropagation()
-      event.stopImmediatePropagation()
+  /**
+   * Nested titles slider only. Text scrolls when hovered (local scroll target).
+   * Returns true when the gesture must stay inside Terms titles.
+   */
+  const handleNestedWheel = (deltaY: number) => {
+    if (!pageActive || !deltaY) return false
 
-      if (wheelLock || swiper.animating) return
-      if (Math.abs(event.deltaY) < 8) return
+    if (Math.abs(deltaY) < WHEEL_THRESHOLD) {
+      if (deltaY > 0) return !swiper.isEnd
+      return !swiper.isBeginning
+    }
 
-      wheelLock = true
-      if (event.deltaY > 0) swiper.slideNext()
-      else swiper.slidePrev()
+    if (deltaY > 0) {
+      if (swiper.isEnd) return false
+      if (!wheelLock && !swiper.animating) {
+        lockNestedSlide()
+        swiper.slideNext()
+      }
+      return true
+    }
 
-      window.setTimeout(() => {
-        wheelLock = false
-      }, reduced ? 280 : SLIDE_SPEED)
-    },
-    { passive: false, capture: true },
-  )
+    if (swiper.isBeginning) return false
+    if (!wheelLock && !swiper.animating) {
+      lockNestedSlide()
+      swiper.slidePrev()
+    }
+    return true
+  }
+
+  registerNestedWheelLock(pageSlide, {
+    handleWheel: handleNestedWheel,
+  })
 
   const syncDirection = () => {
     const nextDirection = isHorizontal() ? 'horizontal' : 'vertical'

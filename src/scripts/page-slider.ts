@@ -60,6 +60,31 @@ const shouldBlockPageSlide = (el: HTMLElement | null, deltaY: number) => {
   return !atTop
 }
 
+export type NestedWheelLock = {
+  /**
+   * Return true if the nested UI consumed the gesture (block page slide).
+   * When `manualScroll` is true (mouse wheel), the lock should apply scroll itself.
+   */
+  handleWheel: (deltaY: number, manualScroll?: boolean) => boolean
+}
+
+const nestedWheelLocks = new WeakMap<HTMLElement, NestedWheelLock>()
+
+/** Register nested wheel handling for a page slide (Terms titles, etc.). */
+export const registerNestedWheelLock = (
+  slideEl: HTMLElement,
+  lock: NestedWheelLock,
+) => {
+  nestedWheelLocks.set(slideEl, lock)
+}
+
+const normalizeWheelDelta = (event: WheelEvent, fallbackPageSize: number) => {
+  let delta = event.deltaY
+  if (event.deltaMode === 1) delta *= 16
+  if (event.deltaMode === 2) delta *= fallbackPageSize
+  return delta
+}
+
 const updateActiveNav = (slides: HTMLElement[], activeIndex: number) => {
   const activeSlideId = slides[activeIndex]?.dataset.slide
 
@@ -396,21 +421,46 @@ export const initPageSlider = () => {
     swiper.allowTouchMove = isTouchSwipeEnabled()
   }
 
-  // Nested scroll lock (e.g. News): block page-slide until the inner block
-  // reaches the matching edge in the scroll direction.
+  // Nested locks: News (overflow scroll) + registered controllers (Terms, …).
   const onNestedWheel = (event: WheelEvent) => {
     if (!event.deltaY) return
     const active = slides[swiper.activeIndex]
-    const scrollEl = getNestedScrollEl(active)
-    if (!shouldBlockPageSlide(scrollEl, event.deltaY)) return
+    if (!(active instanceof HTMLElement)) return
 
-    let delta = event.deltaY
-    if (event.deltaMode === 1) delta *= 16
-    if (event.deltaMode === 2) delta *= scrollEl!.clientHeight
+    const scrollEl = getNestedScrollEl(active)
+    if (shouldBlockPageSlide(scrollEl, event.deltaY)) {
+      const delta = normalizeWheelDelta(event, scrollEl!.clientHeight)
+      event.preventDefault()
+      event.stopImmediatePropagation()
+      scrollEl!.scrollTop += delta
+      return
+    }
+
+    // Hovered local scroll area (e.g. Terms text): native scroll only,
+    // block page slide until that area reaches the matching edge.
+    if (event.target instanceof Element) {
+      const localRoot = event.target.closest('[data-nested-local-scroll]')
+      if (localRoot instanceof HTMLElement && active.contains(localRoot)) {
+        const localScrollEl =
+          localRoot.matches('[data-terms-panel]')
+            ? localRoot
+            : localRoot.querySelector<HTMLElement>('[data-terms-panel]:not([hidden])')
+
+        if (shouldBlockPageSlide(localScrollEl, event.deltaY)) {
+          event.stopImmediatePropagation()
+        }
+        return
+      }
+    }
+
+    const lock = nestedWheelLocks.get(active)
+    if (!lock) return
+
+    const delta = normalizeWheelDelta(event, active.clientHeight)
+    if (!lock.handleWheel(delta, true)) return
 
     event.preventDefault()
     event.stopImmediatePropagation()
-    scrollEl!.scrollTop += delta
   }
 
   window.addEventListener('wheel', onNestedWheel, {
@@ -425,8 +475,7 @@ export const initPageSlider = () => {
 
   const onNestedTouchMove = (event: TouchEvent) => {
     const active = slides[swiper.activeIndex]
-    const scrollEl = getNestedScrollEl(active)
-    if (!scrollEl) {
+    if (!(active instanceof HTMLElement)) {
       syncTouchMove()
       return
     }
@@ -434,7 +483,34 @@ export const initPageSlider = () => {
     const y = event.touches[0]?.clientY ?? touchStartY
     // Finger up => content scrolls down (positive deltaY equivalent).
     const deltaY = touchStartY - y
+
+    const scrollEl = getNestedScrollEl(active)
     if (shouldBlockPageSlide(scrollEl, deltaY)) {
+      swiper.allowTouchMove = false
+      return
+    }
+
+    const touchTarget = event.target
+    if (touchTarget instanceof Element) {
+      const localRoot = touchTarget.closest('[data-nested-local-scroll]')
+      if (localRoot instanceof HTMLElement && active.contains(localRoot)) {
+        const localScrollEl =
+          localRoot.matches('[data-terms-panel]')
+            ? localRoot
+            : localRoot.querySelector<HTMLElement>('[data-terms-panel]:not([hidden])')
+
+        if (shouldBlockPageSlide(localScrollEl, deltaY)) {
+          swiper.allowTouchMove = false
+          return
+        }
+
+        syncTouchMove()
+        return
+      }
+    }
+
+    const lock = nestedWheelLocks.get(active)
+    if (lock?.handleWheel(deltaY, false)) {
       swiper.allowTouchMove = false
       return
     }
