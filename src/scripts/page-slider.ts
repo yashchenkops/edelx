@@ -79,6 +79,7 @@ const applySlideParallax = (slideEl: HTMLElement, progress: number, duration?: n
 
 type SplitCache = {
   units: Element[]
+  split: SplitText
 }
 
 const splitCache = new WeakMap<HTMLElement, SplitCache>()
@@ -91,8 +92,10 @@ const getTextUnits = (el: HTMLElement) => {
   const splitRoot =
     (isTitle ? el.querySelector<HTMLElement>('.section-title__label') : null) ?? el
 
+  // Titles: words only — no line wrappers, so text reflows on resize.
+  // Subtitles: lines for mask reveal.
   const split = SplitText.create(splitRoot, {
-    type: isTitle ? 'words,lines' : 'lines,words',
+    type: isTitle ? 'words' : 'lines,words',
     mask: isTitle ? 'words' : 'lines',
     aria: 'auto',
     wordsClass: 'word',
@@ -105,8 +108,19 @@ const getTextUnits = (el: HTMLElement) => {
       ? split.lines
       : split.words
 
-  splitCache.set(el, { units })
+  splitCache.set(el, { units, split })
   return units
+}
+
+const revertTextSplits = (root: ParentNode = document) => {
+  root.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+    if (el.closest(NESTED_TITLE_SLIDER)) return
+    const cached = splitCache.get(el)
+    if (!cached) return
+    gsap.killTweensOf(cached.units)
+    cached.split.revert()
+    splitCache.delete(el)
+  })
 }
 
 const unitStagger = (count: number) => Math.min(0.045, 0.24 / Math.max(count, 1))
@@ -357,7 +371,25 @@ export const initPageSlider = () => {
     swiper.allowTouchMove = isTouchSwipeEnabled()
   }
 
-  window.addEventListener('resize', syncTouchMove)
+  let resizeTimer = 0
+  const onResize = () => {
+    syncTouchMove()
+
+    // Re-measure subtitle line wraps after layout changes.
+    window.clearTimeout(resizeTimer)
+    resizeTimer = window.setTimeout(() => {
+      if (reduced) return
+      const active = slides[swiper.activeIndex]
+      if (!(active instanceof HTMLElement)) return
+
+      revertTextSplits(active)
+      void prepareTextSplits([active], 0).then(() => {
+        if (slides[swiper.activeIndex] === active) setTextVisible(active)
+      })
+    }, 150)
+  }
+
+  window.addEventListener('resize', onResize)
 
   document.querySelectorAll<HTMLAnchorElement>(NAV_LINK_SELECTOR).forEach((link) => {
     link.addEventListener('click', (event) => {

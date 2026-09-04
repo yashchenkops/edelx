@@ -34,12 +34,8 @@ body {
   color: var(--color-text);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background: var(--bg-image) center / contain no-repeat;
+  background: var(--bg-image) center / cover no-repeat;
   background-color: var(--color-bg);
-
-  @include m.tablet {
-    background-size: cover;
-  }
 }
 
 img,

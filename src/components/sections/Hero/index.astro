@@ -18,7 +18,7 @@ const SY = 1 / 509;
 <Section class="hero" slide="main">
   <div class="hero__inner">
     <div class="hero__title">
-      <SectionTitle as="h1">NEW WAY FOR FINANCE</SectionTitle>
+      <SectionTitle as="h1">NEW WAY<br />FOR FINANCE</SectionTitle>
     </div>
 
     <div class="hero__illustration">
@@ -131,7 +131,6 @@ const SY = 1 / 509;
       }
     })
 
-    // ── Initial hidden state ───────────────────────────────────────
     if (currencies.length) {
       gsap.set(currencies, {
         opacity: 0,
@@ -280,7 +279,6 @@ const SY = 1 / 509;
       }
     }
 
-    // ── Currency entrance ──────────────────────────────────────────
     const playIn = () => {
       runWhenAppReady(() => {
         if (!slide.classList.contains('swiper-slide-active')) return
@@ -346,7 +344,6 @@ const SY = 1 / 509;
       })
     }
 
-    // ── Mouse parallax on SVG + glass (desktop only) ───────────────
     const PARALLAX_MAX = 16
     const parallaxEls = [glass, shape].filter(Boolean) as HTMLElement[]
 
@@ -415,28 +412,36 @@ const SY = 1 / 509;
     align-items: center;
     justify-content: center;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
       flex-direction: column;
-      gap: clamp(rem(20px), 4vh, rem(48px));
+      gap: rem(60px);
       justify-content: flex-start;
       align-items: flex-start;
     }
   }
 
   .hero__title {
+    flex: 1 1 50%;
+    min-width: min(100%, 11em);
     max-width: 666px;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      flex: none;
+      width: 100%;
       max-width: 100%;
+      min-width: 0;
     }
   }
 
   .hero__illustration {
     position: relative;
+    flex: 1 1 50%;
+    min-width: 0;
     width: min(100%, 829px);
     aspect-ratio: 829 / 509;
 
-    @media (max-width: 768px) {
+    @media (max-width: 1024px) {
+      flex: none;
       width: min(100%, 560px);
       align-self: center;
     }
