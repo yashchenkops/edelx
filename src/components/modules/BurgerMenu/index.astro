@@ -27,13 +27,20 @@ const menuItems = [
   </span>
 </button>
 
-<!-- Mobile drawer -->
+<!-- Mobile full-screen menu -->
 <div class="mob-menu" data-mob-menu aria-hidden="true">
-  <div class="mob-menu__backdrop" data-mob-menu-backdrop></div>
   <div class="mob-menu__panel">
-    <button class="mob-menu__close" type="button" aria-label="Close menu" data-mob-menu-close>
-      <span aria-hidden="true"></span>
-    </button>
+    <div class="mob-menu__top">
+      <a href="/" class="mob-menu__logo" data-mob-menu-close>
+        <img class="mob-menu__logo-img mob-menu__logo-img--dark" src="src/assets/img/logo.webp" alt="EdelX">
+        <img class="mob-menu__logo-img mob-menu__logo-img--light" src="src/assets/img/light/logo.webp" alt="EdelX">
+      </a>
+
+      <button class="mob-menu__close" type="button" aria-label="Close menu" data-mob-menu-close>
+        <span class="mob-menu__close-line mob-menu__close-line--a" aria-hidden="true"></span>
+        <span class="mob-menu__close-line mob-menu__close-line--b" aria-hidden="true"></span>
+      </button>
+    </div>
 
     <nav class="mob-menu__nav">
       <ul class="mob-menu__list">
@@ -60,7 +67,7 @@ const menuItems = [
         aria-label="Toggle color theme"
       >
         <span class="mob-theme-toggle__label" data-theme-label>Dark</span>
-        <span class="mob-theme-toggle__knob" aria-hidden="true"></span>
+        <span class="mob-theme-toggle__knob" aria-hidden="true" data-theme-knob></span>
       </button>
 
       <div class="mob-menu__actions">
@@ -75,14 +82,17 @@ const menuItems = [
 <script>
   const burger = document.querySelector<HTMLButtonElement>('[data-burger]')
   const menu = document.querySelector<HTMLElement>('[data-mob-menu]')
-  const backdrop = document.querySelector<HTMLElement>('[data-mob-menu-backdrop]')
-  const closeBtn = document.querySelector<HTMLButtonElement>('[data-mob-menu-close]')
+  const closeBtns = document.querySelectorAll('[data-mob-menu-close]')
+
+  // Escape transformed header ancestors so position:fixed covers the viewport.
+  if (menu && menu.parentElement !== document.body) {
+    document.body.appendChild(menu)
+  }
 
   const open = () => {
     menu?.classList.add('is-open')
     menu?.removeAttribute('aria-hidden')
     burger?.setAttribute('aria-expanded', 'true')
-    burger?.classList.add('is-active')
     document.body.style.overflow = 'hidden'
   }
 
@@ -90,24 +100,26 @@ const menuItems = [
     menu?.classList.remove('is-open')
     menu?.setAttribute('aria-hidden', 'true')
     burger?.setAttribute('aria-expanded', 'false')
-    burger?.classList.remove('is-active')
     document.body.style.overflow = ''
   }
 
   burger?.addEventListener('click', () => {
-    const isOpen = menu?.classList.contains('is-open')
-    isOpen ? close() : open()
+    if (!menu?.classList.contains('is-open')) open()
   })
 
-  closeBtn?.addEventListener('click', close)
-  backdrop?.addEventListener('click', close)
+  closeBtns.forEach((btn) => {
+    btn.addEventListener('click', (event) => {
+      if ((btn as HTMLElement).tagName === 'A') {
+        event.preventDefault()
+      }
+      close()
+    })
+  })
 
-  // close on nav link click
   document.querySelectorAll('[data-mob-nav-link]').forEach((link) => {
     link.addEventListener('click', close)
   })
 
-  // ESC key
   document.addEventListener('keydown', (e) => {
     if (e.key === 'Escape') close()
   })
@@ -126,6 +138,7 @@ const menuItems = [
     border: none;
     cursor: pointer;
     color: var(--color-text);
+    opacity: 0;
 
     @media (max-width: 1024px) {
       display: flex;
@@ -135,13 +148,13 @@ const menuItems = [
   .burger__icon {
     display: flex;
     flex-direction: column;
-    gap: 8px; // vertical gap between rows
+    gap: 8px;
   }
 
   .burger__row {
     display: flex;
     align-items: center;
-    gap: 8px; // horizontal gap between dot and line
+    gap: 8px;
   }
 
   .burger__dot {
@@ -149,42 +162,29 @@ const menuItems = [
     width: 4px;
     height: 4px;
     background: v.$blue;
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease;
   }
 
   .burger__line {
     width: 22px;
     height: 4px;
     background: #fff;
-    transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.3s ease, width 0.3s ease;
 
     :global([data-theme='light']) & {
       background: #111;
     }
   }
 
-  // Active (X) state
-  .burger.is-active {
-    .burger__row--1 {
-      .burger__dot { opacity: 0; }
-      .burger__line { transform: translateY(12px) rotate(45deg); }
-    }
-    .burger__row--2 {
-      .burger__dot { opacity: 0; }
-      .burger__line { opacity: 0; transform: scaleX(0); }
-    }
-    .burger__row--3 {
-      .burger__dot { opacity: 0; }
-      .burger__line { transform: translateY(-12px) rotate(-45deg); }
-    }
-  }
-
-  // ── Mobile drawer ──────────────────────────────────────────────
+  // ── Full-screen mobile menu ────────────────────────────────────
   .mob-menu {
     display: none;
     position: fixed;
-    inset: 0;
-    z-index: calc(v.$z-header + 10);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    width: 100dvw;
+    height: 100vh;
+    height: 100dvh;
+    z-index: calc(v.$z-header + 50);
     pointer-events: none;
 
     @media (max-width: 1024px) {
@@ -196,108 +196,129 @@ const menuItems = [
     }
   }
 
-  .mob-menu__backdrop {
-    position: absolute;
-    inset: 0;
-    background: rgb(0 0 0 / 55%);
-    opacity: 0;
-    transition: opacity 0.35s ease;
-    backdrop-filter: blur(4px);
-
-    .mob-menu.is-open & {
-      opacity: 1;
-    }
-  }
-
   .mob-menu__panel {
     position: absolute;
     top: 0;
-    right: 0;
-    bottom: 0;
     left: 0;
     width: 100%;
-    background: rgb(10 10 18 / 95%);
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    height: 100%;
     display: flex;
     flex-direction: column;
-    padding: 100px v.$page-padding-tablet 48px;
+    padding-top: 64px;
+    padding-inline: clamp(1rem, 2vw, 3rem);
+    padding-bottom: clamp(rem(28px), 6vw, rem(48px));
     box-sizing: border-box;
-    transform: translateX(100%);
-    transition: transform 0.4s cubic-bezier(0.22, 1, 0.36, 1);
-
-    .mob-menu.is-open & {
-      transform: translateX(0);
-    }
-
-    :global([data-theme='light']) & {
-      background: rgb(245 245 252 / 95%);
-    }
+    background-color: var(--color-bg);
+    background-image: var(--bg-image);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
+    opacity: 0;
+    visibility: hidden;
+    transform: translate3d(0, 12px, 0) scale(0.985);
+    transition:
+      opacity 0.35s ease,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1),
+      visibility 0.45s;
 
     @media (max-width: 768px) {
-      padding: 96px v.$page-padding-mobile 40px;
+      padding-top: 24px;
+    }
+
+    .mob-menu.is-open & {
+      opacity: 1;
+      visibility: visible;
+      transform: translate3d(0, 0, 0) scale(1);
+    }
+  }
+
+  .mob-menu__top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: rem(16px);
+    margin-bottom: clamp(rem(48px), 10vh, rem(88px));
+  }
+
+  .mob-menu__logo {
+    display: block;
+    max-width: rem(200px);
+
+    @media (max-width: 768px) {
+      max-width: rem(140px);
+    }
+  }
+
+  .mob-menu__logo-img {
+    display: block;
+    width: 100%;
+    height: auto;
+
+    &--light {
+      display: none;
+    }
+  }
+
+  :global([data-theme='light']) {
+    .mob-menu__logo-img--dark {
+      display: none;
+    }
+
+    .mob-menu__logo-img--light {
+      display: block;
     }
   }
 
   .mob-menu__close {
-    position: absolute;
-    top: 64px;
-    right: v.$page-padding-tablet;
-    width: 36px;
-    height: 36px;
+    position: relative;
+    flex-shrink: 0;
+    width: rem(40px);
+    height: rem(40px);
     padding: 0;
     border: none;
     background: transparent;
     cursor: pointer;
-    color: var(--color-text);
+  }
 
-    @media (max-width: 768px) {
-      top: 24px;
-      right: v.$page-padding-mobile;
-    }
+  .mob-menu__close-line {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: rem(28px);
+    height: 4px;
 
-    span,
-    &::before,
-    &::after {
-      content: '';
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 22px;
-      height: 2px;
-      background: currentColor;
-    }
-
-    &::before {
+    &--a {
+      background: var(--color-text);
       transform: translate(-50%, -50%) rotate(45deg);
     }
 
-    &::after {
+    &--b {
+      background: v.$blue;
       transform: translate(-50%, -50%) rotate(-45deg);
-    }
-
-    span {
-      display: none;
     }
   }
 
   .mob-menu__nav {
     flex: 1;
+    display: flex;
+    align-items: center;
+    min-height: 0;
   }
 
   .mob-menu__list {
     display: flex;
     flex-direction: column;
-    gap: 28px;
+    gap: clamp(rem(18px), 3.5vh, rem(32px));
+    width: 100%;
   }
 
   .mob-menu__item {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(18px);
     transition:
       opacity 0.4s ease,
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
-    transition-delay: calc(var(--item-index, 0) * 0.05s);
+      transform 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+    transition-delay: calc(0.08s + var(--item-index, 0) * 0.05s);
 
     .mob-menu.is-open & {
       opacity: 1;
@@ -306,33 +327,38 @@ const menuItems = [
   }
 
   .mob-menu__link {
-    font-size: rem(20px);
+    display: block;
+    font-size: clamp(rem(28px), 8vw, rem(44px));
     font-weight: 400;
+    line-height: 1.05;
     color: var(--color-text);
     opacity: 0.45;
     transition: opacity 0.2s ease, transform 0.2s ease;
-    display: block;
 
     &.is-active {
       opacity: 1;
       font-weight: 600;
+      font-size: clamp(rem(40px), 11vw, rem(64px));
     }
 
-    &:hover {
+    @include m.hover {
       opacity: 0.85;
-      transform: translateX(4px);
+      transform: translateX(6px);
     }
   }
 
   .mob-menu__footer {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    align-items: flex-start;
+    gap: rem(22px);
+    margin-top: auto;
+    padding-top: rem(32px);
     opacity: 0;
     transform: translateY(16px);
     transition:
-      opacity 0.4s ease 0.18s,
-      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.18s;
+      opacity 0.4s ease 0.2s,
+      transform 0.45s cubic-bezier(0.22, 1, 0.36, 1) 0.2s;
 
     .mob-menu.is-open & {
       opacity: 1;
@@ -347,19 +373,28 @@ const menuItems = [
     color: var(--color-text);
 
     a {
-      font-size: rem(15px);
+      font-size: rem(16px);
       transition: opacity 0.2s;
-      &:hover { opacity: 0.7; }
+
+      @include m.hover {
+        opacity: 0.7;
+      }
     }
   }
 
-  .mob-menu__login { order: 0; }
-  .mob-menu__signup { opacity: 0.5; order: 2; }
+  .mob-menu__login {
+    order: 0;
+  }
+
+  .mob-menu__signup {
+    opacity: 0.5;
+    order: 2;
+  }
 
   .mob-menu__divider {
     display: block;
     width: 2px;
-    height: 24px;
+    height: rem(24px);
     background: v.$blue;
     order: 1;
   }
@@ -406,6 +441,8 @@ const menuItems = [
       transition: background-color v.$transition-base;
     }
 
-    &:hover { opacity: 0.8; }
+    @include m.hover {
+      opacity: 0.8;
+    }
   }
 </style>

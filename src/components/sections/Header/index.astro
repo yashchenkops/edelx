@@ -18,7 +18,7 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
       <a href="#" class="actions__signup">Sign Up</a>
     </div>
   </div>
-  <div data-header-item data-header-burger>
+  <div data-header-burger>
     <BurgerMenu />
   </div>
 </PageHeader>
@@ -28,17 +28,20 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
   import { runWhenAppReady } from '@/scripts/app-ready'
 
   const items = Array.from(document.querySelectorAll<HTMLElement>('[data-header-item]'))
-  if (items.length) {
+  const burger = document.querySelector<HTMLElement>('[data-burger]')
+  const animTargets = [...items, ...(burger ? [burger] : [])]
+
+  if (animTargets.length) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
     const centered = items.filter((el) => el.classList.contains('header__center'))
-    const moving = items.filter((el) => !el.classList.contains('header__center'))
+    const moving = animTargets.filter((el) => !el.classList.contains('header__center'))
 
     if (moving.length) gsap.set(moving, { opacity: 0, y: -14 })
     if (centered.length) gsap.set(centered, { opacity: 0 })
 
     runWhenAppReady(() => {
       if (reduced) {
-        gsap.to(items, { opacity: 1, y: 0, duration: 0.2, overwrite: true })
+        gsap.to(animTargets, { opacity: 1, y: 0, duration: 0.2, overwrite: true })
         return
       }
 
@@ -119,8 +122,6 @@ import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
   }
 
   [data-header-burger] {
-    opacity: 0;
-
     @media (min-width: 1025px) {
       display: none;
     }
