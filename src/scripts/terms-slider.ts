@@ -126,11 +126,22 @@ const bindNestedScroll = (wrap: HTMLElement, getActive: () => HTMLElement | unde
   )
 }
 
+const ACTIVE_COLOR = 'var(--color-text)'
+const MUTED_COLOR = 'color-mix(in srgb, var(--color-text) 28%, transparent)'
+
 const updateSlideVisuals = (instance: SwiperInstance) => {
-  instance.slides.forEach((slide) => {
+  instance.slides.forEach((slide, index) => {
     if (!(slide instanceof HTMLElement)) return
-    const progress = Number.isFinite(slide.progress) ? Math.min(Math.abs(slide.progress), 1) : 1
-    slide.style.opacity = `${1 - progress * 0.78}`
+
+    const isActive = index === instance.activeIndex
+    slide.classList.toggle('is-active', isActive)
+
+    const title = slide.querySelector<HTMLElement>('.section-title')
+    const subtitle = slide.querySelector<HTMLElement>('.section-subtitle')
+    const color = isActive ? ACTIVE_COLOR : MUTED_COLOR
+
+    if (title) title.style.color = color
+    if (subtitle) subtitle.style.color = color
   })
 }
 
@@ -230,8 +241,12 @@ export const initTermsSlider = () => {
         updateSlideVisuals(instance)
       },
       slideChange: (instance) => {
+        updateSlideVisuals(instance)
         if (instance.activeIndex === activeIndex) return
         showPanel(instance.activeIndex, true)
+      },
+      slideChangeTransitionEnd: (instance) => {
+        updateSlideVisuals(instance)
       },
     },
   })

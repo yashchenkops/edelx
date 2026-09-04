@@ -227,7 +227,7 @@ const documents: TermsDocument[] = [
     width: 100%;
     height: auto;
     padding-block: rem(18px);
-    opacity: 0.22;
+    opacity: 1;
     cursor: pointer;
 
     @media (max-width: 1024px) {
@@ -237,17 +237,30 @@ const documents: TermsDocument[] = [
       padding-inline: rem(18px);
     }
 
-    &:global(.swiper-slide-active) {
+    :global(.section-title),
+    :global(.section-subtitle) {
+      color: color-mix(in srgb, var(--color-text) 28%, transparent);
+      transition: color 0.35s ease;
+    }
+
+    &:global(.swiper-slide-active),
+    &:global(.is-active) {
       cursor: default;
+
+      :global(.section-title),
+      :global(.section-subtitle) {
+        color: var(--color-text);
+      }
 
       :global(.section-subtitle) {
         max-height: rem(72px);
-        opacity: 1;
         margin-top: rem(30px);
+        opacity: 1;
       }
 
       :global(.section-title)::before {
         opacity: 1;
+        border-color: var(--color-text);
       }
     }
   }
@@ -281,7 +294,8 @@ const documents: TermsDocument[] = [
     transition:
       max-height 0.45s ease,
       opacity 0.35s ease,
-      margin 0.45s ease;
+      margin 0.45s ease,
+      color 0.35s ease;
 
     @media (max-width: 768px) {
       margin-top: 0;
