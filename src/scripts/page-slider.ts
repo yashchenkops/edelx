@@ -2,6 +2,7 @@ import Swiper from 'swiper'
 import { Mousewheel, Keyboard, HashNavigation, EffectCreative } from 'swiper/modules'
 import { gsap } from 'gsap'
 import { SplitText } from 'gsap/SplitText'
+import { whenAppReady } from '@/scripts/app-ready'
 import 'swiper/css'
 import 'swiper/css/effect-creative'
 
@@ -247,14 +248,21 @@ export const initPageSlider = () => {
         })
 
         window.setTimeout(() => {
-          swiperInstance.mousewheel?.enable?.()
+          void whenAppReady().then(() => {
+            swiperInstance.mousewheel?.enable?.()
+          })
         }, 350)
 
         if (reduced) return
 
-        void prepareTextSplits(slides, swiperInstance.activeIndex).then(() => {
+        void prepareTextSplits(slides, swiperInstance.activeIndex).then(async () => {
           const active = slides[swiperInstance.activeIndex]
-          if (active) revealText(active, 0.08)
+          if (active) setTextHidden(active)
+
+          await whenAppReady()
+
+          const current = slides[swiperInstance.activeIndex]
+          if (current) revealText(current, 0.08)
         })
       },
       slideChange: ({ activeIndex }) => updateActiveNav(slides, activeIndex),

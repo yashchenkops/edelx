@@ -150,6 +150,7 @@ const shapeIds = ['a', 'b'];
 <script>
   import '@/scripts/faq-accordion.ts'
   import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
 
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
   const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
@@ -337,66 +338,70 @@ const shapeIds = ['a', 'b'];
     }
 
     const playIn = () => {
-      playShapeIn()
+      runWhenAppReady(() => {
+        if (!slide.classList.contains('swiper-slide-active')) return
 
-      if (reduced) {
+        playShapeIn()
+
+        if (reduced) {
+          if (items.length) {
+            gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+          }
+          if (image) {
+            gsap.to(image, {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.25,
+              overwrite: true,
+            })
+          }
+          played = true
+          return
+        }
+
         if (items.length) {
-          gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+          gsap.fromTo(
+            items,
+            { opacity: 0, y: 28, filter: 'blur(6px)' },
+            {
+              opacity: 1,
+              y: 0,
+              filter: 'blur(0px)',
+              duration: 0.65,
+              delay: 0.16,
+              stagger: 0.07,
+              ease: 'power3.out',
+              overwrite: true,
+            },
+          )
         }
+
         if (image) {
-          gsap.to(image, {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 0.25,
-            overwrite: true,
-          })
+          gsap.fromTo(
+            image,
+            {
+              opacity: 0,
+              x: 36,
+              scale: 0.94,
+              filter: 'blur(10px)',
+            },
+            {
+              opacity: 1,
+              x: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.85,
+              delay: 0.28,
+              ease: 'power3.out',
+              overwrite: true,
+            },
+          )
         }
+
         played = true
-        return
-      }
-
-      if (items.length) {
-        gsap.fromTo(
-          items,
-          { opacity: 0, y: 28, filter: 'blur(6px)' },
-          {
-            opacity: 1,
-            y: 0,
-            filter: 'blur(0px)',
-            duration: 0.65,
-            delay: 0.16,
-            stagger: 0.07,
-            ease: 'power3.out',
-            overwrite: true,
-          },
-        )
-      }
-
-      if (image) {
-        gsap.fromTo(
-          image,
-          {
-            opacity: 0,
-            x: 36,
-            scale: 0.94,
-            filter: 'blur(10px)',
-          },
-          {
-            opacity: 1,
-            x: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 0.85,
-            delay: 0.28,
-            ease: 'power3.out',
-            overwrite: true,
-          },
-        )
-      }
-
-      played = true
+      })
     }
 
     const playOut = () => {

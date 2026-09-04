@@ -66,6 +66,7 @@ const articles = [
 
 <script>
   import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
 
   const slide = document.querySelector<HTMLElement>('[data-slide="news"]')
   const cards = Array.from(document.querySelectorAll<HTMLElement>('.news__article'))
@@ -95,70 +96,75 @@ const articles = [
     }
 
     const playIn = () => {
-      if (reduced) {
+      runWhenAppReady(() => {
+        if (!slide.classList.contains('swiper-slide-active')) return
+
+        if (reduced) {
+          if (cards.length) {
+            gsap.to(cards, {
+              opacity: 1,
+              y: 0,
+              duration: 0.25,
+              overwrite: true,
+              onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
+            })
+          }
+          if (decorations.length) {
+            gsap.to(decorations, {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.25,
+              overwrite: true,
+            })
+          }
+          played = true
+          return
+        }
+
         if (cards.length) {
-          gsap.to(cards, {
-            opacity: 1,
-            y: 0,
-            duration: 0.25,
-            overwrite: true,
-            onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
-          })
+          gsap.fromTo(
+            cards,
+            { opacity: 0, y: 36 },
+            {
+              opacity: 1,
+              y: 0,
+              duration: 0.7,
+              delay: 0.18,
+              stagger: 0.1,
+              ease: 'power3.out',
+              overwrite: true,
+              onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
+            },
+          )
         }
+
         if (decorations.length) {
-          gsap.to(decorations, {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 0.25,
-            overwrite: true,
-          })
+          gsap.fromTo(
+            decorations,
+            {
+              opacity: 0,
+              y: 28,
+              scale: 0.94,
+              filter: 'blur(10px)',
+            },
+            {
+              opacity: 1,
+              y: 0,
+              scale: 1,
+              filter: 'blur(0px)',
+              duration: 0.85,
+              delay: 0.48,
+              stagger: 0.14,
+              ease: 'power3.out',
+              overwrite: true,
+            },
+          )
         }
-        return
-      }
 
-      if (cards.length) {
-        gsap.fromTo(
-          cards,
-          { opacity: 0, y: 36 },
-          {
-            opacity: 1,
-            y: 0,
-            duration: 0.7,
-            delay: 0.18,
-            stagger: 0.1,
-            ease: 'power3.out',
-            overwrite: true,
-            onComplete: () => gsap.set(cards, { clearProps: 'transform' }),
-          },
-        )
-      }
-
-      if (decorations.length) {
-        gsap.fromTo(
-          decorations,
-          {
-            opacity: 0,
-            y: 28,
-            scale: 0.94,
-            filter: 'blur(10px)',
-          },
-          {
-            opacity: 1,
-            y: 0,
-            scale: 1,
-            filter: 'blur(0px)',
-            duration: 0.85,
-            delay: 0.48,
-            stagger: 0.14,
-            ease: 'power3.out',
-            overwrite: true,
-          },
-        )
-      }
-
-      played = true
+        played = true
+      })
     }
 
     const playOut = () => {

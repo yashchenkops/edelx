@@ -101,6 +101,7 @@ const SY = 1 / 509;
 
 <script>
   import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
 
   const slide = document.querySelector<HTMLElement>('[data-slide="main"]')
   const currencies = Array.from(
@@ -281,47 +282,51 @@ const SY = 1 / 509;
 
     // ── Currency entrance ──────────────────────────────────────────
     const playIn = () => {
-      playShapeIn()
+      runWhenAppReady(() => {
+        if (!slide.classList.contains('swiper-slide-active')) return
 
-      if (!currencies.length) {
+        playShapeIn()
+
+        if (!currencies.length) {
+          played = true
+          return
+        }
+
+        if (reduced) {
+          gsap.to(currencies, {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.25,
+            overwrite: true,
+          })
+          played = true
+          return
+        }
+
+        gsap.fromTo(
+          currencies,
+          {
+            opacity: 0,
+            y: 32,
+            scale: 0.94,
+            filter: 'blur(10px)',
+          },
+          {
+            opacity: 1,
+            y: 0,
+            scale: 1,
+            filter: 'blur(0px)',
+            duration: 0.85,
+            delay: 0.28,
+            stagger: 0.14,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
         played = true
-        return
-      }
-
-      if (reduced) {
-        gsap.to(currencies, {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 0.25,
-          overwrite: true,
-        })
-        played = true
-        return
-      }
-
-      gsap.fromTo(
-        currencies,
-        {
-          opacity: 0,
-          y: 32,
-          scale: 0.94,
-          filter: 'blur(10px)',
-        },
-        {
-          opacity: 1,
-          y: 0,
-          scale: 1,
-          filter: 'blur(0px)',
-          duration: 0.85,
-          delay: 0.28,
-          stagger: 0.14,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
-      played = true
+      })
     }
 
     const playOut = () => {

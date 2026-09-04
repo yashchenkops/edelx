@@ -76,7 +76,7 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
   }
 </style>
 
-<script define:vars={{ enterDuration: 850, exitDuration: 750 }}>
+<script is:inline define:vars={{ enterDuration: 850, exitDuration: 750 }}>
   const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
   const waitForPageLoad = () =>
@@ -124,10 +124,20 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
       },
     ).finished
 
+  const finishPreloader = (preloader) => {
+    preloader?.remove()
+    document.body.classList.remove('is-preloading')
+    document.documentElement.setAttribute('data-app-ready', 'true')
+    window.dispatchEvent(new CustomEvent('edelx:ready'))
+  }
+
   const runPreloader = async () => {
     const preloader = document.querySelector('[data-preloader]')
     const logo = preloader?.querySelector('.preloader__logo')
-    if (!preloader || !logo) return
+    if (!preloader || !logo) {
+      finishPreloader(null)
+      return
+    }
 
     document.body.classList.add('is-preloading')
 
@@ -135,8 +145,7 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
 
     if (prefersReducedMotion) {
       await waitForPageLoad()
-      preloader.remove()
-      document.body.classList.remove('is-preloading')
+      finishPreloader(preloader)
       return
     }
 
@@ -146,8 +155,7 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
     await animateOut(logo)
     await animateOut(preloader)
 
-    preloader.remove()
-    document.body.classList.remove('is-preloading')
+    finishPreloader(preloader)
   }
 
   runPreloader()

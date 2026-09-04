@@ -58,6 +58,7 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 
 <script>
   import { gsap } from 'gsap'
+  import { runWhenAppReady } from '@/scripts/app-ready'
 
   const slide = document.querySelector<HTMLElement>('[data-slide="about-us"]')
   const socials = Array.from(
@@ -76,37 +77,41 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     })
 
     const playIn = () => {
-      if (reduced) {
-        gsap.to(socials, {
-          autoAlpha: 1,
-          y: 0,
-          filter: 'none',
-          duration: 0.25,
-          overwrite: true,
-        })
-        played = true
-        return
-      }
+      runWhenAppReady(() => {
+        if (!slide.classList.contains('swiper-slide-active')) return
 
-      gsap.fromTo(
-        socials,
-        {
-          autoAlpha: 0,
-          y: 28,
-          filter: 'blur(10px)',
-        },
-        {
-          autoAlpha: 1,
-          y: 0,
-          filter: 'none',
-          duration: 0.7,
-          delay: 0.18,
-          stagger: 0.1,
-          ease: 'power3.out',
-          overwrite: true,
-        },
-      )
-      played = true
+        if (reduced) {
+          gsap.to(socials, {
+            autoAlpha: 1,
+            y: 0,
+            filter: 'none',
+            duration: 0.25,
+            overwrite: true,
+          })
+          played = true
+          return
+        }
+
+        gsap.fromTo(
+          socials,
+          {
+            autoAlpha: 0,
+            y: 28,
+            filter: 'blur(10px)',
+          },
+          {
+            autoAlpha: 1,
+            y: 0,
+            filter: 'none',
+            duration: 0.7,
+            delay: 0.18,
+            stagger: 0.1,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+        played = true
+      })
     }
 
     const playOut = () => {

@@ -1,6 +1,7 @@
 import Swiper from 'swiper'
 import type { Swiper as SwiperInstance } from 'swiper'
 import { gsap } from 'gsap'
+import { runWhenAppReady } from '@/scripts/app-ready'
 import 'swiper/css'
 
 const TABLET_BREAKPOINT = 1024
@@ -287,9 +288,12 @@ export const initTermsSlider = () => {
   window.addEventListener('resize', syncDirection)
 
   const playPageIn = () => {
-    swiper.update()
-    updateSlideVisuals(swiper)
-    showPanel(swiper.activeIndex, true)
+    runWhenAppReady(() => {
+      if (!pageSlide.classList.contains('swiper-slide-active')) return
+      swiper.update()
+      updateSlideVisuals(swiper)
+      showPanel(swiper.activeIndex, true)
+    })
   }
 
   const playPageOut = () => {
