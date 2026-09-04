@@ -1243,4 +1243,530 @@ export const documents: TermsDocument[] = [
       },
     ],
   },
+  {
+    title: 'Complaints Procedure',
+    blocks: [
+      { type: 'title', text: '1. General Provisions' },
+      {
+        type: 'text',
+        text: '1.1. This Complaints Procedure (“Procedure”) sets out the process for submitting, handling, and resolving complaints related to services provided under the Tokenum brand by Djooky Finance Limited, a company incorporated in British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA (the “Company”).',
+      },
+      {
+        type: 'text',
+        text: '1.2. Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967.',
+      },
+      {
+        type: 'text',
+        text: '1.3. The Company is committed to handling complaints fairly, efficiently, and in accordance with applicable Canadian laws and regulations, including anti-money laundering obligations and the Personal Information Protection and Electronic Documents Act (PIPEDA).',
+      },
+      {
+        type: 'text',
+        text: '1.4. This Procedure applies to all users of Tokenum services and covers complaints related to account activity, transactions, compliance decisions, and customer support.',
+      },
+
+      { type: 'title', text: '2. Submitting a Complaint' },
+      {
+        type: 'text',
+        text: '2.1. Complaints may be submitted through the following channels:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Email: support@tokenum.com',
+          'Postal mail: 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA',
+          'Through any official communication channel made available on the Tokenum platform',
+        ],
+      },
+      {
+        type: 'text',
+        text: '2.2. Complaints should be submitted in English. The Company may accept other languages at its discretion.',
+      },
+      {
+        type: 'text',
+        text: '2.3. To ensure efficient handling, users are encouraged to provide:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Full name',
+          'Contact details',
+          'Account ID (if applicable)',
+          'Detailed description of the issue',
+          'Relevant dates and transaction IDs',
+          'Supporting documents (screenshots, records, correspondence)',
+        ],
+      },
+      {
+        type: 'text',
+        text: '2.4. The Company may request additional information where necessary.',
+      },
+
+      { type: 'title', text: '3. Complaint Handling Process' },
+      {
+        type: 'text',
+        text: '3.1. Upon receipt of a complaint, the Company will:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Acknowledge receipt within 5 business days',
+          'Assign the complaint for internal review',
+        ],
+      },
+      {
+        type: 'text',
+        text: '3.2. The review process may include:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Examination of transaction data and logs',
+          'Review of compliance and AML records',
+          'Consultation with internal teams or third-party providers',
+        ],
+      },
+      {
+        type: 'text',
+        text: '3.3. The Company will provide a written response within 30 working days. If additional time is required, the user will be informed.',
+      },
+      {
+        type: 'text',
+        text: '3.4. Where legally permitted, the Company will provide details of its findings. However, disclosure may be limited where required under AML/FINTRAC obligations.',
+      },
+
+      { type: 'title', text: '4. Possible Outcomes' },
+      {
+        type: 'text',
+        text: '4.1. Following review, the Company may:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Accept the complaint and propose a resolution',
+          'Reject the complaint with explanation',
+          'Request additional information',
+        ],
+      },
+      {
+        type: 'text',
+        text: '4.2. Resolutions may include corrective measures, account adjustments, or other appropriate actions.',
+      },
+
+      { type: 'title', text: '5. Escalation Process' },
+      {
+        type: 'text',
+        text: '5.1. If the user is not satisfied, they may submit an appeal within 14 days of receiving the response.',
+      },
+      {
+        type: 'text',
+        text: '5.2. The appeal will be reviewed by a senior representative, and a final decision will be issued within 30 working days.',
+      },
+      {
+        type: 'text',
+        text: '5.3. If the matter remains unresolved, users may seek independent legal advice or refer the matter to the appropriate regulatory bodies in Canada.',
+      },
+
+      { type: 'title', text: '6. Confidentiality and Data Protection' },
+      {
+        type: 'text',
+        text: '6.1. All complaints are handled confidentially. Personal data is processed in accordance with PIPEDA and the Company’s Privacy Policy.',
+      },
+      {
+        type: 'text',
+        text: '6.2. Complaint records may be retained for a minimum of five (5) years in accordance with AML and regulatory requirements.',
+      },
+
+      { type: 'title', text: '7. Final Provisions' },
+      {
+        type: 'text',
+        text: '7.1. This Procedure may be updated to reflect changes in legal or regulatory requirements.',
+      },
+      {
+        type: 'text',
+        text: '7.2. The latest version will be available via Tokenum’s official channels.',
+      },
+      {
+        type: 'text',
+        text: '7.3. By using Tokenum services, you acknowledge and agree to this Complaints Procedure.',
+      },
+      {
+        type: 'text',
+        text: 'By using Tokenum services, you confirm that you have read, understood, and agreed to this Complaints Procedure Policy.',
+      },
+    ],
+  },
+  {
+    title: 'Refund & Cancellation Policy',
+    blocks: [
+      { type: 'title', text: '1. Overview' },
+      {
+        type: 'text',
+        text: 'This Refund and Cancellation Policy (“Policy”) applies to all users of services provided under the Tokenum brand by Djooky Finance Limited, a company incorporated in British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA (the “Company”).',
+      },
+      {
+        type: 'text',
+        text: 'Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967.',
+      },
+      {
+        type: 'text',
+        text: 'By using Tokenum services, you acknowledge and agree to the terms of this Policy.',
+      },
+
+      { type: 'title', text: '2. Non-Refundable Transactions' },
+      {
+        type: 'text',
+        text: '2.1. Once a digital asset transaction or currency conversion has been executed and the funds have been transferred to the designated recipient (including external wallets), such transactions are final and irreversible.',
+      },
+      {
+        type: 'text',
+        text: '2.2. Due to the nature of blockchain technology, completed transactions cannot be canceled, reversed, or refunded, except where required by applicable law.',
+      },
+
+      { type: 'title', text: '3. Refunds for Funds Under Company Control' },
+      {
+        type: 'text',
+        text: '3.1. A refund may be considered only in cases where the funds remain under the control of Djooky Finance Limited and have not been processed or transferred.',
+      },
+      {
+        type: 'text',
+        text: '3.2. Any refund decision is made at the sole discretion of the Company and in accordance with applicable laws and regulatory obligations, including AML requirements.',
+      },
+      {
+        type: 'text',
+        text: '3.3. The Company reserves the right to deduct the following prior to issuing any refund:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Service fees',
+          'Network or blockchain fees',
+          'Payment processing fees',
+          'Any third-party charges',
+        ],
+      },
+      {
+        type: 'text',
+        text: '3.4. Refunds may be delayed or refused if the transaction is subject to compliance review, investigation, or regulatory restrictions.',
+      },
+
+      { type: 'title', text: '4. User Responsibility' },
+      {
+        type: 'text',
+        text: '4.1. Users are solely responsible for verifying all transaction details prior to confirmation, including:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Wallet addresses',
+          'Amounts',
+          'Selected assets and networks',
+        ],
+      },
+      {
+        type: 'text',
+        text: '4.2. The Company is not responsible for losses resulting from user errors, including incorrect wallet addresses or incompatible networks.',
+      },
+
+      { type: 'title', text: '5. Fees and Charges' },
+      {
+        type: 'text',
+        text: '5.1. All fees associated with transactions, including blockchain fees and third-party processing costs, are non-refundable, even where a refund is issued.',
+      },
+
+      { type: 'title', text: '6. Fraud, Compliance, and Legal Obligations' },
+      {
+        type: 'text',
+        text: '6.1. The Company reserves the right to delay, suspend, or refuse transactions or refunds where required to comply with:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Canadian AML/CTF laws',
+          'FINTRAC reporting obligations',
+          'Sanctions regulations',
+          'Law enforcement requests',
+        ],
+      },
+      {
+        type: 'text',
+        text: '6.2. In cases of suspected fraud, unauthorized activity, or illegal conduct, the Company may:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Freeze funds',
+          'Restrict account access',
+          'Report the activity to relevant authorities',
+        ],
+      },
+      {
+        type: 'text',
+        text: '6.3. The Company may be legally restricted from disclosing certain information related to such actions.',
+      },
+
+      { type: 'title', text: '7. Contact Information' },
+      {
+        type: 'text',
+        text: 'For questions regarding this Policy:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Email: support@tokenum.com',
+          'Address: 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA',
+        ],
+      },
+
+      { type: 'title', text: '8. Acknowledgment' },
+      {
+        type: 'text',
+        text: 'By using Tokenum services, you confirm that you have read, understood, and agreed to this Refund and Cancellation Policy.',
+      },
+    ],
+  },
+  {
+    title: 'Risk Disclosure',
+    blocks: [
+      { type: 'title', text: '1. Limitation of Liability' },
+      {
+        type: 'text',
+        text: 'Tokenum is a brand name operated by Djooky Finance Limited, a company incorporated in British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA.',
+      },
+      {
+        type: 'text',
+        text: 'Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967. Please be advised that registration with FINTRAC does not indicate an endorsement or licensing of the business by the federal government; it signifies that the Company fulfills its legal requirements under Canada’s PCMLTFA.',
+      },
+      {
+        type: 'text',
+        text: 'By using Tokenum services, you acknowledge and accept that all services are provided on an “as-is” and “as-available” basis. To the maximum extent permitted by applicable law, Djooky Finance Limited shall not be liable for any direct, indirect, incidental, or consequential losses, including loss of profits or data, arising from your use of the platform.',
+      },
+
+      { type: 'title', text: '2. Risk Disclosure' },
+      {
+        type: 'subtitle',
+        text: '2.1. Voluntary Use',
+      },
+      {
+        type: 'text',
+        text: 'You acknowledge that you use Tokenum’s services solely at your own discretion and risk. Transactions involving digital assets carry significant risks and may result in the total loss of your funds.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.2. No Deposit Insurance',
+      },
+      {
+        type: 'text',
+        text: 'Digital assets held in your Tokenum account are not legal tender and are not covered by the Canada Deposit Insurance Corporation (CDIC), the Canadian Investor Protection Fund (CIPF), or any other public or private deposit insurance scheme.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.3. Price Volatility',
+      },
+      {
+        type: 'text',
+        text: 'Cryptocurrency markets are highly volatile. Prices can fluctuate significantly in very short periods due to changes in user confidence, regulatory environments, technological updates, and global political events. No central authority can intervene to stabilize the value of digital assets.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.4. Irreversibility',
+      },
+      {
+        type: 'text',
+        text: 'Blockchain transactions are permanent. If you send digital assets to a wrong address or lose your security credentials (passwords, 2FA keys), your assets may be irreversibly lost. Djooky Finance Limited cannot recover assets sent to incorrect external addresses.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.5. Regulatory Risk',
+      },
+      {
+        type: 'text',
+        text: 'The legal and regulatory status of digital assets in Canada and internationally is subject to change. New laws or regulations may affect your ability to hold, transfer, or exchange digital assets on the Tokenum platform.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.6. Custody & Third-Party Risk',
+      },
+      {
+        type: 'text',
+        text: 'Djooky Finance Limited may engage third-party custodians or liquidity providers. You may be exposed to risks associated with these third parties, including potential insolvency or operational failures.',
+      },
+      {
+        type: 'subtitle',
+        text: '2.7. Banking Disclaimer',
+      },
+      {
+        type: 'text',
+        text: 'Tokenum partners with payment service providers to facilitate fiat transactions. However, the financial institutions involved in these processes do not engage in the exchange, transfer, or custody of your digital assets.',
+      },
+
+      { type: 'title', text: '3. Specific Risks of Digital Assets' },
+      {
+        type: 'list',
+        items: [
+          '(a) Market Risk: the value of your investment may drop to zero.',
+          '(b) Liquidity Risk: it may be difficult to sell certain assets during periods of low market activity.',
+          '(c) Cybersecurity Risk: digital assets are targets for hacking and fraud. While Tokenum implements security measures, you are responsible for maintaining the security of your own account credentials.',
+          '(d) Operational Risk: system outages, maintenance, or technical errors may temporarily restrict your access to services.',
+          '(e) Tax Risk: you are solely responsible for determining and paying any taxes applicable to your transactions under Canadian or international law.',
+        ],
+      },
+
+      { type: 'title', text: '4. No Financial Advice' },
+      {
+        type: 'text',
+        text: '4.1. Djooky Finance Limited (Tokenum) does not provide financial, investment, legal, or tax advice. Any information provided through the platform or our communication channels is for informational purposes only.',
+      },
+      {
+        type: 'text',
+        text: '4.2. By initiating a transaction, you confirm that you possess sufficient knowledge to understand the risks involved and have sought independent professional advice if necessary.',
+      },
+
+      { type: 'title', text: '5. Market Disruptions' },
+      {
+        type: 'text',
+        text: '5.1. In the event of extreme market volatility, technical failure, or force majeure, Tokenum reserves the right to suspend or restrict services.',
+      },
+      {
+        type: 'text',
+        text: '5.2. Upon resumption of services, market prices may differ substantially from the prices available prior to the disruption. Tokenum is not liable for any losses resulting from price changes during service suspensions.',
+      },
+
+      { type: 'title', text: '6. Acknowledgment' },
+      {
+        type: 'text',
+        text: 'By using the Tokenum platform (operated by Djooky Finance Limited), you confirm that you have read, understood, and accepted this Risk Disclosure in its entirety.',
+      },
+    ],
+  },
+  {
+    title: 'Termination Policy',
+    blocks: [
+      { type: 'title', text: '1. General Provisions' },
+      {
+        type: 'text',
+        text: '1.1. This Termination Policy (“Policy”) governs the suspension and termination of user accounts on the Tokenum platform, operated by Djooky Finance Limited, a company incorporated in British Columbia, Canada (Incorporation Number: BC1535602), with its registered office at 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA (the “Company”).',
+      },
+      {
+        type: 'text',
+        text: '1.2. Djooky Finance Limited is registered with the Financial Transactions and Reports Analysis Centre of Canada (FINTRAC) as a Money Services Business (MSB) under registration number C100000967. This Policy reflects the Company’s obligations under applicable Canadian laws, including anti-money laundering and counter-terrorist financing requirements.',
+      },
+      {
+        type: 'text',
+        text: '1.3. This Policy outlines the circumstances under which access to the Tokenum platform may be restricted, suspended, or terminated.',
+      },
+
+      { type: 'title', text: '2. Grounds for Termination or Suspension' },
+      {
+        type: 'text',
+        text: '2.1. The Company may suspend, restrict, or terminate access to the services at its sole discretion in the following cases:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Violation of the Terms of Use, Privacy Policy, or any applicable policies',
+          'Failure to comply with KYC, AML, or identity verification requirements',
+          'Involvement in fraud, money laundering, terrorist financing, sanctioned operations, or other unlawful activities',
+          'Providing false, misleading, or incomplete information',
+          'Unauthorized access or use of another user’s account',
+          'Attempts to gain unauthorized access to systems, data, or infrastructure',
+          'Use of bots, scripts, or automated tools without authorization',
+          'Activities compromising platform security or integrity',
+          'Failure to respond to compliance requests within a reasonable timeframe',
+          'Use of high-risk wallets or blockchain addresses flagged by risk monitoring tools',
+          'Transactions involving sanctioned or restricted jurisdictions',
+          'Suspected market manipulation or abusive trading practices',
+          'Prolonged account inactivity (as defined internally)',
+          'Any activity that may expose the Company to legal, regulatory, or reputational risk',
+          'Any reason required to comply with applicable laws, regulations, or directives from regulatory authorities',
+        ],
+      },
+
+      { type: 'title', text: '3. Effects of Termination' },
+      {
+        type: 'text',
+        text: '3.1. Upon termination, access to the Tokenum platform and all associated services will be revoked.',
+      },
+      {
+        type: 'text',
+        text: '3.2. The Company may freeze or restrict access to funds or digital assets where required to comply with legal, regulatory, or investigative obligations, including obligations under Canadian AML legislation.',
+      },
+      {
+        type: 'text',
+        text: '3.3. Withdrawals and transactions may be delayed, restricted, or cancelled during investigations or compliance reviews.',
+      },
+      {
+        type: 'text',
+        text: '3.4. The Company shall not be liable for any losses resulting from account suspension or termination, except as required by applicable law.',
+      },
+
+      { type: 'title', text: '4. User-Initiated Termination' },
+      {
+        type: 'text',
+        text: '4.1. Users may request account closure by contacting: support@tokenum.com',
+      },
+      {
+        type: 'text',
+        text: '4.2. Users are expected to withdraw all funds prior to closure, unless restricted due to compliance, legal, or investigative reasons.',
+      },
+      {
+        type: 'text',
+        text: '4.3. The Company may require identity verification before processing account closure.',
+      },
+      {
+        type: 'text',
+        text: '4.4. User data will be retained and processed in accordance with applicable Canadian laws (including PIPEDA) and the Company’s Privacy Policy.',
+      },
+
+      { type: 'title', text: '5. Suspension and Investigation' },
+      {
+        type: 'text',
+        text: '5.1. The Company may suspend accounts without prior notice if suspicious or potentially illegal activity is detected.',
+      },
+      {
+        type: 'text',
+        text: '5.2. During investigations, access to funds and services may be restricted.',
+      },
+      {
+        type: 'text',
+        text: '5.3. Users may be required to provide additional documentation or explanations.',
+      },
+      {
+        type: 'text',
+        text: '5.4. Where legally permitted, the Company will notify users of actions taken. However, disclosure may be restricted in cases involving AML/FINTRAC obligations (e.g., suspicious transaction reporting).',
+      },
+
+      { type: 'title', text: '6. Right to Appeal' },
+      {
+        type: 'text',
+        text: '6.1. Users may submit an appeal within 30 days of notification by contacting the Company via email.',
+      },
+      {
+        type: 'text',
+        text: '6.2. The Company will review the appeal and respond within a reasonable timeframe.',
+      },
+      {
+        type: 'text',
+        text: '6.3. The Company’s decision following the appeal shall be final, unless otherwise required by law.',
+      },
+
+      { type: 'title', text: '7. Contact Information' },
+      {
+        type: 'text',
+        text: 'For all inquiries related to this Policy:',
+      },
+      {
+        type: 'list',
+        items: [
+          'Email: support@tokenum.com',
+          'Address: 2-1130 Hachey Ave, Coquitlam, BC V3K 2H4, CANADA',
+        ],
+      },
+
+      { type: 'title', text: '8. Acknowledgment' },
+      {
+        type: 'text',
+        text: 'By using Tokenum, you acknowledge that you have read, understood, and agreed to this Termination Policy.',
+      },
+    ],
+  },
 ]
