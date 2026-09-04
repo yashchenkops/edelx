@@ -96,7 +96,7 @@ const shapeIds = ['a', 'b'];
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
             >
-              <g filter="url(#faq-glow)">
+              <g class="faq-shape__border" filter="url(#faq-glow)">
                 <path
                   d={shapePath}
                   fill="none"
@@ -105,7 +105,7 @@ const shapeIds = ['a', 'b'];
                   vector-effect="non-scaling-stroke"
                 />
               </g>
-              <g stroke="url(#faq-edge-highlight)" stroke-width="0.9" stroke-linecap="round">
+              <g class="faq-shape__edges" stroke="url(#faq-edge-highlight)" stroke-width="0.9" stroke-linecap="round">
                 <line x1="607" y1="0.45" x2="817" y2="0.45" />
                 <line x1="515" y1="230.057" x2="674" y2="230.057" />
               </g>
@@ -142,7 +142,9 @@ const shapeIds = ['a', 'b'];
     </div>
   </div>
 
-  <img class="faq__image" src="src/assets/img/faq-book.webp" alt="Book image">
+  <div class="faq__image">
+    <img class="faq__image-float" src="src/assets/img/faq-book.webp" alt="Book image">
+  </div>
 </Section>
 
 <script>
@@ -152,6 +154,34 @@ const shapeIds = ['a', 'b'];
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
   const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
   const image = document.querySelector<HTMLElement>('.faq__image')
+
+  type ShapeBundle = {
+    glass: HTMLElement | null
+    svg: HTMLElement | null
+    path: SVGPathElement | null
+    pathLength: number
+    edges: SVGLineElement[]
+  }
+
+  const shapeBundles: ShapeBundle[] = Array.from(
+    document.querySelectorAll<HTMLElement>('.faq-shape'),
+  ).map((shape) => {
+    const path = shape.querySelector<SVGPathElement>('.faq-shape__border path')
+    let pathLength = 0
+    try {
+      pathLength = path?.getTotalLength() ?? 0
+    } catch {
+      pathLength = 0
+    }
+
+    return {
+      glass: shape.querySelector<HTMLElement>('.faq-shape__glass'),
+      svg: shape.querySelector<HTMLElement>('.faq-shape__svg'),
+      path,
+      pathLength,
+      edges: Array.from(shape.querySelectorAll<SVGLineElement>('.faq-shape__edges line')),
+    }
+  })
 
   if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -175,7 +205,140 @@ const shapeIds = ['a', 'b'];
       })
     }
 
+    shapeBundles.forEach(({ glass, svg, path, pathLength, edges }) => {
+      if (glass) gsap.set(glass, { opacity: 0, scale: 0.965 })
+      if (svg) gsap.set(svg, { opacity: 0 })
+      if (path && pathLength) {
+        gsap.set(path, {
+          strokeDasharray: pathLength,
+          strokeDashoffset: pathLength,
+          opacity: 0.35,
+        })
+      }
+      if (edges.length) {
+        gsap.set(edges, { opacity: 0, scaleX: 0.72, transformOrigin: '50% 50%' })
+      }
+    })
+
+    const playShapeIn = () => {
+      shapeBundles.forEach(({ glass, svg, path, pathLength, edges }, index) => {
+        const delay = 0.08 + index * 0.12
+
+        if (reduced) {
+          if (glass) gsap.to(glass, { opacity: 1, scale: 1, duration: 0.25, overwrite: true })
+          if (svg) gsap.to(svg, { opacity: 1, duration: 0.25, overwrite: true })
+          if (path) gsap.set(path, { strokeDashoffset: 0, opacity: 1 })
+          if (edges.length) gsap.set(edges, { opacity: 1, scaleX: 1 })
+          return
+        }
+
+        if (glass) {
+          gsap.fromTo(
+            glass,
+            { opacity: 0, scale: 0.965 },
+            {
+              opacity: 1,
+              scale: 1,
+              duration: 1.05,
+              delay,
+              ease: 'power3.out',
+              overwrite: true,
+            },
+          )
+        }
+
+        if (svg) {
+          gsap.fromTo(
+            svg,
+            { opacity: 0 },
+            {
+              opacity: 1,
+              duration: 0.55,
+              delay: delay + 0.04,
+              ease: 'power2.out',
+              overwrite: true,
+            },
+          )
+        }
+
+        if (path && pathLength) {
+          gsap.fromTo(
+            path,
+            { strokeDashoffset: pathLength, opacity: 0.25 },
+            {
+              strokeDashoffset: 0,
+              opacity: 1,
+              duration: 1.15,
+              delay: delay + 0.06,
+              ease: 'power2.out',
+              overwrite: true,
+            },
+          )
+        }
+
+        if (edges.length) {
+          gsap.fromTo(
+            edges,
+            { opacity: 0, scaleX: 0.72 },
+            {
+              opacity: 1,
+              scaleX: 1,
+              duration: 0.7,
+              delay: delay + 0.45,
+              stagger: 0.06,
+              ease: 'power2.out',
+              overwrite: true,
+            },
+          )
+        }
+      })
+    }
+
+    const playShapeOut = () => {
+      shapeBundles.forEach(({ glass, svg, path, pathLength, edges }) => {
+        if (glass) {
+          gsap.to(glass, {
+            opacity: 0,
+            scale: 0.98,
+            duration: reduced ? 0.2 : 0.28,
+            ease: 'power2.in',
+            overwrite: true,
+          })
+        }
+
+        if (svg) {
+          gsap.to(svg, {
+            opacity: 0,
+            duration: reduced ? 0.2 : 0.28,
+            ease: 'power2.in',
+            overwrite: true,
+          })
+        }
+
+        if (path && pathLength) {
+          gsap.to(path, {
+            strokeDashoffset: pathLength * 0.12,
+            opacity: 0,
+            duration: reduced ? 0.2 : 0.28,
+            ease: 'power2.in',
+            overwrite: true,
+          })
+        }
+
+        if (edges.length) {
+          gsap.to(edges, {
+            opacity: 0,
+            duration: reduced ? 0.15 : 0.22,
+            ease: 'power2.in',
+            overwrite: true,
+          })
+        }
+      })
+    }
+
     const playIn = () => {
+      playShapeIn()
+
       if (reduced) {
         if (items.length) {
           gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
@@ -190,6 +353,7 @@ const shapeIds = ['a', 'b'];
             overwrite: true,
           })
         }
+        played = true
         return
       }
 
@@ -237,6 +401,7 @@ const shapeIds = ['a', 'b'];
 
     const playOut = () => {
       if (!played) return
+      playShapeOut()
 
       if (items.length) {
         gsap.to(items, {
@@ -415,7 +580,8 @@ const shapeIds = ['a', 'b'];
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: none;
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
 
     :global([data-theme='light']) & {
       background: rgb(0 0 0 / 10%);
@@ -430,7 +596,8 @@ const shapeIds = ['a', 'b'];
     height: auto;
     overflow: visible;
     pointer-events: none;
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
   }
 
   .faq-accordion {
@@ -500,6 +667,28 @@ const shapeIds = ['a', 'b'];
     max-width: min(325px, 22vw);
     pointer-events: none;
     opacity: 0;
+  }
+
+  .faq__image-float {
+    display: block;
+    width: 100%;
+    height: auto;
+    will-change: transform;
+    animation: faq-float 8.5s ease-in-out infinite;
+  }
+
+  @keyframes faq-float {
+    0%   { transform: translate(0px, 0px) rotate(0deg); }
+    25%  { transform: translate(5px, -10px) rotate(1deg); }
+    50%  { transform: translate(-4px, -18px) rotate(-0.7deg); }
+    75%  { transform: translate(-7px, -8px) rotate(0.6deg); }
+    100% { transform: translate(0px, 0px) rotate(0deg); }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq__image-float {
+      animation: none !important;
+    }
   }
 
   @media (max-width: 1024px) {

@@ -106,6 +106,14 @@ const SY = 1 / 509;
   const currencies = Array.from(
     document.querySelectorAll<HTMLElement>('.hero__currency-reveal'),
   )
+  const glass = document.querySelector<HTMLElement>('.hero__glass')
+  const shape = document.querySelector<HTMLElement>('.hero__shape')
+  const borderPaths = Array.from(
+    document.querySelectorAll<SVGPathElement>('.hero__shape-border path'),
+  )
+  const edgeLines = Array.from(
+    document.querySelectorAll<SVGLineElement>('.hero__shape-edges line'),
+  )
 
   if (slide) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -114,7 +122,15 @@ const SY = 1 / 509;
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    // ── Currency entrance ──────────────────────────────────────────
+    const pathLengths = borderPaths.map((path) => {
+      try {
+        return path.getTotalLength()
+      } catch {
+        return 0
+      }
+    })
+
+    // ── Initial hidden state ───────────────────────────────────────
     if (currencies.length) {
       gsap.set(currencies, {
         opacity: 0,
@@ -124,8 +140,153 @@ const SY = 1 / 509;
       })
     }
 
+    if (glass) {
+      gsap.set(glass, { opacity: 0, scale: 0.965 })
+    }
+
+    if (shape) {
+      gsap.set(shape, { opacity: 0 })
+    }
+
+    borderPaths.forEach((path, index) => {
+      const length = pathLengths[index]
+      if (!length) return
+      gsap.set(path, {
+        strokeDasharray: length,
+        strokeDashoffset: length,
+        opacity: 0.35,
+      })
+    })
+
+    if (edgeLines.length) {
+      gsap.set(edgeLines, { opacity: 0, scaleX: 0.72, transformOrigin: '50% 50%' })
+    }
+
+    const playShapeIn = () => {
+      if (reduced) {
+        if (glass) gsap.to(glass, { opacity: 1, scale: 1, duration: 0.25, overwrite: true })
+        if (shape) gsap.to(shape, { opacity: 1, duration: 0.25, overwrite: true })
+        borderPaths.forEach((path) => {
+          gsap.set(path, { strokeDashoffset: 0, opacity: 1 })
+        })
+        if (edgeLines.length) gsap.set(edgeLines, { opacity: 1, scaleX: 1 })
+        return
+      }
+
+      if (glass) {
+        gsap.fromTo(
+          glass,
+          { opacity: 0, scale: 0.965 },
+          {
+            opacity: 1,
+            scale: 1,
+            duration: 1.05,
+            delay: 0.08,
+            ease: 'power3.out',
+            overwrite: true,
+          },
+        )
+      }
+
+      if (shape) {
+        gsap.fromTo(
+          shape,
+          { opacity: 0 },
+          {
+            opacity: 1,
+            duration: 0.55,
+            delay: 0.12,
+            ease: 'power2.out',
+            overwrite: true,
+          },
+        )
+      }
+
+      borderPaths.forEach((path, index) => {
+        const length = pathLengths[index]
+        if (!length) return
+
+        gsap.fromTo(
+          path,
+          { strokeDashoffset: length, opacity: 0.25 },
+          {
+            strokeDashoffset: 0,
+            opacity: 1,
+            duration: 1.15,
+            delay: 0.14 + index * 0.1,
+            ease: 'power2.out',
+            overwrite: true,
+          },
+        )
+      })
+
+      if (edgeLines.length) {
+        gsap.fromTo(
+          edgeLines,
+          { opacity: 0, scaleX: 0.72 },
+          {
+            opacity: 1,
+            scaleX: 1,
+            duration: 0.7,
+            delay: 0.55,
+            stagger: 0.06,
+            ease: 'power2.out',
+            overwrite: true,
+          },
+        )
+      }
+    }
+
+    const playShapeOut = () => {
+      if (glass) {
+        gsap.to(glass, {
+          opacity: 0,
+          scale: 0.98,
+          duration: reduced ? 0.2 : 0.28,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
+
+      if (shape) {
+        gsap.to(shape, {
+          opacity: 0,
+          duration: reduced ? 0.2 : 0.28,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
+
+      borderPaths.forEach((path, index) => {
+        const length = pathLengths[index]
+        if (!length) return
+        gsap.to(path, {
+          strokeDashoffset: length * 0.12,
+          opacity: 0,
+          duration: reduced ? 0.2 : 0.28,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      })
+
+      if (edgeLines.length) {
+        gsap.to(edgeLines, {
+          opacity: 0,
+          duration: reduced ? 0.15 : 0.22,
+          ease: 'power2.in',
+          overwrite: true,
+        })
+      }
+    }
+
+    // ── Currency entrance ──────────────────────────────────────────
     const playIn = () => {
-      if (!currencies.length) return
+      playShapeIn()
+
+      if (!currencies.length) {
+        played = true
+        return
+      }
 
       if (reduced) {
         gsap.to(currencies, {
@@ -164,7 +325,10 @@ const SY = 1 / 509;
     }
 
     const playOut = () => {
-      if (!played || !currencies.length) return
+      if (!played) return
+      playShapeOut()
+
+      if (!currencies.length) return
       gsap.to(currencies, {
         opacity: 0,
         y: -14,
@@ -179,10 +343,7 @@ const SY = 1 / 509;
 
     // ── Mouse parallax on SVG + glass (desktop only) ───────────────
     const PARALLAX_MAX = 16
-    const parallaxEls = [
-      document.querySelector<HTMLElement>('.hero__glass'),
-      document.querySelector<HTMLElement>('.hero__shape'),
-    ].filter(Boolean) as HTMLElement[]
+    const parallaxEls = [glass, shape].filter(Boolean) as HTMLElement[]
 
     const parallaxEnabled = () =>
       parallaxEls.length > 0 && !reduced && finePointer.matches && desktopMq.matches
@@ -290,7 +451,8 @@ const SY = 1 / 509;
     backdrop-filter: blur(5px);
     -webkit-backdrop-filter: blur(5px);
     pointer-events: none;
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
 
     :global([data-theme='light']) & {
       background: rgb(0 0 0 / 10%);
@@ -304,7 +466,8 @@ const SY = 1 / 509;
     height: auto;
     overflow: visible;
     pointer-events: none;
-    will-change: transform;
+    will-change: transform, opacity;
+    opacity: 0;
   }
 
   @media (prefers-reduced-motion: reduce) {

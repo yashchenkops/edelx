@@ -377,6 +377,42 @@ const articles = [
       }
     }
 
+    &-title {
+      margin-bottom: 6px;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+      line-clamp: 2;
+      overflow: hidden;
+    }
+
+    &-description {
+      margin: 0;
+      font-weight: 200;
+      font-size: clamp(rem(12px), 1.1vw, rem(16px));
+      line-height: 1.45;
+      color: var(--color-text);
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 3;
+      line-clamp: 3;
+      overflow: hidden;
+      mask-image: linear-gradient(
+        180deg,
+        #000 0%,
+        #000 32%,
+        rgb(0 0 0 / 55%) 62%,
+        transparent 100%
+      );
+      -webkit-mask-image: linear-gradient(
+        180deg,
+        #000 0%,
+        #000 32%,
+        rgb(0 0 0 / 55%) 62%,
+        transparent 100%
+      );
+    }
+
     &-button {
       display: inline-block;
       position: absolute;
