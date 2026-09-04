@@ -191,9 +191,8 @@ const shapeIds = ['a', 'b'];
 
     if (items.length) {
       gsap.set(items, {
-        opacity: 0,
+        autoAlpha: 0,
         y: 28,
-        filter: 'blur(6px)',
       })
     }
 
@@ -345,7 +344,13 @@ const shapeIds = ['a', 'b'];
 
         if (reduced) {
           if (items.length) {
-            gsap.to(items, { opacity: 1, y: 0, filter: 'blur(0px)', duration: 0.25, overwrite: true })
+            gsap.to(items, {
+              autoAlpha: 1,
+              y: 0,
+              duration: 0.25,
+              overwrite: true,
+              clearProps: 'transform,filter',
+            })
           }
           if (image) {
             gsap.to(image, {
@@ -362,18 +367,20 @@ const shapeIds = ['a', 'b'];
         }
 
         if (items.length) {
+          // Avoid `filter`/`transform` lingering on accordion items —
+          // both break CSS 0fr/1fr open panels and leave empty gaps.
           gsap.fromTo(
             items,
-            { opacity: 0, y: 28, filter: 'blur(6px)' },
+            { autoAlpha: 0, y: 28 },
             {
-              opacity: 1,
+              autoAlpha: 1,
               y: 0,
-              filter: 'blur(0px)',
               duration: 0.65,
               delay: 0.06,
               stagger: 0.07,
               ease: 'power3.out',
               overwrite: true,
+              clearProps: 'transform,filter',
             },
           )
         }
@@ -410,9 +417,8 @@ const shapeIds = ['a', 'b'];
 
       if (items.length) {
         gsap.to(items, {
-          opacity: 0,
+          autoAlpha: 0,
           y: -12,
-          filter: 'blur(5px)',
           duration: reduced ? 0.2 : 0.24,
           stagger: 0.03,
           ease: 'power2.in',
@@ -607,7 +613,8 @@ const shapeIds = ['a', 'b'];
 
   .faq-accordion {
     position: relative;
-    z-index: 1;
+    z-index: 2;
+    isolation: isolate;
     display: flex;
     flex-direction: column;
     gap: clamp(rem(22px), 3vw, rem(40px));
