@@ -258,8 +258,8 @@ const shapeIds = ['a', 'b'];
         const delay = 0.08 + index * 0.12
 
         if (reduced) {
-          if (glass) gsap.to(glass, { opacity: 1, scale: 1, duration: 0.25, overwrite: true })
-          if (svg) gsap.to(svg, { opacity: 1, duration: 0.25, overwrite: true })
+          if (glass) gsap.to(glass, { opacity: 1, scale: 1, duration: 0.25, overwrite: 'auto' })
+          if (svg) gsap.to(svg, { opacity: 1, duration: 0.25, overwrite: 'auto' })
           if (path) gsap.set(path, { strokeDashoffset: 0, opacity: 1 })
           if (edges.length) gsap.set(edges, { opacity: 1, scaleX: 1 })
           return
@@ -275,7 +275,7 @@ const shapeIds = ['a', 'b'];
               duration: 1.05,
               delay,
               ease: 'power3.out',
-              overwrite: true,
+              overwrite: 'auto',
             },
           )
         }
@@ -289,7 +289,7 @@ const shapeIds = ['a', 'b'];
               duration: 0.55,
               delay: delay + 0.04,
               ease: 'power2.out',
-              overwrite: true,
+              overwrite: 'auto',
             },
           )
         }
@@ -335,7 +335,7 @@ const shapeIds = ['a', 'b'];
             scale: 0.98,
             duration: reduced ? 0.2 : 0.28,
             ease: 'power2.in',
-            overwrite: true,
+            overwrite: 'auto',
           })
         }
 
@@ -344,7 +344,7 @@ const shapeIds = ['a', 'b'];
             opacity: 0,
             duration: reduced ? 0.2 : 0.28,
             ease: 'power2.in',
-            overwrite: true,
+            overwrite: 'auto',
           })
         }
 
@@ -437,41 +437,28 @@ const shapeIds = ['a', 'b'];
       }
     }
 
-    // ── Mouse parallax on SVG chevrons (+ glass), desktop only ─────
+    // ── Mouse parallax on shape wrappers (not glass/svg — avoids kill by entrance overwrite)
     const finePointer = window.matchMedia('(hover: hover) and (pointer: fine)')
     const desktopMq = window.matchMedia('(min-width: 1024px)')
-    const shapeGroups = Array.from(document.querySelectorAll<HTMLElement>('.faq-shape')).map(
-      (shape, index) => ({
-        els: [
-          shape.querySelector<HTMLElement>('.faq-shape__glass'),
-          shape.querySelector<HTMLElement>('.faq-shape__svg'),
-        ].filter(Boolean) as HTMLElement[],
-        max: index === 0 ? 14 : 18,
-      }),
-    )
+    const shapeEls = Array.from(document.querySelectorAll<HTMLElement>('.faq-shape'))
+    const shapeGroups = shapeEls.map((el, index) => ({
+      el,
+      max: index === 0 ? 14 : 18,
+    }))
 
     const parallaxEnabled = () =>
-      !reduced &&
-      finePointer.matches &&
-      desktopMq.matches &&
-      shapeGroups.some((group) => group.els.length > 0)
+      !reduced && finePointer.matches && desktopMq.matches && shapeGroups.length > 0
 
-    const parallaxTweens = shapeGroups
-      .filter((group) => group.els.length)
-      .map((group) => ({
-        max: group.max,
-        xTos: group.els.map((el) =>
-          gsap.quickTo(el, 'x', { duration: 0.7, ease: 'power3.out' }),
-        ),
-        yTos: group.els.map((el) =>
-          gsap.quickTo(el, 'y', { duration: 0.7, ease: 'power3.out' }),
-        ),
-      }))
+    const parallaxTweens = shapeGroups.map((group) => ({
+      max: group.max,
+      xTo: gsap.quickTo(group.el, 'x', { duration: 0.7, ease: 'power3.out' }),
+      yTo: gsap.quickTo(group.el, 'y', { duration: 0.7, ease: 'power3.out' }),
+    }))
 
     const resetParallax = () => {
-      parallaxTweens.forEach(({ xTos, yTos }) => {
-        xTos.forEach((to) => to(0))
-        yTos.forEach((to) => to(0))
+      parallaxTweens.forEach(({ xTo, yTo }) => {
+        xTo(0)
+        yTo(0)
       })
     }
 
@@ -486,19 +473,21 @@ const shapeIds = ['a', 'b'];
       const clampedX = Math.max(-1, Math.min(1, nx))
       const clampedY = Math.max(-1, Math.min(1, ny))
 
-      parallaxTweens.forEach(({ max, xTos, yTos }) => {
-        const x = clampedX * max
-        const y = clampedY * max
-        xTos.forEach((to) => to(x))
-        yTos.forEach((to) => to(y))
+      parallaxTweens.forEach(({ max, xTo, yTo }) => {
+        xTo(clampedX * max)
+        yTo(clampedY * max)
       })
     }
 
     if (parallaxTweens.length && !reduced) {
-      slide.addEventListener('pointermove', onPointerMove)
+      // Listen on window so Swiper transforms / overlays don't drop move events.
+      window.addEventListener('pointermove', onPointerMove, { passive: true })
       slide.addEventListener('pointerleave', resetParallax)
       desktopMq.addEventListener('change', () => {
         if (!desktopMq.matches) resetParallax()
+      })
+      finePointer.addEventListener('change', () => {
+        if (!finePointer.matches) resetParallax()
       })
     }
 
@@ -574,6 +563,7 @@ const shapeIds = ['a', 'b'];
     width: min(480px, 68cqw);
     aspect-ratio: 400 / 509;
     flex-shrink: 0;
+    will-change: transform;
 
     & + & {
       margin-left: clamp(rem(-120px), -10cqw, rem(-60px));
