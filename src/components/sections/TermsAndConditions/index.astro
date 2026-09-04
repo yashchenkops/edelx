@@ -227,22 +227,27 @@ import { documents } from './content';
   }
 
   .terms-and-conditions__content :global(.section-title) {
-    font-size: clamp(rem(40px), 5.4vw, rem(104px));
+    font-size: clamp(rem(32px), 4vw, rem(72px));
+    line-height: 1.05;
     text-align: left;
 
     @media (max-width: 1024px) {
-      font-size: clamp(rem(28px), 6.5vw, rem(44px));
+      font-size: clamp(rem(24px), 5.5vw, rem(40px));
       width: 100%;
-      line-height: 1.05;
     }
 
     @media (max-width: 768px) {
-      font-size: clamp(rem(24px), 7.2vw, rem(36px));
+      font-size: clamp(rem(22px), 6.5vw, rem(32px));
     }
 
     :global(.section-title__mark) {
       opacity: 0;
       transition: opacity 0.35s ease;
+    }
+
+    // Long titles (e.g. Cancellation) must not get clipped by SplitText word boxes.
+    :global(.word) {
+      overflow: visible;
     }
   }
 
