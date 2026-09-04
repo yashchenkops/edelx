@@ -116,7 +116,10 @@ const shapeIds = ['a', 'b'];
 
       <div class="faq-accordion" data-faq-accordion>
         {items.map((item, index) => (
-          <div class:list={['faq-accordion__item', { 'is-open': index === 0 }]}>
+          <div
+            class:list={['faq-accordion__item', { 'is-open': index === 0 }]}
+            style={`--faq-i: ${index}`}
+          >
             <button
               class="faq-accordion__trigger"
               type="button"
@@ -154,22 +157,18 @@ const shapeIds = ['a', 'b'];
 
   const slide = document.querySelector<HTMLElement>('[data-slide="faq"]')
   const accordion = document.querySelector<HTMLElement>('[data-faq-accordion]')
-  const items = Array.from(document.querySelectorAll<HTMLElement>('.faq-accordion__item'))
   const image = document.querySelector<HTMLElement>('.faq__image')
 
-  const revealItems = () => {
-    gsap.set(items, { clearProps: 'all' })
-    accordion?.classList.add('is-revealed')
+  const showItems = () => {
+    if (!accordion) return
+    accordion.classList.remove('is-items-in')
+    // Restart CSS animation reliably
+    void accordion.offsetWidth
+    accordion.classList.add('is-items-in')
   }
 
-  const hideItemsForAnim = () => {
-    accordion?.classList.remove('is-revealed')
-    gsap.killTweensOf(items)
-    gsap.set(items, {
-      opacity: 0,
-      y: 28,
-      filter: 'blur(6px)',
-    })
+  const hideItems = () => {
+    accordion?.classList.remove('is-items-in')
   }
 
   type ShapeBundle = {
@@ -205,7 +204,7 @@ const shapeIds = ['a', 'b'];
     let played = false
     let isActive = slide.classList.contains('swiper-slide-active')
 
-    if (items.length) hideItemsForAnim()
+    hideItems()
 
     if (image) {
       gsap.set(image, {
@@ -354,7 +353,7 @@ const shapeIds = ['a', 'b'];
         playShapeIn()
 
         if (reduced) {
-          if (items.length) revealItems()
+          showItems()
           if (image) {
             gsap.to(image, {
               opacity: 1,
@@ -369,23 +368,7 @@ const shapeIds = ['a', 'b'];
           return
         }
 
-        if (items.length) {
-          hideItemsForAnim()
-          gsap
-            .timeline({
-              delay: 0.06,
-              onComplete: revealItems,
-            })
-            .to(items, {
-              opacity: 1,
-              y: 0,
-              filter: 'blur(0px)',
-              duration: 0.65,
-              stagger: 0.07,
-              ease: 'power3.out',
-              overwrite: true,
-            })
-        }
+        showItems()
 
         if (image) {
           gsap.fromTo(
@@ -416,19 +399,7 @@ const shapeIds = ['a', 'b'];
     const playOut = () => {
       if (!played) return
       playShapeOut()
-
-      if (items.length) {
-        accordion?.classList.remove('is-revealed')
-        gsap.to(items, {
-          opacity: 0,
-          y: -12,
-          filter: 'blur(5px)',
-          duration: reduced ? 0.2 : 0.24,
-          stagger: 0.03,
-          ease: 'power2.in',
-          overwrite: true,
-        })
-      }
+      hideItems()
 
       if (image) {
         gsap.to(image, {
@@ -627,14 +598,31 @@ const shapeIds = ['a', 'b'];
     position: relative;
     z-index: 1;
     min-width: 0;
+    opacity: 0;
+    transform: translateY(28px);
+    filter: blur(6px);
   }
 
-  /* After intro, force visible — clears stuck GSAP opacity/filter/visibility */
-  .faq-accordion.is-revealed .faq-accordion__item {
-    opacity: 1 !important;
-    visibility: visible !important;
-    filter: none !important;
-    transform: none !important;
+  .faq-accordion.is-items-in .faq-accordion__item {
+    animation: faq-item-in 0.65s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    animation-delay: calc(0.06s + var(--faq-i, 0) * 0.07s);
+  }
+
+  @keyframes faq-item-in {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+      filter: blur(0);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .faq-accordion__item {
+      opacity: 1;
+      transform: none;
+      filter: none;
+      animation: none !important;
+    }
   }
 
   .faq-accordion__trigger {
