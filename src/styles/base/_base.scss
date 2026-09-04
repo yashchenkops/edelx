@@ -13,11 +13,9 @@
 }
 
 [data-theme='dark'] {
-  --bg-loader-image: url('/src/assets/img/preloader-bg.svg');
   --bg-image: url('/src/assets/img/bg-image.svg');
 }
 [data-theme='light'] {
-  --bg-loader-image: url('/src/assets/img/light/preloader-bg.svg');
   --bg-image: url('/src/assets/img/light/bg-image.svg');
 }
 

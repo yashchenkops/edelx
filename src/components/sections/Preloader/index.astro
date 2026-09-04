@@ -1,8 +1,55 @@
 ---
 import preloaderLogo from '@/assets/img/preloader-logo.webp'
+
+const bgPathLeft =
+  'M2.06055 -25.4883H518.145C519.415 -25.4882 520.592 -24.8182 521.241 -23.7256V-23.7246L810.626 463.402C816.649 473.541 827.566 479.755 839.354 479.755H856.509C874.4 479.755 888.903 494.267 888.903 512.168V567.832L888.893 568.669C888.449 586.184 874.12 600.245 856.509 600.245H839.354C827.566 600.245 816.649 606.459 810.626 616.598L521.245 1103.72C520.596 1104.82 519.419 1105.49 518.148 1105.49H2.06445C0.852702 1105.49 0.113087 1104.16 0.754883 1103.12L314.074 600.446C316.235 596.98 320.029 594.873 324.111 594.873H718.943C737.401 594.873 752.363 579.901 752.362 561.434L752.36 518.562C752.359 500.096 737.398 485.127 718.941 485.127H324.107C320.025 485.127 316.231 483.02 314.07 479.554L0.748047 -23.125H0.74707C0.107099 -24.1547 0.848691 -25.4882 2.06055 -25.4883Z'
+
+const bgPathRight =
+  'M1317.22 -25.4883H1832.06C1833.27 -25.4882 1834.01 -24.1561 1833.37 -23.126L1520.81 479.544C1518.65 483.016 1514.85 485.127 1510.76 485.127H1116.98C1098.52 485.127 1083.56 500.099 1083.56 518.566V561.438C1083.56 579.904 1098.52 594.873 1116.98 594.873H1510.77C1514.85 594.873 1518.65 596.984 1520.81 600.456L1833.38 1103.13C1834.02 1104.16 1833.28 1105.49 1832.07 1105.49H1317.23C1315.96 1105.49 1314.78 1104.82 1314.13 1103.72L1025.46 616.627C1019.44 606.471 1008.51 600.245 996.709 600.245H979.741C961.85 600.245 947.347 585.734 947.347 567.832V512.168C947.347 494.267 961.85 479.755 979.741 479.755H996.709C1008.51 479.755 1019.44 473.529 1025.46 463.373L1314.12 -23.7236C1314.77 -24.8178 1315.95 -25.4882 1317.22 -25.4883Z'
 ---
 
 <div class="preloader" data-preloader aria-hidden="false">
+  <svg
+    class="preloader__bg"
+    viewBox="0 0 1835 1080"
+    fill="none"
+    xmlns="http://www.w3.org/2000/svg"
+    aria-hidden="true"
+    preserveAspectRatio="xMidYMid meet"
+  >
+    <path
+      class="preloader__bg-path"
+      d={bgPathLeft}
+      stroke="url(#preloader-bg-grad)"
+      stroke-width="1.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <path
+      class="preloader__bg-path"
+      d={bgPathRight}
+      stroke="url(#preloader-bg-grad)"
+      stroke-width="1.4"
+      stroke-linecap="round"
+      stroke-linejoin="round"
+      fill="none"
+    />
+    <defs>
+      <radialGradient
+        id="preloader-bg-grad"
+        cx="0"
+        cy="0"
+        r="1"
+        gradientUnits="userSpaceOnUse"
+        gradientTransform="translate(917.063 540) rotate(90) scale(995.5 1612.96)"
+      >
+        <stop class="preloader__bg-stop-start" stop-color="#fff" />
+        <stop class="preloader__bg-stop-end" offset="1" stop-color="#999" stop-opacity="0" />
+      </radialGradient>
+    </defs>
+  </svg>
+
   <div class="preloader__logo">
     <img
       src={preloaderLogo.src}
@@ -15,21 +62,8 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
 </div>
 
 <style lang="scss">
-  $preloader-enter: 850ms;
-  $preloader-exit: 750ms;
+  $preloader-draw: 1000ms;
   $preloader-easing: cubic-bezier(0.4, 0, 0.2, 1);
-
-  @keyframes preloader-enter {
-    from {
-      opacity: 0;
-      transform: scale(0.88);
-    }
-
-    to {
-      opacity: 1;
-      transform: scale(1);
-    }
-  }
 
   .preloader {
     position: fixed;
@@ -39,20 +73,30 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
     align-items: center;
     justify-content: center;
     background-color: var(--color-bg);
-    background-image: var(--bg-loader-image);
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: contain;
-    opacity: 0;
-    transform: scale(0.88);
-    animation: preloader-enter $preloader-enter $preloader-easing forwards;
-    will-change: transform, opacity;
+    opacity: 1;
 
-    @include m.tablet {
-      background-size: cover;
+    &__bg {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      overflow: visible;
+    }
+
+    &__bg-path {
+      opacity: 0.6;
+      // Hidden until JS sets real length — avoids a flash of full stroke
+      stroke-dasharray: 1;
+      stroke-dashoffset: 1;
+      transition: stroke-dashoffset $preloader-draw $preloader-easing;
+      will-change: stroke-dashoffset;
     }
 
     &__logo {
+      position: relative;
+      z-index: 1;
       padding-inline: rem(30px);
       max-width: rem(300px);
       opacity: 0;
@@ -71,13 +115,25 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
     }
   }
 
+  :global([data-theme='light']) {
+    .preloader__bg-stop-start {
+      stop-color: #000;
+    }
+
+    .preloader__bg-stop-end {
+      stop-color: #000;
+    }
+  }
+
   :global(body.is-preloading) {
     overflow: hidden;
   }
 </style>
 
-<script is:inline define:vars={{ enterDuration: 850, exitDuration: 750 }}>
+<script is:inline define:vars={{ drawDuration: 1000, enterDuration: 700, exitDuration: 550, logoOverlapMs: 450 }}>
   const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
+
+  const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms))
 
   const waitForPageLoad = () =>
     document.readyState === 'complete'
@@ -86,17 +142,52 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
           window.addEventListener('load', () => resolve(), { once: true })
         })
 
-  const waitForPreloaderEnter = (element) =>
+  const waitTransition = (element, propertyName, fallbackMs) =>
     new Promise((resolve) => {
       const onEnd = (event) => {
-        if (event.animationName !== 'preloader-enter') return
-        element.removeEventListener('animationend', onEnd)
+        if (event.target !== element) return
+        if (propertyName && event.propertyName !== propertyName) return
+        element.removeEventListener('transitionend', onEnd)
+        window.clearTimeout(timer)
         resolve()
       }
 
-      element.addEventListener('animationend', onEnd)
-      setTimeout(resolve, enterDuration + 100)
+      element.addEventListener('transitionend', onEnd)
+      const timer = window.setTimeout(() => {
+        element.removeEventListener('transitionend', onEnd)
+        resolve()
+      }, fallbackMs + 80)
     })
+
+  const animateDraw = (paths) => {
+    if (!paths.length) return Promise.resolve()
+
+    // Prime: hide strokes with real path lengths (no transition yet)
+    paths.forEach((path) => {
+      let length = 0
+      try {
+        length = path.getTotalLength()
+      } catch {
+        length = 0
+      }
+      if (!length) return
+
+      path.style.transition = 'none'
+      path.style.strokeDasharray = `${length}`
+      path.style.strokeDashoffset = `${length}`
+    })
+
+    // Force style flush, then animate dashoffset → 0
+    void paths[0].getBoundingClientRect()
+
+    return Promise.all(
+      paths.map((path) => {
+        path.style.transition = `stroke-dashoffset ${drawDuration}ms ${EASING}`
+        path.style.strokeDashoffset = '0'
+        return waitTransition(path, 'stroke-dashoffset', drawDuration)
+      }),
+    )
+  }
 
   const animateIn = (element) =>
     element.animate(
@@ -111,12 +202,14 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
       },
     ).finished
 
-  const animateOut = (element) =>
+  const animateOut = (element, { scale = true } = {}) =>
     element.animate(
-      [
-        { opacity: 1, transform: 'scale(1)' },
-        { opacity: 0, transform: 'scale(1.14)' },
-      ],
+      scale
+        ? [
+            { opacity: 1, transform: 'scale(1)' },
+            { opacity: 0, transform: 'scale(1.14)' },
+          ]
+        : [{ opacity: 1 }, { opacity: 0 }],
       {
         duration: exitDuration,
         easing: EASING,
@@ -134,6 +227,9 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
   const runPreloader = async () => {
     const preloader = document.querySelector('[data-preloader]')
     const logo = preloader?.querySelector('.preloader__logo')
+    const paths = Array.from(preloader?.querySelectorAll('.preloader__bg-path') || [])
+    const bg = preloader?.querySelector('.preloader__bg')
+
     if (!preloader || !logo) {
       finishPreloader(null)
       return
@@ -141,19 +237,41 @@ import preloaderLogo from '@/assets/img/preloader-logo.webp'
 
     document.body.classList.add('is-preloading')
 
+    if (bg && window.matchMedia('(min-width: 768px)').matches) {
+      bg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
+    }
+
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
     if (prefersReducedMotion) {
+      paths.forEach((path) => {
+        path.style.transition = 'none'
+        path.style.strokeDasharray = 'none'
+        path.style.strokeDashoffset = '0'
+      })
+      logo.style.opacity = '1'
+      logo.style.transform = 'scale(1)'
       await waitForPageLoad()
       finishPreloader(preloader)
       return
     }
 
-    await waitForPreloaderEnter(preloader)
-    await animateIn(logo)
+    // Start logo while the stroke is still finishing — less idle wait.
+    await Promise.all([
+      animateDraw(paths),
+      (async () => {
+        await wait(Math.max(0, drawDuration - logoOverlapMs))
+        await animateIn(logo)
+      })(),
+    ])
     await waitForPageLoad()
-    await animateOut(logo)
-    await animateOut(preloader)
+    await Promise.all([
+      animateOut(logo),
+      (async () => {
+        await wait(180)
+        await animateOut(preloader, { scale: false })
+      })(),
+    ])
 
     finishPreloader(preloader)
   }
