@@ -5,7 +5,8 @@ import { fileURLToPath } from 'url'
 // https://astro.build/config
 export default defineConfig({
   site: 'https://yashchenkops.github.io',
-  base: '/edelx',
+  // GitHub Pages project site needs /edelx; keep "/" for local build/dev.
+  base: process.env.GITHUB_ACTIONS ? '/edelx' : '/',
   vite: {
     resolve: {
       alias: {
