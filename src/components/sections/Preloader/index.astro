@@ -1,5 +1,6 @@
 ---
 import preloaderLogo from '@/assets/img/preloader-logo.webp'
+import preloaderLogoLight from '@/assets/img/light/preloader-logo.webp'
 
 const bgPathLeft =
   'M2.06055 -25.4883H518.145C519.415 -25.4882 520.592 -24.8182 521.241 -23.7256V-23.7246L810.626 463.402C816.649 473.541 827.566 479.755 839.354 479.755H856.509C874.4 479.755 888.903 494.267 888.903 512.168V567.832L888.893 568.669C888.449 586.184 874.12 600.245 856.509 600.245H839.354C827.566 600.245 816.649 606.459 810.626 616.598L521.245 1103.72C520.596 1104.82 519.419 1105.49 518.148 1105.49H2.06445C0.852702 1105.49 0.113087 1104.16 0.754883 1103.12L314.074 600.446C316.235 596.98 320.029 594.873 324.111 594.873H718.943C737.401 594.873 752.363 579.901 752.362 561.434L752.36 518.562C752.359 500.096 737.398 485.127 718.941 485.127H324.107C320.025 485.127 316.231 483.02 314.07 479.554L0.748047 -23.125H0.74707C0.107099 -24.1547 0.848691 -25.4882 2.06055 -25.4883Z'
@@ -15,7 +16,7 @@ const bgPathRight =
     fill="none"
     xmlns="http://www.w3.org/2000/svg"
     aria-hidden="true"
-    preserveAspectRatio="xMidYMid meet"
+    preserveAspectRatio="xMidYMid slice"
   >
     <path
       class="preloader__bg-path"
@@ -52,9 +53,18 @@ const bgPathRight =
 
   <div class="preloader__logo">
     <img
+      class="preloader__logo-img preloader__logo-img--dark"
       src={preloaderLogo.src}
       width={preloaderLogo.width}
       height={preloaderLogo.height}
+      alt="EdelX"
+      decoding="async"
+    />
+    <img
+      class="preloader__logo-img preloader__logo-img--light"
+      src={preloaderLogoLight.src}
+      width={preloaderLogoLight.width}
+      height={preloaderLogoLight.height}
       alt="EdelX"
       decoding="async"
     />
@@ -87,7 +97,6 @@ const bgPathRight =
 
     &__bg-path {
       opacity: 0.6;
-      // Hidden until JS sets real length — avoids a flash of full stroke
       stroke-dasharray: 1;
       stroke-dashoffset: 1;
       transition: stroke-dashoffset $preloader-draw $preloader-easing;
@@ -107,10 +116,15 @@ const bgPathRight =
       @include m.tablet {
         max-width: rem(560px);
       }
+    }
 
-      img {
-        width: 100%;
-        height: auto;
+    &__logo-img {
+      display: block;
+      width: 100%;
+      height: auto;
+
+      &--light {
+        display: none;
       }
     }
   }
@@ -122,6 +136,14 @@ const bgPathRight =
 
     .preloader__bg-stop-end {
       stop-color: #000;
+    }
+
+    .preloader__logo-img--dark {
+      display: none;
+    }
+
+    .preloader__logo-img--light {
+      display: block;
     }
   }
 
@@ -162,7 +184,6 @@ const bgPathRight =
   const animateDraw = (paths) => {
     if (!paths.length) return Promise.resolve()
 
-    // Prime: hide strokes with real path lengths (no transition yet)
     paths.forEach((path) => {
       let length = 0
       try {
@@ -177,7 +198,6 @@ const bgPathRight =
       path.style.strokeDashoffset = `${length}`
     })
 
-    // Force style flush, then animate dashoffset → 0
     void paths[0].getBoundingClientRect()
 
     return Promise.all(
@@ -228,7 +248,6 @@ const bgPathRight =
     const preloader = document.querySelector('[data-preloader]')
     const logo = preloader?.querySelector('.preloader__logo')
     const paths = Array.from(preloader?.querySelectorAll('.preloader__bg-path') || [])
-    const bg = preloader?.querySelector('.preloader__bg')
 
     if (!preloader || !logo) {
       finishPreloader(null)
@@ -236,10 +255,6 @@ const bgPathRight =
     }
 
     document.body.classList.add('is-preloading')
-
-    if (bg && window.matchMedia('(min-width: 768px)').matches) {
-      bg.setAttribute('preserveAspectRatio', 'xMidYMid slice')
-    }
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
 
@@ -256,7 +271,6 @@ const bgPathRight =
       return
     }
 
-    // Start logo while the stroke is still finishing — less idle wait.
     await Promise.all([
       animateDraw(paths),
       (async () => {
