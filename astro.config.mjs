@@ -8,6 +8,11 @@ export default defineConfig({
   // GitHub Pages project site needs /edelx; keep "/" for local build/dev.
   base: process.env.GITHUB_ACTIONS ? '/edelx' : '/',
   vite: {
+    build: {
+      // LightningCSS drops unprefixed `backdrop-filter` (keeps only -webkit-),
+      // which breaks glass blur in current Chromium production builds.
+      cssMinify: 'esbuild',
+    },
     resolve: {
       alias: {
         '@': fileURLToPath(new URL('./src', import.meta.url)),
