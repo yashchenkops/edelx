@@ -133,11 +133,13 @@ const documents: TermsDocument[] = [
     position: relative;
     display: flex;
     align-items: center;
-    gap: clamp(rem(20px), 3vw, rem(48px));
+    justify-content: space-between;
+    gap: clamp(rem(16px), 2vw, rem(32px));
 
     @media (max-width: 1024px) {
       flex-direction: column;
       align-items: flex-start;
+      justify-content: flex-start;
       gap: rem(24px);
       padding-top: rem(120px);
       padding-bottom: var(--footer-offset, rem(240px));
@@ -153,8 +155,8 @@ const documents: TermsDocument[] = [
   }
 
   .terms-and-conditions__content {
-    flex: 0 0 45%;
-    max-width: 45%;
+    flex: 1 1 52%;
+    max-width: 54%;
     min-width: 0;
 
     @media (max-width: 1024px) {
@@ -167,7 +169,7 @@ const documents: TermsDocument[] = [
   .terms-titles {
     overflow: hidden;
     height: clamp(rem(320px), 58vh, rem(640px));
-    padding: rem(20px) rem(8px) rem(20px) rem(18px);
+    padding: rem(28px) rem(8px) rem(28px) rem(24px);
     mask-image: linear-gradient(
       180deg,
       transparent 0%,
@@ -187,7 +189,7 @@ const documents: TermsDocument[] = [
     @media (max-width: 1024px) {
       width: 100%;
       height: auto;
-      padding: rem(8px) 0 rem(4px);
+      padding: rem(20px) rem(8px) rem(8px) rem(24px);
       mask-image: linear-gradient(
         90deg,
         transparent 0%,
@@ -217,6 +219,7 @@ const documents: TermsDocument[] = [
 
   .terms-titles :global(.swiper-slide) {
     height: auto;
+    overflow: visible;
   }
 
   .terms-titles__slide {
@@ -226,15 +229,17 @@ const documents: TermsDocument[] = [
     box-sizing: border-box;
     width: 100%;
     height: auto;
-    padding-block: rem(18px);
+    padding-block: rem(24px);
+    padding-left: rem(20px);
     opacity: 1;
     cursor: pointer;
 
     @media (max-width: 1024px) {
       width: fit-content;
       max-width: 82%;
-      padding-block: rem(6px);
-      padding-inline: rem(18px);
+      padding-block: rem(12px);
+      padding-left: rem(20px);
+      padding-right: rem(18px);
     }
 
     :global(.section-title),
@@ -274,7 +279,7 @@ const documents: TermsDocument[] = [
   }
 
   .terms-and-conditions__content :global(.section-title) {
-    font-size: clamp(rem(36px), 4.5vw, rem(88px));
+    font-size: clamp(rem(40px), 5.4vw, rem(104px));
 
     @media (max-width: 1024px) {
       font-size: clamp(rem(36px), 8vw, rem(72px));
@@ -304,9 +309,10 @@ const documents: TermsDocument[] = [
 
   .terms-and-conditions__scroll-wrap {
     position: relative;
-    flex: 0 0 42%;
-    max-width: 42%;
+    flex: 0 1 44%;
+    max-width: 46%;
     min-width: 0;
+    margin-left: auto;
     mask-image: linear-gradient(
       180deg,
       transparent 0%,
@@ -326,6 +332,7 @@ const documents: TermsDocument[] = [
       flex: none;
       max-width: min(100%, rem(560px));
       width: min(100%, rem(560px));
+      margin-left: 0;
     }
   }
 
