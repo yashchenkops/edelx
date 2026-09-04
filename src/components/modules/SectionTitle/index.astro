@@ -37,15 +37,22 @@ const {
 
     &__mark {
       position: absolute;
-      top: -15px;
-      left: -15px;
-      width: 15px;
-      height: 15px;
+      top: -0.125em;
+      left: -0.125em;
+      width: 0.15em;
+      height: 0.15em;
       border: 1px solid var(--color-text);
       background-color: transparent;
       pointer-events: none;
       transform-origin: center;
       will-change: transform, opacity;
+
+      @media (max-width: 768px) {
+        top: -0.1em;
+        left: -0.1em;
+        width: 0.125em;
+        height: 0.125em;
+      }
     }
 
     &__label {

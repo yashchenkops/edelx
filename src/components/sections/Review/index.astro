@@ -138,7 +138,7 @@ const slides = [
     @media (max-width: 768px) {
       flex-direction: column;
       align-items: flex-start;
-      gap: rem(100px);
+      gap: clamp(rem(28px), 5vh, rem(56px));
     }
   }
 
@@ -173,7 +173,7 @@ const slides = [
       width: min(85%, 360px);
       max-width: 100%;
       align-self: center;
-      margin-bottom: rem(60px);
+      margin-bottom: clamp(rem(24px), 4vh, rem(48px));
     }
   }
 
