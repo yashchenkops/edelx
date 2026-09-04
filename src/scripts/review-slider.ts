@@ -107,7 +107,6 @@ const initReviewSlider = (root: HTMLElement) => {
     const folderOut = [frontDeco, outCard].filter(Boolean) as HTMLElement[]
 
     try {
-      // 1) Pull current folder out
       const outTl = gsap.timeline({ defaults: { overwrite: 'auto' } })
 
       outTl.to(folderOut, {
@@ -148,7 +147,6 @@ const initReviewSlider = (root: HTMLElement) => {
 
       await outTl
 
-      // 2) Swap while hidden
       resetLayer(outCard)
       direction > 0 ? swiper.slideNext(0) : swiper.slidePrev(0)
       syncSlide(swiper.activeIndex)
@@ -165,7 +163,6 @@ const initReviewSlider = (root: HTMLElement) => {
         opacity: 0,
       })
 
-      // 3) Lay the next folder into the pocket
       const inTl = gsap.timeline({ defaults: { overwrite: 'auto' } })
 
       inTl.to(folderIn, {
@@ -203,7 +200,6 @@ const initReviewSlider = (root: HTMLElement) => {
 
       await inTl
 
-      // Leave decorations free of inline transform so backdrop-filter stays alive
       if (frontDeco) gsap.set(frontDeco, { clearProps: 'transform,opacity' })
       if (backDeco) gsap.set(backDeco, { clearProps: 'transform' })
       if (inCard) gsap.set(inCard, { clearProps: 'transform' })

@@ -10,8 +10,6 @@ gsap.registerPlugin(SplitText)
 const NAV_LINK_SELECTOR = '[data-nav-link]'
 const SLIDE_SELECTOR = '[data-slide]'
 const TEXT_SELECTOR = '.section-title, .section-subtitle'
-/* Do not target glass parents (.hero__illustration, .faq__decoration):
-   transform/filter/opacity on ancestors kill backdrop-filter. */
 const VISUAL_SELECTOR =
   '.page-section__decor, .hero__currency, .about__illustration, .review__slider'
 const TABLET_BREAKPOINT = 1024
@@ -171,7 +169,6 @@ export const initPageSlider = () => {
 
   const reduced = prefersReducedMotion()
 
-  // Keep the hashed slide on reload; don't let the browser restore scroll / fire wheel.
   if ('scrollRestoration' in history) {
     history.scrollRestoration = 'manual'
   }
@@ -233,7 +230,6 @@ export const initPageSlider = () => {
     },
     on: {
       init: (swiperInstance) => {
-        // Re-assert hash slide in case modules moved us during boot
         if (swiperInstance.activeIndex !== initialSlide) {
           swiperInstance.slideTo(initialSlide, 0, false)
         }
@@ -243,7 +239,6 @@ export const initPageSlider = () => {
           if (slide instanceof HTMLElement) applySlideParallax(slide, slide.progress)
         })
 
-        // Ignore residual wheel/trackpad events from reload for a moment
         window.setTimeout(() => {
           swiperInstance.mousewheel?.enable?.()
         }, 350)
