@@ -2,6 +2,11 @@
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
 import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
+import aboutVideo from '@/assets/video/About_US_video.webm'
+import aboutVideoLight from '@/assets/video/light/About_Us_white_video.webm'
+
+const videoSrc = (asset: string | { src: string }) =>
+  typeof asset === 'string' ? asset : asset.src
 ---
 
 <Section class="about" slide="about-us">
@@ -32,26 +37,26 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
       </div>
     </div>
     <div class="about__illustration">
-      <div class="about__illustration-item item-1">
-        <svg width="263" height="335" viewBox="0 0 263 335" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M152.961 0C153.389 3.74891e-08 153.786 0.226142 154.005 0.594758L239.434 144.483C241.185 147.432 244.358 149.239 247.785 149.239H252.849C258.214 149.239 262.563 153.593 262.563 158.964V175.406C262.563 180.778 258.214 185.132 252.849 185.132H247.785C244.358 185.132 241.185 186.939 239.434 189.888L154.006 333.776C153.787 334.144 153.39 334.371 152.962 334.371H0.609555C0.132968 334.371 -0.157561 333.846 0.0945612 333.441L92.5893 184.96C93.2546 183.892 94.4232 183.243 95.6805 183.243H212.238C217.604 183.243 221.953 178.888 221.953 173.517L221.952 160.853C221.952 155.482 217.603 151.128 212.238 151.128H95.6793C94.422 151.128 93.2534 150.479 92.5881 149.411L0.0927219 0.929271C-0.159164 0.524443 0.131826 -4.17046e-08 0.608329 0H152.961Z" fill="white"/>
-        </svg>
-      </div>
-      <div class="about__illustration-item item-2">
-        <svg width="163" height="207" viewBox="0 0 163 207" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M94.4544 0C94.7189 2.3122e-08 94.964 0.139476 95.0992 0.366827L147.852 89.112C148.933 90.9308 150.893 92.0455 153.009 92.0455H156.136C159.449 92.0456 162.135 94.7311 162.135 98.0438V108.185C162.135 111.498 159.449 114.183 156.136 114.183H153.009C150.893 114.183 148.933 115.298 147.852 117.117L95.0999 205.862C94.9648 206.089 94.7197 206.229 94.4552 206.229H0.376405C0.0821086 206.229 -0.0972951 205.905 0.0583923 205.655L57.1746 114.077C57.5855 113.418 58.3071 113.018 59.0835 113.018H131.059C134.372 113.018 137.058 110.332 137.058 107.019L137.057 99.2087C137.057 95.896 134.371 93.2107 131.058 93.2107H59.0827C58.3063 93.2107 57.5847 92.8103 57.1739 92.1515L0.0572565 0.573143C-0.0982851 0.323459 0.0814033 -2.5722e-08 0.375648 0H94.4544Z" fill="white"/>
-        </svg>
-      </div>
-      <div class="about__illustration-item item-3">
-        <svg width="163" height="207" viewBox="0 0 163 207" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M67.6803 0C67.4158 2.3122e-08 67.1707 0.139476 67.0356 0.366827L14.2825 89.112C13.2014 90.9308 11.2418 92.0455 9.12584 92.0455H5.9987C2.68573 92.0456 6.10352e-05 94.7311 0 98.0438V108.185C6.10352e-05 111.498 2.68573 114.183 5.9987 114.183H9.12584C11.2418 114.183 13.2014 115.298 14.2825 117.117L67.0348 205.862C67.17 206.089 67.4151 206.229 67.6796 206.229H161.758C162.053 206.229 162.232 205.905 162.076 205.655L104.96 114.077C104.549 113.418 103.828 113.018 103.051 113.018H31.0759C27.7628 113.018 25.0771 110.332 25.0772 107.019L25.0776 99.2087C25.0778 95.896 27.7634 93.2107 31.0763 93.2107H103.052C103.828 93.2107 104.55 92.8103 104.961 92.1515L162.078 0.573143C162.233 0.323459 162.053 -2.5722e-08 161.759 0H67.6803Z" fill="white"/>
-        </svg>
-      </div>
-      <div class="about__illustration-item item-4">
-        <svg width="263" height="335" viewBox="0 0 263 335" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path d="M109.603 0C109.174 3.74891e-08 108.778 0.226141 108.559 0.594758L23.1298 144.483C21.3789 147.432 18.2056 149.239 14.7789 149.239H9.7148C4.34973 149.239 0.000518799 153.593 0.000427246 158.964V175.406C0.000518799 180.778 4.34973 185.132 9.7148 185.132H14.7789C18.2056 185.132 21.3789 186.939 23.1298 189.888L108.557 333.776C108.776 334.145 109.173 334.371 109.602 334.371H261.954C262.431 334.371 262.721 333.846 262.469 333.441L169.974 184.96C169.309 183.892 168.14 183.243 166.883 183.243H50.3251C44.9598 183.243 40.6105 178.888 40.6108 173.517L40.6114 160.853C40.6117 155.482 44.9608 151.128 50.3257 151.128H166.884C168.142 151.128 169.31 150.479 169.975 149.411L262.471 0.929271C262.723 0.524443 262.432 -4.17046e-08 261.955 0H109.603Z" fill="white"/>
-        </svg>
-      </div>
+      <video
+        class="about__video about__video--dark"
+        src={videoSrc(aboutVideo)}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="About EdelX"
+      ></video>
+      <video
+        class="about__video about__video--light"
+        src={videoSrc(aboutVideoLight)}
+        autoplay
+        muted
+        loop
+        playsinline
+        preload="metadata"
+        aria-label="About EdelX"
+      ></video>
     </div>
   </div>
 </Section>
@@ -64,6 +69,17 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
   const socials = Array.from(
     document.querySelectorAll<HTMLElement>('.about__content-socials-item'),
   )
+  const videos = Array.from(document.querySelectorAll<HTMLVideoElement>('.about__video'))
+
+  const syncVideo = (active: boolean) => {
+    videos.forEach((video) => {
+      if (active) {
+        void video.play().catch(() => {})
+      } else {
+        video.pause()
+      }
+    })
+  }
 
   if (slide && socials.length) {
     const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches
@@ -79,6 +95,8 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     const playIn = () => {
       runWhenAppReady(() => {
         if (!slide.classList.contains('swiper-slide-active')) return
+
+        syncVideo(true)
 
         if (reduced) {
           gsap.to(socials, {
@@ -116,6 +134,7 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
 
     const playOut = () => {
       if (!played) return
+      syncVideo(false)
       gsap.to(socials, {
         autoAlpha: 0,
         y: -14,
@@ -141,6 +160,14 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
     })
 
     if (isActive) playIn()
+    else syncVideo(false)
+
+    new MutationObserver(() => {
+      if (slide.classList.contains('swiper-slide-active')) syncVideo(true)
+    }).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ['data-theme'],
+    })
   }
 </script>
 
@@ -217,58 +244,78 @@ import SectionSubtitle from '@/components/modules/SectionSubtitle/index.astro';
   }
 
   .about__illustration {
-    display: flex;
-    align-items: center;
-    justify-content: center;
+    position: relative;
     min-width: 0;
     width: 100%;
-    gap: clamp(rem(8px), 1.2vw, rem(18px));
+    isolation: isolate;
 
-    .about__illustration-item {
-      flex-shrink: 1;
-      min-width: 0;
-
-      svg {
-        display: block;
-        width: 100%;
-        height: auto;
-      }
-    }
-
-    .item-1,
-    .item-4 {
-      width: 32%;
-    }
-
-    .item-2,
-    .item-3 {
-      width: 20%;
-    }
-
-    .item-1 {
-      margin-right: clamp(rem(-48px), -3.5vw, rem(-18px));
-    }
-
-    .item-4 {
-      margin-left: clamp(rem(-48px), -3.5vw, rem(-18px));
+    // Soft steel-blue glow behind the video (matches page vignette)
+    &::before {
+      content: '';
+      position: absolute;
+      inset: -22% -16%;
+      z-index: 0;
+      pointer-events: none;
+      background: radial-gradient(
+        ellipse 58% 54% at 50% 48%,
+        rgb(43 46 54 / 70%) 0%,
+        rgb(43 46 54 / 22%) 32%,
+        transparent 58%
+      );
     }
 
     @media (max-width: 1024px) {
       align-self: stretch;
-      gap: clamp(rem(6px), 1.5vw, rem(14px));
-
-      .item-1 {
-        margin-right: clamp(-36px, -5vw, -16px);
-      }
-
-      .item-4 {
-        margin-left: clamp(-36px, -5vw, -16px);
-      }
     }
   }
 
-  :global(.about__illustration-item svg path) {
-    fill: var(--color-text);
+  .about__video {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    max-height: min(70vh, rem(640px));
+    object-fit: cover;
+    pointer-events: none;
+    // Soft edge falloff — larger dark vignette around the video
+    mask-image: radial-gradient(
+      ellipse 68% 62% at 50% 50%,
+      #000 18%,
+      rgb(0 0 0 / 85%) 40%,
+      rgb(0 0 0 / 30%) 62%,
+      transparent 78%
+    );
+    -webkit-mask-image: radial-gradient(
+      ellipse 68% 62% at 50% 50%,
+      #000 18%,
+      rgb(0 0 0 / 85%) 40%,
+      rgb(0 0 0 / 30%) 62%,
+      transparent 78%
+    );
+    mask-mode: alpha;
+
+    &--light {
+      display: none;
+    }
   }
 
+  :global([data-theme='light']) {
+    .about__illustration::before {
+      background: radial-gradient(
+        ellipse 58% 54% at 50% 48%,
+        rgb(200 204 212 / 55%) 0%,
+        rgb(200 204 212 / 16%) 32%,
+        transparent 58%
+      );
+    }
+
+    .about__video--dark {
+      display: none;
+    }
+
+    .about__video--light {
+      display: block;
+    }
+  }
 </style>
