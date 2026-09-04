@@ -10,6 +10,13 @@ gsap.registerPlugin(SplitText)
 const NAV_LINK_SELECTOR = '[data-nav-link]'
 const SLIDE_SELECTOR = '[data-slide]'
 const TEXT_SELECTOR = '.section-title, .section-subtitle'
+const NESTED_TITLE_SLIDER = '[data-terms-titles]'
+
+const getTextElements = (slideEl: HTMLElement) =>
+  Array.from(slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR)).filter(
+    (el) => !el.closest(NESTED_TITLE_SLIDER),
+  )
+
 const VISUAL_SELECTOR =
   '.page-section__decor, .hero__currency, .about__illustration, .review__slider'
 const TABLET_BREAKPOINT = 1024
@@ -101,7 +108,7 @@ const getTextUnits = (el: HTMLElement) => {
 const unitStagger = (count: number) => Math.min(0.045, 0.24 / Math.max(count, 1))
 
 const setTextHidden = (slideEl: HTMLElement) => {
-  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+  getTextElements(slideEl).forEach((el) => {
     const units = getTextUnits(el)
     gsap.killTweensOf(units)
     gsap.set(units, { yPercent: 110 })
@@ -109,7 +116,7 @@ const setTextHidden = (slideEl: HTMLElement) => {
 }
 
 const setTextVisible = (slideEl: HTMLElement) => {
-  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+  getTextElements(slideEl).forEach((el) => {
     const units = getTextUnits(el)
     gsap.killTweensOf(units)
     gsap.set(units, { yPercent: 0 })
@@ -117,7 +124,7 @@ const setTextVisible = (slideEl: HTMLElement) => {
 }
 
 const revealText = (slideEl: HTMLElement, delay = 0) => {
-  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el, index) => {
+  getTextElements(slideEl).forEach((el, index) => {
     const units = getTextUnits(el)
     if (!units.length) return
 
@@ -137,7 +144,7 @@ const revealText = (slideEl: HTMLElement, delay = 0) => {
 }
 
 const concealText = (slideEl: HTMLElement) => {
-  slideEl.querySelectorAll<HTMLElement>(TEXT_SELECTOR).forEach((el) => {
+  getTextElements(slideEl).forEach((el) => {
     const units = getTextUnits(el)
     if (!units.length) return
 
