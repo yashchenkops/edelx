@@ -72,7 +72,7 @@ const bgPathRight =
 </div>
 
 <style lang="scss">
-  $preloader-draw: 1000ms;
+  $preloader-draw: 1800ms;
   $preloader-easing: cubic-bezier(0.4, 0, 0.2, 1);
 
   .preloader {
@@ -152,7 +152,7 @@ const bgPathRight =
   }
 </style>
 
-<script is:inline define:vars={{ drawDuration: 1000, enterDuration: 700, exitDuration: 550, logoOverlapMs: 450 }}>
+<script is:inline define:vars={{ drawDuration: 1800, enterDuration: 700, exitDuration: 550, logoOverlapMs: 500 }}>
   const EASING = 'cubic-bezier(0.4, 0, 0.2, 1)'
 
   const wait = (ms) => new Promise((resolve) => window.setTimeout(resolve, ms))
