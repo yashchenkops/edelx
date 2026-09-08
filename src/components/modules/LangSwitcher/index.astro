@@ -1,0 +1,92 @@
+---
+---
+
+<div class="lang-switcher" data-lang-switcher role="group" aria-label="Language">
+  <button type="button" class="lang-switcher__btn" data-lang="en" aria-pressed="true">
+    EN
+  </button>
+  <span class="lang-switcher__divider" aria-hidden="true"></span>
+  <button type="button" class="lang-switcher__btn" data-lang="fr" aria-pressed="false">
+    FR
+  </button>
+</div>
+
+<style lang="scss">
+  .lang-switcher {
+    display: flex;
+    align-items: center;
+    gap: rem(18px);
+    color: var(--color-text);
+  }
+
+  .lang-switcher__btn {
+    padding: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    font: inherit;
+    font-size: rem(16px);
+    font-weight: 500;
+    line-height: 1;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    opacity: 0.45;
+    transition:
+      opacity v.$transition-base,
+      transform v.$transition-base;
+
+    &[aria-pressed='true'] {
+      opacity: 1;
+    }
+
+    @include m.hover {
+      transform: scale(1.05);
+    }
+  }
+
+  .lang-switcher__divider {
+    display: block;
+    width: 2px;
+    height: rem(28px);
+    background-color: v.$blue;
+    flex-shrink: 0;
+  }
+</style>
+
+<script>
+  const STORAGE_KEY = 'edelx-lang'
+  type Lang = 'en' | 'fr'
+
+  const isLang = (value: string | null): value is Lang =>
+    value === 'en' || value === 'fr'
+
+  const getStoredLang = (): Lang | null => {
+    const value = localStorage.getItem(STORAGE_KEY)
+    return isLang(value) ? value : null
+  }
+
+  const applyLang = (lang: Lang) => {
+    document.documentElement.setAttribute('lang', lang)
+    localStorage.setItem(STORAGE_KEY, lang)
+
+    document.querySelectorAll<HTMLElement>('[data-lang-switcher]').forEach((group) => {
+      group.querySelectorAll<HTMLButtonElement>('[data-lang]').forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.lang === lang))
+      })
+    })
+  }
+
+  applyLang(getStoredLang() ?? 'en')
+
+  document.querySelectorAll<HTMLElement>('[data-lang-switcher]').forEach((group) => {
+    group.addEventListener('click', (event) => {
+      const target = event.target
+      if (!(target instanceof HTMLElement)) return
+      const button = target.closest<HTMLButtonElement>('[data-lang]')
+      if (!button || !group.contains(button)) return
+      const next = button.dataset.lang
+      if (!isLang(next)) return
+      applyLang(next)
+    })
+  })
+</script>

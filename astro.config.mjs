@@ -1,12 +1,15 @@
 // @ts-check
 import { defineConfig } from 'astro/config'
+import relativeLinks from 'astro-relative-links'
 import { fileURLToPath } from 'url'
 
 // https://astro.build/config
 export default defineConfig({
+  // Optional canonical origin for meta/sitemap. Asset URLs stay relative via
+  // astro-relative-links so `dist/` works on any host (root or subdirectory).
   site: 'https://yashchenkops.github.io',
-  // GitHub Pages project site needs /edelx; keep "/" for local build/dev.
-  base: process.env.GITHUB_ACTIONS ? '/edelx' : '/',
+  // Leave base at "/" — relativeLinks() rewrites built HTML/CSS/JS to ./ paths.
+  integrations: [relativeLinks()],
   vite: {
     build: {
       // LightningCSS drops unprefixed `backdrop-filter` (keeps only -webkit-),

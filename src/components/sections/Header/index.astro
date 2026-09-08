@@ -1,9 +1,10 @@
 ---
 import PageHeader from '@/components/layout/PageHeader/index.astro';
 import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
+import LangSwitcher from '@/components/modules/LangSwitcher/index.astro';
 import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 import logoDark from '@/assets/img/logo.webp';
-import logoLight from '@/assets/img/light/logo.webp';
+import logoLight from '@/assets/img/light/preloader-logo.webp';
 ---
 
 <PageHeader>
@@ -15,6 +16,7 @@ import logoLight from '@/assets/img/light/logo.webp';
     <ThemeToggle />
   </div>
   <div class="header__desktop" data-header-item>
+    <LangSwitcher />
     <div class="actions">
       <a href="#" class="actions__login">Log In</a>
       <a href="#" class="actions__signup">Sign Up</a>
@@ -115,7 +117,7 @@ import logoLight from '@/assets/img/light/logo.webp';
   .header__desktop {
     display: flex;
     align-items: center;
-    gap: #{rem(24px)};
+    gap: #{rem(50px)};
     opacity: 0;
 
     @media (max-width: 1024px) {

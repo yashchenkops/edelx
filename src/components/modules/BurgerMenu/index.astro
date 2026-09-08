@@ -1,6 +1,7 @@
 ---
+import LangSwitcher from '@/components/modules/LangSwitcher/index.astro'
 import logoDark from '@/assets/img/logo.webp'
-import logoLight from '@/assets/img/light/logo.webp'
+import logoLight from '@/assets/img/light/preloader-logo.webp'
 
 const menuItems = [
   { name: 'Main', slide: 'main' },
@@ -73,10 +74,13 @@ const menuItems = [
         <span class="mob-theme-toggle__knob" aria-hidden="true" data-theme-knob></span>
       </button>
 
-      <div class="mob-menu__actions">
-        <a href="#" class="mob-menu__login">Log In</a>
-        <span class="mob-menu__divider"></span>
-        <a href="#" class="mob-menu__signup">Sign Up</a>
+      <div class="mob-menu__meta">
+        <LangSwitcher />
+        <div class="mob-menu__actions">
+          <a href="#" class="mob-menu__login">Log In</a>
+          <span class="mob-menu__divider"></span>
+          <a href="#" class="mob-menu__signup">Sign Up</a>
+        </div>
       </div>
     </div>
   </div>
