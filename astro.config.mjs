@@ -9,12 +9,12 @@ export default defineConfig({
   // astro-relative-links so `dist/` works on any host (root or subdirectory).
   site: 'https://yashchenkops.github.io',
   // Leave base at "/" — relativeLinks() rewrites built HTML/CSS/JS to ./ paths.
+  compressHTML: false,
   integrations: [relativeLinks()],
   vite: {
     build: {
-      // LightningCSS drops unprefixed `backdrop-filter` (keeps only -webkit-),
-      // which breaks glass blur in current Chromium production builds.
-      cssMinify: 'esbuild',
+      minify: false,
+      cssMinify: false,
     },
     resolve: {
       alias: {
