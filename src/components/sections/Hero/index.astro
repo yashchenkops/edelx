@@ -1,9 +1,9 @@
 ---
 import Section from '@/components/layout/Section/index.astro';
 import SectionTitle from '@/components/modules/SectionTitle/index.astro';
-import usdImg from '@/assets/img/usd.webp';
-import yenImg from '@/assets/img/yen.webp';
-import euroImg from '@/assets/img/euro.webp';
+import ethImg from '@/assets/img/eth.webp';
+import bitcoinImg from '@/assets/img/bitcoin.webp';
+import usdcImg from '@/assets/img/usdc.webp';
 
 const pathRight =
   'M595.973 0C595.32 5.70682e-08 594.716 0.344247 594.382 0.905378L464.236 219.941C461.569 224.43 456.734 227.181 451.514 227.181H443.799C435.626 227.181 429 233.809 429 241.985V267.015C429 275.191 435.626 281.819 443.799 281.819H451.514C456.734 281.819 461.569 284.57 464.236 289.059L594.381 508.095C594.714 508.656 595.319 509 595.971 509H828.071C828.797 509 829.24 508.202 828.856 507.585L687.945 281.558C686.932 279.932 685.152 278.943 683.236 278.943H505.667C497.493 278.943 490.867 272.314 490.868 264.138L490.868 244.86C490.869 236.684 497.495 230.057 505.668 230.057H683.238C685.153 230.057 686.934 229.068 687.947 227.442L828.859 1.41459C829.242 0.79834 828.799 -6.34854e-08 828.073 0H595.973Z';
@@ -18,19 +18,20 @@ const SY = 1 / 509;
 <Section class="hero" slide="main">
   <div class="hero__inner">
     <div class="hero__title">
-      <SectionTitle as="h1">NEW WAY<br />FOR FINANCE</SectionTitle>
+      <SectionTitle as="h1">DON'T<br /> LEAP<br /> CROSS</SectionTitle>
     </div>
 
     <div class="hero__illustration">
       <div class="hero__currency hero__currency--back">
         <div class="hero__currency-item hero__currency-item--usd">
           <div class="hero__currency-reveal">
-            <img src={usdImg.src} alt="USD" />
+            <img src={bitcoinImg.src} alt="Bitcoin" />
           </div>
         </div>
         <div class="hero__currency-item hero__currency-item--yen">
           <div class="hero__currency-reveal">
-            <img src={yenImg.src} alt="YEN" />
+            <img src={ethImg.src} alt="ETH" />
+            
           </div>
         </div>
       </div>
@@ -91,7 +92,7 @@ const SY = 1 / 509;
       <div class="hero__currency hero__currency--front">
         <div class="hero__currency-item hero__currency-item--euro">
           <div class="hero__currency-reveal">
-            <img src={euroImg.src} alt="EURO" />
+            <img src={usdcImg.src} alt="USDC" />
           </div>
         </div>
       </div>
