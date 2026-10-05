@@ -2,9 +2,13 @@
 import PageHeader from '@/components/layout/PageHeader/index.astro';
 import ThemeToggle from '@/components/modules/ThemeToggle/index.astro';
 import LangSwitcher from '@/components/modules/LangSwitcher/index.astro';
+import UserAccount from '@/components/modules/UserAccount/index.astro';
 import BurgerMenu from '@/components/modules/BurgerMenu/index.astro';
 import logoDark from '@/assets/img/logo.webp';
 import logoLight from '@/assets/img/light/preloader-logo.webp';
+
+// Toggle guest / logged-in header actions
+const isLoggedIn = true
 ---
 
 <PageHeader>
@@ -17,13 +21,17 @@ import logoLight from '@/assets/img/light/preloader-logo.webp';
   </div>
   <div class="header__desktop" data-header-item>
     <LangSwitcher />
-    <div class="actions">
-      <a href="#" class="actions__login">Log In</a>
-      <a href="#" class="actions__signup">Sign Up</a>
-    </div>
+    {isLoggedIn ? (
+      <UserAccount />
+    ) : (
+      <div class="actions">
+        <a href="#" class="actions__login">Log In</a>
+        <a href="#" class="actions__signup">Sign Up</a>
+      </div>
+    )}
   </div>
   <div data-header-burger>
-    <BurgerMenu />
+    <BurgerMenu isLoggedIn={isLoggedIn} />
   </div>
 </PageHeader>
 

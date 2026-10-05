@@ -1,0 +1,110 @@
+---
+interface Props {
+  name?: string
+  email?: string
+  profileHref?: string
+  signOutHref?: string
+  /** Flatten into parent flex (e.g. mobile footer: Lang | info | links) */
+  spread?: boolean
+}
+
+const {
+  name = 'product',
+  email = 'productpro@gmail.com',
+  profileHref = '#',
+  signOutHref = '#',
+  spread = false,
+} = Astro.props
+---
+
+<div class:list={['user-account', { 'user-account--spread': spread }]}>
+  <div class="user-account__info">
+    <span class="user-account__name">{name}</span>
+    <span class="user-account__email">{email}</span>
+  </div>
+
+  <div class="user-account__links">
+    <a href={profileHref} class="user-account__link">
+      <span>My profile</span>
+      <svg class="user-account__icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M3 9L9 3M9 3H4.5M9 3V7.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+    <a href={signOutHref} class="user-account__link">
+      <span>Sign out</span>
+      <svg class="user-account__icon" width="12" height="12" viewBox="0 0 12 12" fill="none" aria-hidden="true">
+        <path d="M9 3L3 9M3 9H7.5M3 9V4.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+    </a>
+  </div>
+</div>
+
+<style lang="scss">
+  .user-account {
+    display: flex;
+    align-items: center;
+    gap: rem(24px);
+    color: var(--color-text);
+
+    &--spread {
+      display: contents;
+    }
+  }
+
+  .user-account__info {
+    display: flex;
+    flex-direction: column;
+    gap: rem(4px);
+    min-width: 0;
+    color: var(--color-text);
+  }
+
+  .user-account__name {
+    font-size: rem(16px);
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+  }
+
+  .user-account__email {
+    font-size: rem(13px);
+    font-weight: 400;
+    line-height: 1.2;
+    opacity: 0.5;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .user-account__links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: rem(6px);
+    flex-shrink: 0;
+    color: var(--color-text);
+  }
+
+  .user-account__link {
+    display: inline-flex;
+    align-items: center;
+    gap: rem(6px);
+    font-size: rem(16px);
+    font-weight: 500;
+    line-height: 1.2;
+    white-space: nowrap;
+    color: inherit;
+    transition: opacity v.$transition-base;
+
+    @include m.hover {
+      opacity: 0.7;
+    }
+  }
+
+  .user-account__icon {
+    flex-shrink: 0;
+    width: rem(12px);
+    height: rem(12px);
+    color: v.$blue;
+  }
+</style>

@@ -1,7 +1,14 @@
 ---
 import LangSwitcher from '@/components/modules/LangSwitcher/index.astro'
+import UserAccount from '@/components/modules/UserAccount/index.astro'
 import logoDark from '@/assets/img/logo.webp'
 import logoLight from '@/assets/img/light/preloader-logo.webp'
+
+interface Props {
+  isLoggedIn?: boolean
+}
+
+const { isLoggedIn = false } = Astro.props
 
 const menuItems = [
   { name: 'Main', slide: 'main' },
@@ -63,24 +70,30 @@ const menuItems = [
       </ul>
     </nav>
 
-    <div class="mob-menu__footer">
-      <button
-        type="button"
-        class="mob-theme-toggle"
-        data-theme-toggle
-        aria-label="Toggle color theme"
-      >
-        <span class="mob-theme-toggle__label" data-theme-label>Dark</span>
-        <span class="mob-theme-toggle__knob" aria-hidden="true" data-theme-knob></span>
-      </button>
+    <div class={`mob-menu__footer${isLoggedIn ? ' mob-menu__footer--account' : ''}`}>
+      {!isLoggedIn && (
+        <button
+          type="button"
+          class="mob-theme-toggle"
+          data-theme-toggle
+          aria-label="Toggle color theme"
+        >
+          <span class="mob-theme-toggle__label" data-theme-label>Dark</span>
+          <span class="mob-theme-toggle__knob" aria-hidden="true" data-theme-knob></span>
+        </button>
+      )}
 
       <LangSwitcher />
 
-      <div class="mob-menu__actions">
-        <a href="#" class="mob-menu__login">Log In</a>
-        <span class="mob-menu__divider"></span>
-        <a href="#" class="mob-menu__signup">Sign Up</a>
-      </div>
+      {isLoggedIn ? (
+        <UserAccount spread />
+      ) : (
+        <div class="mob-menu__actions">
+          <a href="#" class="mob-menu__login">Log In</a>
+          <span class="mob-menu__divider"></span>
+          <a href="#" class="mob-menu__signup">Sign Up</a>
+        </div>
+      )}
     </div>
   </div>
 </div>
@@ -375,6 +388,13 @@ const menuItems = [
     :global(.lang-switcher) {
       flex-shrink: 0;
       gap: rem(12px);
+    }
+
+    &--account {
+      :global(.user-account__info),
+      :global(.user-account__links) {
+        flex-shrink: 0;
+      }
     }
   }
 
